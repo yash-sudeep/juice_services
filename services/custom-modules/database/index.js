@@ -1,15 +1,14 @@
 var pg = require('pg');
-var config = require('./config/config.json');
 
 const checkConnection = () => {
     return new Promise(async(resolve, reject) => {
         try {
             const client = new pg.Client({
-                host: config.host,
-                port: config.port,
-                database: config.database,
-                user: config.user,
-                password: config.password,
+                host: process.env.DB_HOST,
+                port: process.env.DB_PORT,
+                database: process.env.DB_NAME,
+                user: process.env.DB_USER,
+                password: process.env.DB_PWD,
                 ssl: {
                     rejectUnauthorized: false,
                 }

@@ -19,7 +19,7 @@ app.use(allowCrossDomain);
 let db = require("./services/custom-modules/database/index.js");
 
 // app.use(tokenValidation);
-app.use(require("body-parser").json());
+app.use(require("body-parser").json({ limit: '50mb', extended: true }));
 
 app.use(function(err, req, res, next) {
     if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
@@ -29,7 +29,7 @@ app.use(function(err, req, res, next) {
 
 app.use("/api", router);
 
-var port = config.port;
+var port = process.env.NODE_PORT || config.port;
 
 var server = app.listen(port, async function() {
     try {

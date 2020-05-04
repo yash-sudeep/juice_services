@@ -1,7 +1,0 @@
-{
-    "host": "ec2-34-195-169-25.compute-1.amazonaws.com",
-    "database": "d1db7f8oqfe8ak",
-    "user": "pjfixwqbuoukmy",
-    "port": "5432",
-    "password": "4a09eac940b41d8ad99f16a0ea7391cdfcee851d621e1769392ef9de8928b25a"
-}
