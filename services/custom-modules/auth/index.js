@@ -23,6 +23,7 @@ const createToken = (username, userrole) => {
 
 const validateToken = (req, res, next) => {
     if (req.originalUrl === "/api/signup") {
+		console.log('JWT Skipped for ' + req.originalUrl);
         next();
     } else {
         let token = req.headers["Authorization"];
