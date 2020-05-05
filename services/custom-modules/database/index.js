@@ -1,14 +1,15 @@
 var pg = require('pg');
+var client;
 
 const checkConnection = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            const client = new pg.Client({
-                host: process.env.DB_HOST,
-                port: process.env.DB_PORT,
-                database: process.env.DB_NAME,
-                user: process.env.DB_USER,
-                password: process.env.DB_PWD,
+            client = new pg.Client({
+                host: 'ec2-52-23-14-156.compute-1.amazonaws.com',
+                port: 5432,
+                database: 'd6leakc9cfvda',
+                user: 'qhcellrvquatuc',
+                password: 'b5afe83dc3c5f279a72ec4d6b5a917025a167ff94c9246885ae372bb77b1f9ee',
                 ssl: {
                     rejectUnauthorized: false,
                 }
