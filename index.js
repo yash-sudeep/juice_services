@@ -17,7 +17,7 @@ var allowCrossDomain = function(req, res, next) {
 app.use(allowCrossDomain);
 
 let db = require("./services/custom-modules/database/index.js");
-require("./services/users-service/routes.js");
+require("./services/users-service/routes.js")(app, router);
 
 // app.use(tokenValidation);
 app.use(require("body-parser").json({ limit: '50mb', extended: true }));
