@@ -15,6 +15,7 @@ const checkConnection = () => {
                 }
             });
             await client.connect();
+			console.log('Database Connection Successful');
             resolve(true);
         } catch (error) {
             reject(false);
