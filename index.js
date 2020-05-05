@@ -1,7 +1,6 @@
 var express = require("express");
 var app = express();
 var router = express.Router();
-var config = require("./config/config.json");
 var tokenValidation = require('./services/custom-modules/auth').validateToken;
 
 var allowCrossDomain = function(req, res, next) {
@@ -30,7 +29,7 @@ app.use(function(err, req, res, next) {
 
 app.use("/api", router);
 
-var port = process.env.NODE_PORT || config.port;
+var port = process.env.NODE_PORT || 3000;
 
 var server = app.listen(port, async function() {
     try {
