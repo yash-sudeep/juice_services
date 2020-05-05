@@ -9,6 +9,7 @@ module.exports = {
             auth
                 .hashPassword(user.password)
                 .then((hashedPassword) => {
+                    delete user.password;
                     user.password_digest = hashedPassword;
                 })
                 .then(() => auth.createToken(user.username, user.userrole))
