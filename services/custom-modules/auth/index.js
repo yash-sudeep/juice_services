@@ -22,24 +22,28 @@ const createToken = (username, userrole) => {
 };
 
 const validateToken = (req, res, next) => {
-    let token = req.headers["Authorization"];
-    if (!token) {
-        return res.status(400).send({
-            status: false,
-            message: "Access Token cannot be empty",
-        });
-    }
-
-    jwt.verify(token, accessTokenSecret, (err, user) => {
-        if (err) {
-            return res.status(401).send({
+    if (req.originalUrl === "/api/signup") {
+        next();
+    } else {
+        let token = req.headers["Authorization"];
+        if (!token) {
+            return res.status(400).send({
                 status: false,
-                message: "Unauthorized Access",
+                message: "Access Token cannot be empty",
             });
         }
-        req.user = user;
-        next();
-    });
+
+        jwt.verify(token, accessTokenSecret, (err, user) => {
+            if (err) {
+                return res.status(401).send({
+                    status: false,
+                    message: "Unauthorized Access",
+                });
+            }
+            req.user = user;
+            next();
+        });
+    }
 };
 
 module.exports = {
