@@ -2,6 +2,7 @@ var auth = require("./../../custom-modules/auth/index");
 const db = require("./../../custom-modules/database/index");
 
 module.exports = {
+
     signUp: function(req) {
         return new Promise((resolve, reject) => {
             const user = req.body;

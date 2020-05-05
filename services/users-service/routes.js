@@ -1,4 +1,4 @@
-var userController = ('./controllers/userController.js');
+var userController = require('./controllers/userController');
 // var tokenValidation = require('./../custom-modules/auth').validateToken;
 
 var bodyParser = require('body-parser');
