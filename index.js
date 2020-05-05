@@ -29,7 +29,7 @@ app.use(function(err, req, res, next) {
 
 app.use("/api", router);
 
-var port = process.env.NODE_PORT || 3000;
+var port = process.env.PORT || 3000;
 
 var server = app.listen(port, async function() {
     try {
