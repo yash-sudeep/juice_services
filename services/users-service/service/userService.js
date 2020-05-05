@@ -43,6 +43,8 @@ function createUser(user) {
             user.password_digest,
         ];
         try {
+			let con = await db.checkConnection();
+            console.log("DB Con: " + con);
             await db.parameterizedQuery(query, values);
             resolve(user);
         } catch (error) {
