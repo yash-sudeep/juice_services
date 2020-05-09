@@ -31,7 +31,6 @@ const basicQuery = (query) => {
                 console.log(res.err.stack);
                 return res.err;
             }
-            await client.end();
             resolve(res.rows);
         } catch (error) {
             reject(error);
@@ -47,7 +46,6 @@ const parameterizedQuery = (query, values) => {
                 console.log(res.err.stack);
                 reject(res.err);
             }
-            await client.end();
             resolve(res.rows);
         } catch (error) {
             reject(error);
