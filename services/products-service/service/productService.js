@@ -42,6 +42,12 @@ module.exports = {
     addProduct: function(req) {
         return new Promise(async(resolve, reject) => {
             try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject(errors.array());
+                }
+
                 const product = req.body;
                 let query = "SELECT USERROLE FROM USERS WHERE USERID=" + req.params.id;
                 let role = await db.basicQuery(query);
@@ -58,12 +64,13 @@ module.exports = {
                         product.quantity,
                         product.mediapath,
                         product.price,
-                        product.pid
+                        product.pid,
                     ];
+                    let res = await db.parameterizedQuery(query, values);
+                    resolve(res);
                 } else {
                     reject("You do not have permissions to add a product.");
                 }
-                resolve(res);
             } catch (error) {
                 console.log(error);
                 reject(error);
@@ -73,7 +80,7 @@ module.exports = {
 };
 
 async function validateProgram(ids) {
-    let query = 'SELECT PROGRAMID FROM PROGRAMS';
+    let query = "SELECT PROGRAMID FROM PROGRAMS";
     let pid = await db.basicQuery(query);
     for (let i = 0; i < ids.length; i++) {
         if (!pid.includes(ids[i])) {

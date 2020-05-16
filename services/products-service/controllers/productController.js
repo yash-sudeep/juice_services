@@ -1,4 +1,5 @@
 var productService = require("./../service/productService");
+const body = require('express-validator/check');
 
 module.exports = {
     getAllProducts: function(req, res) {
@@ -7,7 +8,7 @@ module.exports = {
                 res.status(201).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
+                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
             }
         );
     },
@@ -17,7 +18,7 @@ module.exports = {
                 res.status(201).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
+                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
             }
         );
     },
@@ -27,7 +28,7 @@ module.exports = {
                 res.status(201).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
+                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
             }
         );
     },
@@ -37,8 +38,29 @@ module.exports = {
                 res.status(201).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
+                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
             }
         );
-    }
-}
+    },
+    validate: function(name) {
+        switch (name) {
+            case 'addProduct':
+                {
+                    return [
+                        [
+                            body('name').exists(),
+                            body('description').exists(),
+                            body('advantages').isArray(),
+                            body('disadvantages').isArray(),
+                            body('ingredients').isArray(),
+                            body('status').isBoolean(),
+                            body('quantity').isNumeric(),
+                            body('mediapath').isString(),
+                            body('price').isNumeric(),
+                            body('pid').isNumeric()
+                        ]
+                    ]
+                }
+        }
+    },
+};

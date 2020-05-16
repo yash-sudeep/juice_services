@@ -20,5 +20,5 @@ module.exports = function(app, router) {
     router.get('/products/description/:id', productController.getProductDescription);
 
     // Add New Products
-    router.get('/products/add', productController.addProduct);
+    router.post('/products/add/:id', productController.validate("addProduct"), productController.addProduct);
 }
