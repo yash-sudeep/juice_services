@@ -18,4 +18,7 @@ module.exports = function(app, router) {
 
     // Get Information of Specific Product
     router.get('/products/description/:id', productController.getProductDescription);
+
+    // Add New Products
+    router.get('/products/add', productController.addProduct);
 }

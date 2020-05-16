@@ -30,5 +30,15 @@ module.exports = {
                 res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
             }
         );
+    },
+    addProduct: function(req, res) {
+        productService.addProduct(req).then(
+            (data) => {
+                res.status(201).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: 'Invalid Input' });
+            }
+        );
     }
 }
