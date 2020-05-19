@@ -10,6 +10,18 @@ module.exports = function(app, router) {
 
     //app.use(tokenValidate);
 
-    // SignUp User to our application
-    router.post('/signup', userController.userSignUp);
+    // SignUp User
+    router.post('/user/signup', userController.validate('signUp'), userController.userSignUp);
+
+    // Verify User by OTP While SignUp
+    router.post('/user/verify', userController.validate('verifyUser'), userController.verifyUser);
+
+    // SignIn User
+    router.post('/user/signin', userController.validate('signIn'), userController.signIn);
+
+    // SignOut User
+    router.delete('/user/signout', userController.signOut);
+
+    // Reset Password
+    router.delete('/user/password/reset', userController.validate('resetPassword'), userController.resetPassword);
 }
