@@ -14,7 +14,7 @@ module.exports = function(app, router) {
     router.post('/user/signup', userController.validate('signUp'), userController.userSignUp);
 
     // Verify User by OTP While SignUp
-    router.post('/user/verify', userController.validate('verifyUser'), userController.verifyUser);
+    router.post('/user/signup/verify', userController.validate('verifyUser'), userController.verifyUser);
 
     // SignIn User
     router.post('/user/signin', userController.validate('signIn'), userController.signIn);
@@ -24,4 +24,10 @@ module.exports = function(app, router) {
 
     // Reset Password
     router.delete('/user/password/reset', userController.validate('resetPassword'), userController.resetPassword);
+
+    // Verify User by OTP While Forgot-Password
+    router.post('/user/forgot-password/verify', userController.validate('verifyUser'), userController.verifyUser);
+
+    // Forgot Password
+    router.post('/user/forgot-password', userController.validate('forgotPassword'), userController.forgotPassword);
 }

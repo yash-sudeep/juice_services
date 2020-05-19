@@ -52,6 +52,16 @@ module.exports = {
             }
         );
     },
+    forgotPassword: function(req, res) {
+        userService.forgotPassword(req).then(
+            (data) => {
+                res.status(202).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+            }
+        );
+    },
     validate: function(name) {
         switch (name) {
             case "verifyUser":
@@ -59,7 +69,7 @@ module.exports = {
                     return [
                         [
                             body("mobile_number", "Invalid Mobile Number").isMobilePhone({ locale: "en-IN" }),
-                            body("otp", "Invalid OTP").isNumeric(),
+                            body("otp", "Invalid OTP").isLength({ min: 6, max: 6 }).isNumeric(),
                         ],
                     ];
                 }
@@ -73,7 +83,7 @@ module.exports = {
                             body("password", "Invalid Password").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
                             body("mobile_number", "Invalid Mobile Number").isMobilePhone({ locale: "en-IN" }),
                             body("userrole").isMobilePhone({ locale: "en-IN" }),
-                            body("otp", "Invalid OTP").isNumeric(),
+                            body("otp", "Invalid OTP").isLength({ min: 6, max: 6 }).isNumeric(),
                         ],
                     ];
                 }
@@ -92,6 +102,16 @@ module.exports = {
                         [
                             body("oldPassword", "Invalid Old Password").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
                             body("newPassword", "Invalid New Password").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
+                        ],
+                    ];
+                }
+            case "forgotPassword":
+                {
+                    return [
+                        [
+                            body("mobile_number", "Invalid Mobile Number").isMobilePhone({ locale: "en-IN" }),
+                            body("password", "Invalid Password").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
+                            body("otp", "Invalid OTP").isLength({ min: 6, max: 6 }).isNumeric(),
                         ],
                     ];
                 }

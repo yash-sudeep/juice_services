@@ -44,11 +44,20 @@ module.exports = {
 
                 const { mobile_number } = req.body;
                 let validUser = await findUser(mobile_number);
-                if (!validUser) {
-                    let res = await otp.sendOtp(mobile_number);
-                    resolve(res);
+                if (req.originalUrl === "/api/user/signup/verify") {
+                    if (!validUser) {
+                        let res = await otp.sendOtp(mobile_number);
+                        resolve(res);
+                    } else {
+                        reject("Account Already Registered with this Mobile Number.");
+                    }
                 } else {
-                    reject("Account Already Registered with this Mobile Number.");
+                    if (validUser) {
+                        let res = await otp.sendOtp(mobile_number);
+                        resolve(res);
+                    } else {
+                        reject("Invalid Mobile Number");
+                    }
                 }
             } catch (error) {
                 reject(error);
@@ -108,13 +117,15 @@ module.exports = {
 
                 const { oldPassword, newPassword } = req.body;
 
-                findUser(mobile_number)
+                findUser(req.user.mobile_number)
                     .then((foundUser) => {
                         user = foundUser;
                     })
                     .then(() => checkPassword(oldPassword, foundUser))
                     .then(() => auth.hashPassword(newPassword))
-                    .then((newHashedPassword) => updatePassword(newHashedPassword, req.user.mobile_number))
+                    .then((newHashedPassword) =>
+                        updatePassword(newHashedPassword, req.user.mobile_number)
+                    )
                     .then(() => {
                         resolve("Password Reset Successful");
                     })
@@ -122,6 +133,42 @@ module.exports = {
                         console.error(err);
                         reject(err);
                     });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    },
+    forgotPassword: function(req) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject(errors.array());
+                    return;
+                }
+
+                const { password, otp, mobile_number } = req.body;
+                let OTP = await otp.verifyOtp(password, otp);
+                if (OTP.valid) {
+                    findUser(mobile_number)
+                        .then((foundUser) => {
+                            user = foundUser;
+                        })
+                        .then(() => auth.hashPassword(password))
+                        .then((newHashedPassword) =>
+                            updatePassword(newHashedPassword, mobile_number)
+                        )
+                        .then(() => {
+                            resolve("Password Updated Successfully");
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            reject(err);
+                        });
+                } else {
+                    reject("Invalid OTP");
+                }
             } catch (error) {
                 reject(error);
             }
