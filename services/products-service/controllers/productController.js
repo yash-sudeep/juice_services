@@ -48,16 +48,16 @@ module.exports = {
                 {
                     return [
                         [
-                            body('name', 'name doesn\'t exists').exists(),
-                            body('description', 'description doesn\'t exists').exists(),
-                            body('advantages', 'Advantages cannot be empty').exists().isArray({ min: 1 }),
-                            body('disadvantages', 'Disadvantages cannot be empty').exists().isArray({ min: 1 }),
-                            body('ingredients', 'Ingredients cannot be empty').exists().isArray({ min: 1 }),
-                            body('status').exists().isBoolean(),
+                            body('name', 'name doesn\'t exists'),
+                            body('description', 'description doesn\'t exists'),
+                            body('advantages', 'Advantages cannot be empty').isArray({ min: 1 }),
+                            body('disadvantages', 'Disadvantages cannot be empty').isArray({ min: 1 }),
+                            body('ingredients', 'Ingredients cannot be empty').isArray({ min: 1 }),
+                            body('status').isBoolean(),
                             body('quantity').optional().isNumeric(),
-                            body('mediapath').exists().isString(),
+                            body('mediapath').isString(),
                             body('price').optional().isNumeric(),
-                            body('pid').exists().isNumeric()
+                            body('pid').isNumeric()
                         ]
                     ]
                 }
