@@ -5,7 +5,7 @@ module.exports = {
     getAllProgrammes: function(req, res) {
         programService.getAllProgrammes(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send(data);
             },
             (err) => {
                 res.status(400).send({ errorCode: 1, message: "Invalid Input" });
@@ -15,7 +15,7 @@ module.exports = {
     getProgramDescription: function(req, res) {
         programService.getProgramDescription(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send(data);
             },
             (err) => {
                 res.status(400).send({ errorCode: 1, message: "Invalid Input" });
