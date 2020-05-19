@@ -38,9 +38,9 @@ module.exports = {
                 {
                     return [
                         [
-                            body('name', 'Program name doesn\'t exists').exists(),
-                            body('description', 'Program description doesn\'t exists').exists(),
-                            body('status').exists().isBoolean(),
+                            body('name', 'Program name doesn\'t exists'),
+                            body('description', 'Program description doesn\'t exists'),
+                            body('status').isBoolean(),
                             body('price').isNumeric(),
                         ]
                     ]
