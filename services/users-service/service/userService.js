@@ -1,6 +1,7 @@
 const auth = require("./../../custom-modules/auth/index");
 const otp = require("./../../custom-modules/otp/index");
 const db = require("./../../custom-modules/database/index");
+var moment = require("moment");
 
 module.exports = {
     signUp: function(req) {
@@ -60,7 +61,7 @@ module.exports = {
                     }
                 }
             } catch (error) {
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -91,7 +92,7 @@ module.exports = {
                         reject(err);
                     });
             } catch (error) {
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -101,7 +102,7 @@ module.exports = {
                 await updateUserToken("", req.user.mobile_number, false);
                 resolve("User Logged Out Successfully");
             } catch (error) {
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -134,7 +135,7 @@ module.exports = {
                         reject(err);
                     });
             } catch (error) {
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -170,7 +171,77 @@ module.exports = {
                     reject("Invalid OTP");
                 }
             } catch (error) {
-                reject(error);
+                reject(error.message);
+            }
+        });
+    },
+    addNewAddress: function(req) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject(errors.array());
+                    return;
+                }
+
+                const address = req.body;
+                let userId = await getUserID(req.user.mobile_number);
+                address.userId = userId;
+                await insertAddress(address);
+                resolve("Address Added Successfully");
+            } catch (error) {
+                reject(error.message);
+            }
+        });
+    },
+    updateAddress: function(req) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject(errors.array());
+                    return;
+                }
+
+                const address = req.body;
+                let userId = await getUserID(req.user.mobile_number);
+                address.userId = userId;
+                let valid = await verifyAddress(address.addressId, userId);
+                if (valid) {
+                    await updateAddress(address);
+                    resolve("Address Updated Successfully");
+                } else {
+                    reject("Address Not Registered");
+                }
+            } catch (error) {
+                reject(error.message);
+            }
+        });
+    },
+    deleteAddress: function(req) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject(errors.array());
+                    return;
+                }
+
+                const { addressId } = req.body;
+                let userId = await getUserID(req.user.mobile_number);
+                address.userId = userId;
+                let valid = await verifyAddress(addressId, userId);
+                if (valid) {
+                    await deleteAddress(addressId, userId);
+                    resolve("Address Deleted Successfully");
+                } else {
+                    reject("Address Not Registered");
+                }
+            } catch (error) {
+                reject(error.message);
             }
         });
     },
@@ -180,7 +251,7 @@ const createUser = (user) => {
     return new Promise(async(resolve, reject) => {
         user.username = user.firstname + user.lastname;
         let query =
-            "INSERT INTO USERS (FIRSTNAME,LASTNAME,USERNAME,EMAILID,MOBILENUMBER,USERROLE,TOKEN,ISLOGGEDIN,PASSWORD) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *";
+            "INSERT INTO USERS (FIRSTNAME,LASTNAME,USERNAME,EMAILID,MOBILENUMBER,USERROLE,TOKEN,ISLOGGEDIN,PASSWORD,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
         let values = [
             user.firstname,
             user.lastname,
@@ -191,12 +262,13 @@ const createUser = (user) => {
             user.token,
             true,
             user.password_digest,
+            moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
         ];
         try {
             await db.parameterizedQuery(query, values);
             resolve(user);
         } catch (error) {
-            reject(error);
+            reject(error.message);
         }
     });
 };
@@ -211,7 +283,7 @@ const findUser = (mobile_number) => {
             let res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
-            reject(error);
+            reject(error.message);
         }
     });
 };
@@ -250,4 +322,105 @@ const updatePassword = (password, mobile_number) => {
         mobile_number +
         "'";
     return db.basicQuery(query).then((data) => data.rows[0]);
+};
+
+const insertAddress = (address) => {
+    return new Promise(async(resolve, reject) => {
+        let query =
+            "INSERT INTO ADDRESS (NAME,MOBILENUMBER,PINCODE,ADDRESS,CITY,STATE,LANDMARK,TYPE,USERID,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+        let values = [
+            address.name,
+            address.mobile_number,
+            address.pincode,
+            address.address,
+            address.city,
+            address.state,
+            address.landmark,
+            address.type,
+            address.userId,
+            moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
+        ];
+        try {
+            await db.parameterizedQuery(query, values);
+            resolve(user);
+        } catch (error) {
+            reject(error.message);
+        }
+    });
+};
+
+const getUserID = (mobile_number) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT USERID FROM USERS WHERE MOBILENUMBER='" + mobile_number + "');";
+            let res = await db.basicQuery(query);
+            if (res.length > 0) {
+                resolve(res[0].userid);
+            } else {
+                reject("Invalid User");
+            }
+        } catch (error) {
+            reject(error.message);
+        }
+    });
+};
+
+const verifyAddress = (addressId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM ADDRESS WHERE ADDRESSID=" +
+                addressId +
+                " AND USERID=" +
+                userId +
+                ");";
+            let res = await db.basicQuery(query);
+            resolve(res[0].exists);
+        } catch (error) {
+            reject(error.message);
+        }
+    });
+};
+
+const updateAddress = (address) => {
+    let query =
+        "UPDATE ADDRESS SET NAME='" +
+        address.name +
+        "', MOBILENUMBER='" +
+        address.mobile_number +
+        "', PINCODE='" +
+        address.pincode +
+        "', ADDRESS='" +
+        address.address +
+        "', CITY='" +
+        address.city +
+        "', STATE='" +
+        address.state +
+        "', LANDMARK='" +
+        address.landmark +
+        "', TYPE='" +
+        address.type +
+        "', UPDATEDAT='" +
+        moment().format("YYYY-MM-DD HH:mm:ss.SSSSS") +
+        "' WHERE USERID=" +
+        address.userId + " AND ADDRESSID=" + address.addressId;
+    return db.basicQuery(query).then((data) => data.rows[0]);
+};
+
+const deleteAddress = (addressId, userId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "DELETE * FROM ADDRESS WHERE ADDRESSID=" +
+                addressId +
+                " AND USERID=" +
+                userId +
+                ";";
+            let res = await db.basicQuery(query);
+            resolve(res);
+        } catch (error) {
+            reject(error.message);
+        }
+    });
 };

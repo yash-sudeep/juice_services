@@ -23,11 +23,21 @@ module.exports = function(app, router) {
     router.delete('/user/signout', userController.signOut);
 
     // Reset Password
-    router.delete('/user/password/reset', userController.validate('resetPassword'), userController.resetPassword);
+    router.put('/user/password/reset', userController.validate('resetPassword'), userController.resetPassword);
 
     // Verify User by OTP While Forgot-Password
     router.post('/user/forgot-password/verify', userController.validate('verifyUser'), userController.verifyUser);
 
     // Forgot Password
     router.post('/user/forgot-password', userController.validate('forgotPassword'), userController.forgotPassword);
+
+    // Add New Address
+    router.post('/user/address/add', userController.validate('addNewAddress'), userController.addNewAddress);
+
+    // Update Address
+    router.put('/user/address/update', userController.validate('updateAddress'), userController.updateAddress);
+
+    // Delete Address
+    router.delete('/user/address/delete', userController.validate('deleteAddress'), userController.updateAddress);
+
 }
