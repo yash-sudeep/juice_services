@@ -18,4 +18,10 @@ module.exports = function(app, router) {
 
     // Add New Program
     router.post('/program/add/:id', programController.validate("addProgram"), programController.addProgram);
+
+    // Update Program
+    router.put('/program/update/:id', programController.validate("updateProgram"), programController.updateProgram);
+
+    // Delete Program
+    router.delete('/program/:id', programController.deleteProgram);
 }

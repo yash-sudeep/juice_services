@@ -8,7 +8,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+                res.status(400).send({ errorCode: 1, message: err });
             }
         );
     },
@@ -18,7 +18,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+                res.status(400).send({ errorCode: 1, message: err });
             }
         );
     },
@@ -26,6 +26,26 @@ module.exports = {
         programService.addProgram(req).then(
             (data) => {
                 res.status(201).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: err });
+            }
+        );
+    },
+    updateProgram: function(req, res) {
+        programService.updateProgram(req).then(
+            (data) => {
+                res.status(202).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: err });
+            }
+        );
+    },
+    deleteProgram: function(req, res) {
+        programService.deleteProgram(req).then(
+            (data) => {
+                res.status(200).send(data);
             },
             (err) => {
                 res.status(400).send({ errorCode: 1, message: err });
@@ -42,6 +62,16 @@ module.exports = {
                             body('description', 'Program description doesn\'t exists'),
                             body('status').isBoolean(),
                             body('price').isNumeric(),
+                        ]
+                    ]
+                }
+            case 'updateProgram':
+                {
+                    return [
+                        [
+                            body('programId', 'Invalid Program').isNumeric(),
+                            body('status', 'Invalid Status').isBoolean(),
+                            body('price', 'Invalid Amount').isNumeric(),
                         ]
                     ]
                 }
