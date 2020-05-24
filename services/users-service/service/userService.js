@@ -26,7 +26,7 @@ module.exports = {
                     })
                     .catch((err) => {
                         console.error(err);
-                        reject(err);
+                        reject(err.message);
                     });
             } else {
                 reject("Invalid OTP");
@@ -89,7 +89,7 @@ module.exports = {
                     })
                     .catch((err) => {
                         console.error(err);
-                        reject(err);
+                        reject(err.message);
                     });
             } catch (error) {
                 reject(error.message);
@@ -132,7 +132,7 @@ module.exports = {
                     })
                     .catch((err) => {
                         console.error(err);
-                        reject(err);
+                        reject(err.message);
                     });
             } catch (error) {
                 reject(error.message);
@@ -165,7 +165,7 @@ module.exports = {
                         })
                         .catch((err) => {
                             console.error(err);
-                            reject(err);
+                            reject(err.message);
                         });
                 } else {
                     reject("Invalid OTP");
@@ -292,7 +292,7 @@ const checkPassword = (reqPassword, foundUser) => {
     return new Promise((resolve, reject) =>
         bcrypt.compare(reqPassword, foundUser.password_digest, (err, response) => {
             if (err) {
-                reject(err);
+                reject(err.message);
             } else if (response) {
                 resolve(response);
             } else {
