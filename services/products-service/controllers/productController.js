@@ -42,6 +42,26 @@ module.exports = {
             }
         );
     },
+    updateProduct: function(req, res) {
+        productService.updateProduct(req).then(
+            (data) => {
+                res.status(202).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: err });
+            }
+        );
+    },
+    deleteProduct: function(req, res) {
+        productService.deleteProduct(req).then(
+            (data) => {
+                res.status(202).send(data);
+            },
+            (err) => {
+                res.status(400).send({ errorCode: 1, message: err });
+            }
+        );
+    },
     validate: function(name) {
         switch (name) {
             case 'addProduct':
@@ -58,6 +78,15 @@ module.exports = {
                             body('mediapath').isString(),
                             body('price').optional().isNumeric(),
                             body('pid').isNumeric()
+                        ]
+                    ]
+                }
+            case 'updateProduct':
+                {
+                    return [
+                        [
+                            body('productId', 'Invalid Product').isNumeric(),
+                            body('status').isBoolean(),
                         ]
                     ]
                 }

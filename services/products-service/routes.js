@@ -21,4 +21,10 @@ module.exports = function(app, router) {
 
     // Add New Products
     router.post('/products/add/:id', productController.validate("addProduct"), productController.addProduct);
+
+    // Update Product
+    router.put('/products/update', productController.validate("updateProduct"), productController.updateProduct);
+
+    // Delete Products
+    router.delete('/products/:id', productController.deleteProduct);
 }

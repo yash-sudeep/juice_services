@@ -10,7 +10,7 @@ module.exports = {
                 resolve(res);
             } catch (error) {
                 console.log(error);
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -22,7 +22,7 @@ module.exports = {
                 resolve(res);
             } catch (error) {
                 console.log(error);
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -36,7 +36,7 @@ module.exports = {
                 resolve(res);
             } catch (error) {
                 console.log(error);
-                reject(error);
+                reject(error.message);
             }
         });
     },
@@ -51,41 +51,70 @@ module.exports = {
                 }
 
                 const product = req.body;
-                let query = "SELECT userid FROM USERS WHERE USERROLE='Seller'";
-                let role = await db.basicQuery(query);
-                let seller_ids = [];
                 let programValidationResult = await validateProgram(product.pid);
-                let userID = parseInt(req.params.id);
-                if (role.length > 0 && programValidationResult) {
-                    role.map((el) => seller_ids.push(el.userid));
-                    if (seller_ids.includes(userID)) {
-                        query = "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
-                        let values = [
-                            product.name,
-                            product.description,
-                            JSON.stringify(product.advantages).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
-                            JSON.stringify(product.disadvantages).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
-                            JSON.stringify(product.ingredients).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
-                            product.status,
-                            product.quantity ? product.quantity : 0,
-                            product.mediapath,
-                            JSON.stringify(product.pid).replace('[', '{').replace(']', '}'),
-                            product.price ? product.price : 0,
-                        ];
-                        let res = await db.parameterizedQuery(query, values);
-                        resolve({ message: "Product Added Successfully" });
-                    } else {
-                        reject("You do not have permissions to add a product.");
-                    }
+                if (req.user.role === 'Seller' && programValidationResult) {
+                    let query = "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+                    let values = [
+                        product.name,
+                        product.description,
+                        JSON.stringify(product.advantages).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
+                        JSON.stringify(product.disadvantages).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
+                        JSON.stringify(product.ingredients).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
+                        product.status,
+                        product.quantity ? product.quantity : 0,
+                        product.mediapath,
+                        JSON.stringify(product.pid).replace('[', '{').replace(']', '}'),
+                        product.price ? product.price : 0,
+                    ];
+                    await db.parameterizedQuery(query, values);
+                    resolve({ message: "Product Added Successfully" });
                 } else {
                     reject("Invalid Input");
                 }
             } catch (error) {
                 console.log(error);
-                reject(error);
+                reject(error.message);
             }
         });
     },
+    updateProduct: function(req) {
+        try {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                reject(errors.array());
+                return;
+            }
+
+            const { productId, status } = req.body;
+            if (req.user.userrole === "Seller") {
+                query = "UPDATE PRODUCTS SET STATUS=" + status + "WHERE PRODUCTID= "
+                productId;
+                await db.basicQuery(query);
+                resolve("Product Deleted Successfully");
+            } else {
+                reject("You do not have permissions for this operation.");
+            }
+        } catch (error) {
+            console.log(error);
+            reject(error.message);
+        }
+    },
+    deleteProduct: function(req) {
+        try {
+            const productId = req.params.id;
+            if (req.user.userrole === "Seller") {
+                query = "DELETE * FROM PRODUCTS WHERE PRODUCTID= " + productId;
+                await db.basicQuery(query);
+                resolve("Product Deleted Successfully");
+            } else {
+                reject("You do not have permissions for this operation.");
+            }
+        } catch (error) {
+            console.log(error);
+            reject(error.message);
+        }
+    }
 };
 
 function validateProgram(ids) {
