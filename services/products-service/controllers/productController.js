@@ -8,7 +8,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(500).send({ errorCode: 1, message: "INTERNAL_SERVER_ERROR" });
+                res.status(500).send({ errorCode: 1, message: "Server Error" });
             }
         );
     },
