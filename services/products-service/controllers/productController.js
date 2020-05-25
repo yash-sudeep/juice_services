@@ -8,7 +8,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+                res.status(500).send({ errorCode: 1, message: "INTERNAL_SERVER_ERROR" });
             }
         );
     },
@@ -18,7 +18,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
@@ -28,7 +28,7 @@ module.exports = {
                 res.status(200).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: "Invalid Input" });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
@@ -38,7 +38,7 @@ module.exports = {
                 res.status(201).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
@@ -48,7 +48,7 @@ module.exports = {
                 res.status(202).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
@@ -58,7 +58,7 @@ module.exports = {
                 res.status(202).send(data);
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
