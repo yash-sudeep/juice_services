@@ -31,13 +31,16 @@ module.exports = function(app, router) {
     // Forgot Password
     router.post('/user/forgot-password', userController.validate('forgotPassword'), userController.forgotPassword);
 
+    // Get Addresses Registered by User
+    router.get('/user/address', userController.getAddress);
+
     // Add New Address
-    router.post('/user/address/add', userController.validate('addNewAddress'), userController.addNewAddress);
+    router.post('/user/address', userController.validate('addNewAddress'), userController.addNewAddress);
 
     // Update Address
-    router.put('/user/address/update', userController.validate('updateAddress'), userController.updateAddress);
+    router.put('/user/address', userController.validate('updateAddress'), userController.updateAddress);
 
     // Delete Address
-    router.delete('/user/address/delete', userController.validate('deleteAddress'), userController.updateAddress);
+    router.delete('/user/address', userController.validate('deleteAddress'), userController.deleteAddress);
 
 }

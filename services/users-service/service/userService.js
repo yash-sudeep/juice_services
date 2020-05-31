@@ -1,67 +1,96 @@
 const auth = require("./../../custom-modules/auth/index");
 const otp = require("./../../custom-modules/otp/index");
 const db = require("./../../custom-modules/database/index");
+const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
 var moment = require("moment");
 
 module.exports = {
     signUp: function(req) {
         return new Promise(async(resolve, reject) => {
-            const user = req.body;
-            let OTP = await otp.verifyOtp(user.mobile_number, user.otp);
-            if (OTP.valid) {
-                auth
-                    .hashPassword(user.password)
-                    .then((hashedPassword) => {
-                        delete user.password;
-                        user.password_digest = hashedPassword;
-                    })
-                    .then(() =>
-                        auth.createToken(user.username, user.userrole, user.mobile_number)
-                    )
-                    .then((token) => (user.token = token))
-                    .then(() => createUser(user))
-                    .then((user) => {
-                        delete user.password_digest;
-                        resolve(user);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        reject(err.message);
-                    });
-            } else {
-                reject("Invalid OTP");
-            }
-        });
-    },
-    verifyUser: function(req) {
-        return new Promise(async(resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
+                    return;
+                }
+
+                const user = req.body;
+                otp
+                    .verifyOtp(user.mobile_number.toString(), user.otp.toString())
+                    .then((OTP) => {
+                        if (OTP.valid) {
+                            auth
+                                .hashPassword(user.password)
+                                .then((hashedPassword) => {
+                                    delete user.password;
+                                    user.password_digest = hashedPassword;
+                                })
+                                .then(() =>
+                                    auth.createToken(
+                                        user.username,
+                                        user.userrole,
+                                        user.mobile_number
+                                    )
+                                )
+                                .then((token) => (user.token = token))
+                                .then(() => createUser(user))
+                                .then((user) => {
+                                    delete user.password_digest;
+                                    resolve(user);
+                                })
+                                .catch((err) => {
+                                    reject({ code: 400, message: "Bad Request" });
+                                });
+                        } else {
+                            reject({ code: 422, message: "Invalid OTP" });
+                        }
+                    })
+                    .catch((err) => {
+                        reject({ code: 400, message: "Bad Request" });
+                    });
+            } catch (error) {
+                reject({ code: 400, message: "Invalid Input" });
+            }
+        });
+    },
+    verifyUser: function(req) {
+        return new Promise((resolve, reject) => {
+            try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
                 const { mobile_number } = req.body;
-                let validUser = await findUser(mobile_number);
-                if (req.originalUrl === "/api/user/signup/verify") {
-                    if (!validUser) {
-                        let res = await otp.sendOtp(mobile_number);
-                        resolve(res);
+                validateUser(mobile_number).then(async(validUser) => {
+                    if (req.originalUrl === "/api/user/signup/verify") {
+                        if (!validUser) {
+                            await otp.sendOtp(mobile_number.toString());
+                            resolve({ code: 200, message: "OTP Sent to Your Mobile Number" });
+                        } else {
+                            reject({
+                                code: 409,
+                                message: "This Mobile Number is already registered",
+                            });
+                        }
                     } else {
-                        reject("Account Already Registered with this Mobile Number.");
+                        if (validUser) {
+                            await otp.sendOtp(mobile_number.toString());
+                            resolve({ code: 200, message: "OTP Sent to Your Mobile Number" });
+                        } else {
+                            reject({
+                                code: 404,
+                                message: "Mobile Number provided is not registered",
+                            });
+                        }
                     }
-                } else {
-                    if (validUser) {
-                        let res = await otp.sendOtp(mobile_number);
-                        resolve(res);
-                    } else {
-                        reject("Invalid Mobile Number");
-                    }
-                }
+                });
             } catch (error) {
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
@@ -71,7 +100,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -79,30 +108,43 @@ module.exports = {
                 findUser(mobile_number)
                     .then((foundUser) => {
                         user = foundUser;
-                        return checkPassword(password, foundUser);
+                        return checkPassword(password, foundUser.password);
                     })
-                    .then((res) => auth.createToken())
+                    .then((res) =>
+                        auth.createToken(user.username, user.userrole, mobile_number)
+                    )
                     .then((token) => updateUserToken(token, mobile_number, true))
-                    .then(() => {
-                        delete user.password_digest;
+                    .then((data) => {
+                        delete user.password;
+                        delete user.isloggedin;
+                        delete user.createdat;
                         resolve(user);
                     })
                     .catch((err) => {
-                        console.error(err);
-                        reject(err.message);
+                        reject({ code: 400, message: err.message });
                     });
             } catch (error) {
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
     signOut: function(req) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                await updateUserToken("", req.user.mobile_number, false);
-                resolve("User Logged Out Successfully");
+                validateUser(req.user.mobile_number)
+                    .then(async(valid) => {
+                        if (valid) {
+                            await updateUserToken("", req.user.mobile_number, false);
+                            resolve("User Logged Out Successfully");
+                        } else {
+                            reject({ code: 422, message: 'Invalid User' });
+                        }
+                    })
+                    .catch((err) => {
+                        reject({ code: 400, message: err.message });
+                    });
             } catch (error) {
-                reject(error.message);
+                reject({ code: 500, message: 'Server Error' });
             }
         });
     },
@@ -112,7 +154,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -122,7 +164,7 @@ module.exports = {
                     .then((foundUser) => {
                         user = foundUser;
                     })
-                    .then(() => checkPassword(oldPassword, foundUser))
+                    .then(() => checkPassword(oldPassword, user.password))
                     .then(() => auth.hashPassword(newPassword))
                     .then((newHashedPassword) =>
                         updatePassword(newHashedPassword, req.user.mobile_number)
@@ -131,11 +173,10 @@ module.exports = {
                         resolve("Password Reset Successful");
                     })
                     .catch((err) => {
-                        console.error(err);
-                        reject(err.message);
+                        reject({ code: 400, message: err.message });
                     });
             } catch (error) {
-                reject(error.message);
+                reject({ code: 500, message: 'Server Error' });
             }
         });
     },
@@ -145,7 +186,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -164,15 +205,25 @@ module.exports = {
                             resolve("Password Updated Successfully");
                         })
                         .catch((err) => {
-                            console.error(err);
-                            reject(err.message);
+                            reject({ code: 400, message: err.message });
                         });
                 } else {
-                    reject("Invalid OTP");
+                    reject({ code: 422, message: "Invalid OTP" });
                 }
             } catch (error) {
-                reject(error.message);
+                reject({ code: 500, message: 'Server Error' });
             }
+        });
+    },
+    getAddress: function(req) {
+        return new Promise((resolve, reject) => {
+            findUser(req.user.mobile_number).then(async(user) => {
+                let query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE FROM ADDRESS WHERE USERID=" + user.userid;
+                let res = await db.basicQuery(query);
+                resolve(res);
+            }).catch((err) => {
+                reject({ code: 404, message: err.message });
+            });
         });
     },
     addNewAddress: function(req) {
@@ -181,7 +232,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -191,7 +242,7 @@ module.exports = {
                 await insertAddress(address);
                 resolve("Address Added Successfully");
             } catch (error) {
-                reject(error.message);
+                reject({ code: 400, message: error.message });
             }
         });
     },
@@ -201,7 +252,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -213,10 +264,10 @@ module.exports = {
                     await updateAddress(address);
                     resolve("Address Updated Successfully");
                 } else {
-                    reject("Address Not Registered");
+                    reject({ code: 404, message: "Address Not Registered" });
                 }
             } catch (error) {
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
@@ -226,22 +277,21 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
                 const { addressId } = req.body;
                 let userId = await getUserID(req.user.mobile_number);
-                address.userId = userId;
                 let valid = await verifyAddress(addressId, userId);
                 if (valid) {
                     await deleteAddress(addressId, userId);
                     resolve("Address Deleted Successfully");
                 } else {
-                    reject("Address Not Registered");
+                    reject({ code: 404, message: "Address Not Registered" });
                 }
             } catch (error) {
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
@@ -273,7 +323,7 @@ const createUser = (user) => {
     });
 };
 
-const findUser = (mobile_number) => {
+const validateUser = (mobile_number) => {
     return new Promise(async(resolve, reject) => {
         try {
             let query =
@@ -283,14 +333,31 @@ const findUser = (mobile_number) => {
             let res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const findUser = (mobile_number) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT * FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
+            let res = await db.basicQuery(query);
+            if (res.length > 0) {
+                resolve(res[0]);
+            } else {
+                reject(new Error("Invalid User"));
+            }
+        } catch (error) {
             reject(error.message);
         }
     });
 };
 
-const checkPassword = (reqPassword, foundUser) => {
+const checkPassword = (newPassword, oldPassword) => {
     return new Promise((resolve, reject) =>
-        bcrypt.compare(reqPassword, foundUser.password_digest, (err, response) => {
+        bcrypt.compare(newPassword, oldPassword, (err, response) => {
             if (err) {
                 reject(err.message);
             } else if (response) {
@@ -311,7 +378,10 @@ const updateUserToken = (token, mobile_number, logged_in) => {
         " WHERE MOBILENUMBER ='" +
         mobile_number +
         "'";
-    return db.basicQuery(query).then((data) => data.rows[0]);
+    return db
+        .basicQuery(query)
+        .then((data) => data)
+        .catch((err) => err);
 };
 
 const updatePassword = (password, mobile_number) => {
@@ -321,7 +391,10 @@ const updatePassword = (password, mobile_number) => {
         "' WHERE MOBILENUMBER ='" +
         mobile_number +
         "'";
-    return db.basicQuery(query).then((data) => data.rows[0]);
+    return db
+        .basicQuery(query)
+        .then((data) => data)
+        .catch((err) => err);
 };
 
 const insertAddress = (address) => {
@@ -341,8 +414,8 @@ const insertAddress = (address) => {
             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
         ];
         try {
-            await db.parameterizedQuery(query, values);
-            resolve(user);
+            let res = await db.parameterizedQuery(query, values);
+            resolve(res);
         } catch (error) {
             reject(error.message);
         }
@@ -353,7 +426,7 @@ const getUserID = (mobile_number) => {
     return new Promise(async(resolve, reject) => {
         try {
             let query =
-                "SELECT USERID FROM USERS WHERE MOBILENUMBER='" + mobile_number + "');";
+                "SELECT USERID FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
             let res = await db.basicQuery(query);
             if (res.length > 0) {
                 resolve(res[0].userid);
@@ -366,7 +439,7 @@ const getUserID = (mobile_number) => {
     });
 };
 
-const verifyAddress = (addressId) => {
+const verifyAddress = (addressId, userId) => {
     return new Promise(async(resolve, reject) => {
         try {
             let query =
@@ -404,15 +477,20 @@ const updateAddress = (address) => {
         "', UPDATEDAT='" +
         moment().format("YYYY-MM-DD HH:mm:ss.SSSSS") +
         "' WHERE USERID=" +
-        address.userId + " AND ADDRESSID=" + address.addressId;
-    return db.basicQuery(query).then((data) => data.rows[0]);
+        address.userId +
+        " AND ADDRESSID=" +
+        address.addressId;
+    return db
+        .basicQuery(query)
+        .then((data) => data)
+        .catch((err) => err);
 };
 
 const deleteAddress = (addressId, userId) => {
     return new Promise(async(resolve, reject) => {
         try {
             let query =
-                "DELETE * FROM ADDRESS WHERE ADDRESSID=" +
+                "DELETE FROM ADDRESS WHERE ADDRESSID=" +
                 addressId +
                 " AND USERID=" +
                 userId +

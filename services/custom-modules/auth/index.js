@@ -15,31 +15,28 @@ const hashPassword = (password) => {
 
 const createToken = (username, userrole, mobile_number) => {
     return new Promise((resolve, reject) => {
-        const accessToken = jwt.sign({ username: username, role: userrole, mobile_number: mobile_number },
-            accessTokenSecret, { expiresIn: "30m" }
-        );
-        resolve(accessToken);
+        try {
+            const accessToken = jwt.sign({ username: username, role: userrole, mobile_number: mobile_number, exp: Math.floor(Date.now() / 1000) + (60 * 60) },
+                secretKey);
+            resolve(accessToken);
+        } catch (error) {
+            reject(error.message);
+        }
     });
 };
 
 const validateToken = (req, res, next) => {
-    if (req.originalUrl === "/api/signup") {
+    if (req.originalUrl === "/api/user/signup" || req.originalUrl === "/api/user/signin" || req.originalUrl === "/api/user/signup/verify" || req.originalUrl === "/api/user/forgot-password/verify") {
         next();
     } else {
-        let token = req.headers["Authorization"];
+        let token = req.headers["authorization"];
         if (!token) {
-            return res.status(400).send({
-                status: false,
-                message: "Access Token cannot be empty",
-            });
+            return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
         }
 
         jwt.verify(token, accessTokenSecret, (err, userJWT) => {
             if (err) {
-                return res.status(401).send({
-                    status: false,
-                    message: "Unauthorized Access",
-                });
+                return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
             }
 
             findByToken(token).then((user) => {
@@ -47,10 +44,7 @@ const validateToken = (req, res, next) => {
                     req.user = userJWT;
                     next();
                 } else {
-                    return res.status(401).send({
-                        status: false,
-                        message: "Unauthorized Access",
-                    });
+                    return res.status(403).send({ "error": { "message": "Unauthorized access" } });
                 }
             });
         });
