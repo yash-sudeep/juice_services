@@ -16,8 +16,14 @@ const hashPassword = (password) => {
 const createToken = (username, userrole, mobile_number) => {
     return new Promise((resolve, reject) => {
         try {
-            const accessToken = jwt.sign({ username: username, role: userrole, mobile_number: mobile_number, exp: Math.floor(Date.now() / 1000) + (60 * 60) },
-                secretKey);
+            const accessToken = jwt.sign({
+                    username: username,
+                    role: userrole,
+                    mobile_number: mobile_number,
+                    exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                },
+                secretKey
+            );
             resolve(accessToken);
         } catch (error) {
             reject(error.message);
@@ -26,36 +32,51 @@ const createToken = (username, userrole, mobile_number) => {
 };
 
 const validateToken = (req, res, next) => {
-    if (req.originalUrl === "/api/user/signup" || req.originalUrl === "/api/user/signin" || req.originalUrl === "/api/user/signup/verify" || req.originalUrl === "/api/user/forgot-password/verify") {
+    if (
+        req.originalUrl === "/api/user/signup" ||
+        req.originalUrl === "/api/user/signin" ||
+        req.originalUrl === "/api/user/signup/verify" ||
+        req.originalUrl === "/api/user/forgot-password/verify"
+    ) {
         next();
     } else {
         let token = req.headers["authorization"];
         if (!token) {
-            return res.status(401).send({ errorCode: 1, message: "Unauthenticated access" });
+            return res
+                .status(401)
+                .send({ errorCode: 1, message: "Unauthenticated access" });
         }
 
         jwt.verify(token, secretKey, (err, userJWT) => {
             if (err) {
-                return res.status(401).send({ errorCode: 1, message: "Unauthenticated access" });
+                return res
+                    .status(401)
+                    .send({ errorCode: 1, message: "Unauthenticated access" });
             }
 
             findByToken(token).then((user) => {
-                if (user.username == userJWT.username) {
-                    req.user = userJWT;
-                    next();
-                } else {
-                    return res.status(403).send({ errorCode: 1, message: "Unauthorized access" });
-                }
+                req.user = userJWT;
+                next();
+            }).catch((err) => {
+                return res
+                    .status(403)
+                    .send({ errorCode: 1, message: err.message });
             });
         });
     }
 };
 
 const findByToken = (token) => {
-    let query = "SELECT * FROM USERS WHERE TOKEN=\'" + token + "\'";
-    return db
-        .basicQuery(query)
-        .then((data) => data);
+    let query = "SELECT * FROM USERS WHERE TOKEN='" + token + "'";
+    return new Promise((resolve, reject) => {
+        db.basicQuery(query).then((data) => {
+            if (data.length > 0) {
+                resolve(data[0]);
+            } else {
+                reject(new Error("Unauthorized access"))
+            }
+        });
+    });
 };
 
 module.exports = {
