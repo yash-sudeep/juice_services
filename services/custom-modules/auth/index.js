@@ -36,7 +36,8 @@ const validateToken = (req, res, next) => {
         req.originalUrl === "/api/user/signup" ||
         req.originalUrl === "/api/user/signin" ||
         req.originalUrl === "/api/user/signup/verify" ||
-        req.originalUrl === "/api/user/forgot-password/verify"
+        req.originalUrl === "/api/user/forgot-password/verify" ||
+        req.originalUrl === "/api//user/forgot-password"
     ) {
         next();
     } else {
