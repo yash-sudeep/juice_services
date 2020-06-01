@@ -54,7 +54,7 @@ const validateToken = (req, res, next) => {
                     .send({ errorCode: 1, message: "Unauthenticated access" });
             }
 
-            findByToken(token).then((user) => {
+            findByToken(token).then(() => {
                 req.user = userJWT;
                 next();
             }).catch((err) => {
@@ -67,15 +67,21 @@ const validateToken = (req, res, next) => {
 };
 
 const findByToken = (token) => {
-    let query = "SELECT * FROM USERS WHERE TOKEN='" + token + "'";
-    return new Promise((resolve, reject) => {
-        db.basicQuery(query).then((data) => {
-            if (data.length > 0) {
-                resolve(data[0]);
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM USERS WHERE TOKEN='" +
+                token +
+                "');";
+            let res = await db.basicQuery(query);
+            if (res[0].exists) {
+                resolve();
             } else {
-                reject(new Error("Unauthorized access"))
+                reject(new Error("Unauthorized access"));
             }
-        });
+        } catch (error) {
+            reject(new Error("Unauthorized access"));
+        }
     });
 };
 
