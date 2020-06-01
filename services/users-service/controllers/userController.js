@@ -65,7 +65,7 @@ module.exports = {
     getAddress: function(req, res) {
         userService.getAddress(req).then(
             (data) => {
-                res.status(201).send({ errorCode: 0, address: data });
+                res.status(200).send({ errorCode: 0, address: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
