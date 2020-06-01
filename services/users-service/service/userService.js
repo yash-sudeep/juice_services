@@ -113,11 +113,15 @@ module.exports = {
                     .then((res) =>
                         auth.createToken(user.username, user.userrole, mobile_number)
                     )
-                    .then((token) => updateUserToken(token, mobile_number, true))
+                    .then((token) => {
+                        authToken = token;
+                        updateUserToken(token, mobile_number, true)
+                    })
                     .then((data) => {
                         delete user.password;
                         delete user.isloggedin;
                         delete user.createdat;
+                        user.token = authToken;
                         resolve(user);
                     })
                     .catch((err) => {

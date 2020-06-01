@@ -36,7 +36,7 @@ var server = app.listen(port, async function() {
         await db.checkConnection();
         console.log("Server started on port " + port);
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 });
 
