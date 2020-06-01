@@ -31,12 +31,12 @@ const validateToken = (req, res, next) => {
     } else {
         let token = req.headers["authorization"];
         if (!token) {
-            return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
+            return res.status(401).send({ errorCode: 1, message: "Unauthenticated access" });
         }
 
         jwt.verify(token, secretKey, (err, userJWT) => {
             if (err) {
-                return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
+                return res.status(401).send({ errorCode: 1, message: "Unauthenticated access" });
             }
 
             findByToken(token).then((user) => {
@@ -44,7 +44,7 @@ const validateToken = (req, res, next) => {
                     req.user = userJWT;
                     next();
                 } else {
-                    return res.status(403).send({ "error": { "message": "Unauthorized access" } });
+                    return res.status(403).send({ errorCode: 1, message: "Unauthorized access" });
                 }
             });
         });
