@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const accessTokenSecret = process.env.JWT_AUTH_KEY ?
+const secretKey = process.env.JWT_AUTH_KEY ?
     process.env.JWT_AUTH_KEY :
-    "This is a random secret";
+    "Secret Key";
 const db = require("../database/index");
 
 const hashPassword = (password) => {
@@ -34,7 +34,7 @@ const validateToken = (req, res, next) => {
             return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
         }
 
-        jwt.verify(token, accessTokenSecret, (err, userJWT) => {
+        jwt.verify(token, secretKey, (err, userJWT) => {
             if (err) {
                 return res.status(401).send({ "error": { "message": "Unauthenticated access" } });
             }
@@ -52,9 +52,10 @@ const validateToken = (req, res, next) => {
 };
 
 const findByToken = (token) => {
+    let query = "SELECT * FROM USERS WHERE TOKEN=\'" + token + "\'";
     return db
-        .basicQuery("SELECT * FROM users WHERE token = '" + token + "'")
-        .then((data) => data.rows[0]);
+        .basicQuery(query)
+        .then((data) => data);
 };
 
 module.exports = {
