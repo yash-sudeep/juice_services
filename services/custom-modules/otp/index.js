@@ -2,7 +2,8 @@ let accouuntID = process.env.OTP_ACCOUNT_ID ? process.env.OTP_ACCOUNT_ID : '';
 let authToken = process.env.OTP_AUTH_TOKEN ? process.env.OTP_AUTH_TOKEN : '';
 let serviceID = process.env.OTP_SERVICE_ID ? process.env.OTP_SERVICE_ID : '';
 
-client = require("twilio")(
+var twilio = require("./node_modules/twilio/lib");
+client = twilio(
     accouuntID,
     authToken
 );

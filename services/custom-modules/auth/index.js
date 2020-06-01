@@ -40,21 +40,21 @@ const validateToken = (req, res, next) => {
     ) {
         next();
     } else {
-        let token = req.headers["authorization"];
-        if (!token) {
+        let authHeader = req.headers["authorization"];
+        if (!authHeader) {
             return res
                 .status(401)
                 .send({ errorCode: 1, message: "Unauthenticated access" });
         }
-
-        jwt.verify(token, secretKey, (err, userJWT) => {
+        let token = authHeader.split(" ");
+        jwt.verify(token[1], secretKey, (err, userJWT) => {
             if (err) {
                 return res
                     .status(401)
                     .send({ errorCode: 1, message: "Unauthenticated access" });
             }
 
-            findByToken(token).then(() => {
+            findByToken(token[1]).then(() => {
                 req.user = userJWT;
                 next();
             }).catch((err) => {
