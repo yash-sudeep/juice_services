@@ -5,17 +5,17 @@ module.exports = {
     getAllProducts: function(req, res) {
         productService.getAllProducts(req).then(
             (data) => {
-                res.status(200).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(500).send({ errorCode: 1, message: "Server Error" });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     getProgramWiseProducts: function(req, res) {
         productService.getProgramWiseProducts(req).then(
             (data) => {
-                res.status(200).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
@@ -25,7 +25,7 @@ module.exports = {
     getProductDescription: function(req, res) {
         productService.getProductDescription(req).then(
             (data) => {
-                res.status(200).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
@@ -35,7 +35,7 @@ module.exports = {
     addProduct: function(req, res) {
         productService.addProduct(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(201).send({ errorCode: 0, message: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
@@ -45,7 +45,7 @@ module.exports = {
     updateProduct: function(req, res) {
         productService.updateProduct(req).then(
             (data) => {
-                res.status(202).send(data);
+                res.status(202).send({ errorCode: 0, message: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
@@ -55,7 +55,7 @@ module.exports = {
     deleteProduct: function(req, res) {
         productService.deleteProduct(req).then(
             (data) => {
-                res.status(202).send(data);
+                res.status(202).send({ errorCode: 0, message: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
@@ -87,6 +87,14 @@ module.exports = {
                         [
                             body('productId', 'Invalid Product').isNumeric(),
                             body('status').isBoolean(),
+                        ]
+                    ]
+                }
+            case 'deleteProduct':
+                {
+                    return [
+                        [
+                            body('productId', 'Invalid Product').isNumeric()
                         ]
                     ]
                 }

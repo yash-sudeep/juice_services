@@ -11,20 +11,20 @@ module.exports = function(app, router) {
     //app.use(tokenValidate);
 
     // Get All Products
-    router.get('/products/all', productController.getAllProducts);
+    router.get('/products', productController.getAllProducts);
 
     // Get Program Wise Products
-    router.get('/products/:id', productController.getProgramWiseProducts);
+    router.get('/products', productController.getProgramWiseProducts);
 
     // Get Information of Specific Product
     router.get('/products/description/:id', productController.getProductDescription);
 
     // Add New Products
-    router.post('/products/add/:id', productController.validate("addProduct"), productController.addProduct);
+    router.post('/products', productController.validate("addProduct"), productController.addProduct);
 
     // Update Product
-    router.put('/products/update', productController.validate("updateProduct"), productController.updateProduct);
+    router.put('/products', productController.validate("updateProduct"), productController.updateProduct);
 
     // Delete Products
-    router.delete('/products/:id', productController.deleteProduct);
+    router.delete('/products', productController.validate("deleteProduct"), productController.deleteProduct);
 }
