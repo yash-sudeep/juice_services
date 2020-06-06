@@ -11,14 +11,14 @@ module.exports = function(app, router) {
     //app.use(tokenValidate);
 
     // Get All Subscriptions
-    router.get('/subscription/all', subscriptionController.getAllSubscriptions);
+    router.get('/subscription', subscriptionController.getAllSubscriptions);
 
     // Add New Subscription
-    router.post('/subscription/add', subscriptionController.validate("addSubscription"), subscriptionController.addSubscription);
+    router.post('/subscription', subscriptionController.validate("addSubscription"), subscriptionController.addSubscription);
 
     // Update Existing Subscription
-    router.put('/subscription/update', subscriptionController.validate("updateSubscription"), subscriptionController.updateSubscription);
+    router.put('/subscription', subscriptionController.validate("updateSubscription"), subscriptionController.updateSubscription);
 
     // Delete Subscription
-    router.delete('/subscription/:id', subscriptionController.deleteSubscription);
+    router.delete('/subscription', subscriptionController.validate("deleteSubscription"), subscriptionController.deleteSubscription);
 }

@@ -5,40 +5,40 @@ module.exports = {
     getAllSubscriptions: function(req, res) {
         subscriptionService.getAllSubscriptions(req).then(
             (data) => {
-                res.status(200).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     addSubscription: function(req, res) {
         subscriptionService.addSubscription(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(201).send({ errorCode: 0, message: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     updateSubscription: function(req, res) {
         subscriptionService.updateSubscription(req).then(
             (data) => {
-                res.status(202).send(data);
+                res.status(202).send({ errorCode: 0, message: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     deleteSubscription: function(req, res) {
         subscriptionService.deleteSubscription(req).then(
             (data) => {
-                res.status(200).send(data);
+                res.status(202).send({ errorCode: 0, message: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
@@ -61,6 +61,14 @@ module.exports = {
                             body('subscriptionId', 'Invalid Subscription').isNumeric(),
                             body('package', 'Invalid Package Name').isString(),
                             body('price', 'Invalid Amount').isNumeric(),
+                        ]
+                    ]
+                }
+            case 'deleteSubscription':
+                {
+                    return [
+                        [
+                            body('subscriptionId', 'Invalid Subscription').isNumeric()
                         ]
                     ]
                 }
