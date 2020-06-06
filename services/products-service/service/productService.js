@@ -22,7 +22,7 @@ module.exports = {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
                             let query =
-                                "SELECT PRODUCTID,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
+                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
                                 req.params.id +
                                 "=ANY(PROGRAMID)";
                             let res = await db.basicQuery(query);
