@@ -62,7 +62,7 @@ module.exports = {
                         await db.parameterizedQuery(query, values);
                         resolve("Program Added Successfully");
                     } else {
-                        reject({ code: 409, message: "Program with this name already exists" });
+                        reject({ code: 409, message: "Program already exists" });
                     }
                 } else {
                     reject({ code: 403, message: "Access Forbidden" });
