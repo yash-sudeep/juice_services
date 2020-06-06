@@ -50,7 +50,7 @@ module.exports = {
                 const program = req.body;
                 if (req.user.role === "Seller") {
                     let programValidationResult = await validateProgram(program.name);
-                    if (programValidationResult) {
+                    if (!programValidationResult) {
                         let query =
                             "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE) VALUES($1, $2, $3, $4) RETURNING *";
                         let values = [
