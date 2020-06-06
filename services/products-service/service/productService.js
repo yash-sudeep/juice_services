@@ -147,7 +147,7 @@ module.exports = {
                 validateProduct([productId]).then(async(valid) => {
                     if (valid) {
                         if (req.user.userrole === "Seller") {
-                            query = "DELETE * FROM PRODUCTS WHERE PRODUCTID= " + productId;
+                            query = "DELETE FROM PRODUCTS WHERE PRODUCTID= " + productId;
                             await db.basicQuery(query);
                             resolve("Product Deleted");
                         } else {
