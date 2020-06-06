@@ -120,7 +120,7 @@ module.exports = {
                 if (req.user.role === "Seller") {
                     let valid = await checkProgramID(programId);
                     if (valid) {
-                        let query = "DELETE * FROM PROGRAMS WHERE PROGRAMID=" + programId;
+                        let query = "DELETE FROM PROGRAMS WHERE PROGRAMID=" + programId;
                         await db.basicQuery(query);
                         resolve("Program Deleted");
                     } else {
