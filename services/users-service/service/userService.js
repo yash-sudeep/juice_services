@@ -206,7 +206,7 @@ module.exports = {
                             updatePassword(newHashedPassword, mobile_number)
                         )
                         .then(() => {
-                            resolve("Password Updated Successfully");
+                            resolve("Password Updated");
                         })
                         .catch((err) => {
                             reject({ code: 400, message: err.message });
@@ -244,7 +244,7 @@ module.exports = {
                 let userId = await getUserID(req.user.mobile_number);
                 address.userId = userId;
                 await insertAddress(address);
-                resolve("Address Added Successfully");
+                resolve("Address Added");
             } catch (error) {
                 reject({ code: 400, message: error.message });
             }
@@ -266,7 +266,7 @@ module.exports = {
                 let valid = await verifyAddress(address.addressId, userId);
                 if (valid) {
                     await updateAddress(address);
-                    resolve("Address Updated Successfully");
+                    resolve("Address Updated");
                 } else {
                     reject({ code: 404, message: "Address Not Registered" });
                 }
@@ -290,7 +290,7 @@ module.exports = {
                 let valid = await verifyAddress(addressId, userId);
                 if (valid) {
                     await deleteAddress(addressId, userId);
-                    resolve("Address Deleted Successfully");
+                    resolve("Address Deleted");
                 } else {
                     reject({ code: 404, message: "Address Not Registered" });
                 }
