@@ -26,16 +26,26 @@ module.exports = {
 
                 const subscription = req.body;
                 if (req.user.userrole === "Seller") {
-                    query =
-                        "INSERT INTO SUBSCRIPTIONS (PROGRAMID,PACKAGE,PRICE,CREATEDAT) VALUES($1, $2, $3, $4) RETURNING *";
-                    let values = [
-                        subscription.programId,
-                        subscription.package,
-                        subscription.price,
-                        moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
-                    ];
-                    await db.parameterizedQuery(query, values);
-                    resolve("Subscription Added");
+                    let programValidationResult = await checkProgramID(subscription.programId);
+                    if (programValidationResult) {
+                        let valid = await checkSubscription(subscription.programId, subscription.package);
+                        if (!valid) {
+                            let query =
+                                "INSERT INTO SUBSCRIPTIONS (PROGRAMID,PACKAGE,PRICE,CREATEDAT) VALUES($1, $2, $3, $4) RETURNING *";
+                            let values = [
+                                subscription.programId,
+                                subscription.package,
+                                subscription.price,
+                                moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
+                            ];
+                            await db.parameterizedQuery(query, values);
+                            resolve("Subscription Added");
+                        } else {
+                            reject({ code: 409, message: "Subscription already exists" });
+                        }
+                    } else {
+                        reject({ code: 404, message: "Program Not Found" });
+                    }
                 } else {
                     reject({ code: 403, message: "Access Forbidden" });
                 }
@@ -122,3 +132,33 @@ const validateSubscriptionID = (subId) => {
         }
     });
 };
+
+const checkSubscription = (programId, packageName) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM SUBSCRIPTIONS WHERE PROGRAMID=" +
+                programId +
+                " AND PACKAGE='" + packageName + "');";
+            let res = await db.basicQuery(query);
+            resolve(res[0].exists);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+const checkProgramID = (programId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM PROGRAMS WHERE PROGRAMID='" +
+                programId +
+                "');";
+            let res = await db.basicQuery(query);
+            resolve(res[0].exists);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
