@@ -73,31 +73,36 @@ module.exports = {
                 let programValidationResult = await validateProgram(product.pid);
                 if (req.user.role === "Seller") {
                     if (programValidationResult) {
-                        let query =
-                            "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
-                        let values = [
-                            product.name,
-                            product.description,
-                            JSON.stringify(product.advantages)
-                            .replace("[", "{")
-                            .replace("]", "}")
-                            .replace(/'/g, '"'),
-                            JSON.stringify(product.disadvantages)
-                            .replace("[", "{")
-                            .replace("]", "}")
-                            .replace(/'/g, '"'),
-                            JSON.stringify(product.ingredients)
-                            .replace("[", "{")
-                            .replace("]", "}")
-                            .replace(/'/g, '"'),
-                            product.status,
-                            product.quantity ? product.quantity : 0,
-                            product.mediapath,
-                            JSON.stringify(product.pid).replace("[", "{").replace("]", "}"),
-                            product.price ? product.price : 0,
-                        ];
-                        await db.parameterizedQuery(query, values);
-                        resolve("Product Added");
+                        let productValidationResult = await validateProductName(product.name);
+                        if (productValidationResult) {
+                            let query =
+                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+                            let values = [
+                                product.name,
+                                product.description,
+                                JSON.stringify(product.advantages)
+                                .replace("[", "{")
+                                .replace("]", "}")
+                                .replace(/'/g, '"'),
+                                JSON.stringify(product.disadvantages)
+                                .replace("[", "{")
+                                .replace("]", "}")
+                                .replace(/'/g, '"'),
+                                JSON.stringify(product.ingredients)
+                                .replace("[", "{")
+                                .replace("]", "}")
+                                .replace(/'/g, '"'),
+                                product.status,
+                                product.quantity ? product.quantity : 0,
+                                product.mediapath,
+                                JSON.stringify(product.pid).replace("[", "{").replace("]", "}"),
+                                product.price ? product.price : 0,
+                            ];
+                            await db.parameterizedQuery(query, values);
+                            resolve("Product Added");
+                        } else {
+                            reject({ code: 409, message: "Product already exists" });
+                        }
                     } else {
                         reject({ code: 400, message: "Invalid Input" });
                     }
@@ -199,3 +204,18 @@ const validateProduct = (productId) => {
         }
     });
 };
+
+const validateProductName = (productName) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM PRODUCTS WHERE NAME=" +
+                productName +
+                ");";
+            let res = await db.basicQuery(query);
+            resolve(res[0].exists);
+        } catch (error) {
+            reject(error.message);
+        }
+    });
+}
