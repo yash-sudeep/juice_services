@@ -101,7 +101,7 @@ module.exports = {
                             await db.parameterizedQuery(query, values);
                             resolve("Product Added");
                         } else {
-                            reject({ code: 409, message: "Product already exists" });
+                            reject({ code: 409, message: "Product Already Exists" });
                         }
                     } else {
                         reject({ code: 400, message: "Invalid Input" });
