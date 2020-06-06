@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             try {
                 let query =
-                    "SELECT PRODUCTID,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true";
+                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true";
                 let res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
