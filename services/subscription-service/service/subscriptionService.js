@@ -6,7 +6,7 @@ module.exports = {
     getAllSubscriptions: function(req) {
         return new Promise(async(resolve, reject) => {
             try {
-                let query = "SELECT * FROM SUBSCRIPTIONS";
+                let query = "SELECT subscriptions.subid,subscriptions.package,subscriptions.price,programs.name,programs.programid FROM subscriptions INNER JOIN programs ON programs.programid = subscriptions.subid;";
                 let res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -63,7 +63,7 @@ module.exports = {
                             package +
                             "', PRICE=" +
                             price +
-                            " WHERE SUBSCRIPTIONID= " +
+                            " WHERE SUBID= " +
                             subscriptionId;
                         await db.basicQuery(query);
                         resolve("Subscription Updated");
@@ -92,7 +92,7 @@ module.exports = {
                 if (req.user.userrole === "Seller") {
                     let valid = await validateSubscriptionID(subscriptionId);
                     if (valid) {
-                        let query = "DELETE * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONID=" + subscriptionId;
+                        let query = "DELETE * FROM SUBSCRIPTIONS WHERE SUBID=" + subscriptionId;
                         await db.basicQuery(query);
                         resolve("Subscription Deleted");
                     } else {
