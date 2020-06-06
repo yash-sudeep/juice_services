@@ -74,7 +74,7 @@ module.exports = {
                 if (req.user.role === "Seller") {
                     if (programValidationResult) {
                         let productValidationResult = await validateProductName(product.name);
-                        if (productValidationResult) {
+                        if (!productValidationResult) {
                             let query =
                                 "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
                             let values = [
