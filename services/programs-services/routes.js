@@ -11,17 +11,17 @@ module.exports = function(app, router) {
     //app.use(tokenValidate);
 
     // Get All Programmes
-    router.get('/program/all', programController.getAllProgrammes);
+    router.get('/program', programController.getAllProgrammes);
 
     // Get Information of Specific Program
-    router.get('/program/description/:id', programController.getProgramDescription);
+    router.get('/program/description', programController.getProgramDescription);
 
     // Add New Program
-    router.post('/program/add/:id', programController.validate("addProgram"), programController.addProgram);
+    router.post('/program', programController.validate("addProgram"), programController.addProgram);
 
     // Update Program
-    router.put('/program/update/:id', programController.validate("updateProgram"), programController.updateProgram);
+    router.put('/program', programController.validate("updateProgram"), programController.updateProgram);
 
     // Delete Program
-    router.delete('/program/:id', programController.deleteProgram);
+    router.delete('/program', programController.validate("deleteProgram"), programController.deleteProgram);
 }

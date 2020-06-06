@@ -9,22 +9,31 @@ module.exports = {
                 let res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
-                console.log(error);
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
     getProgramDescription: function(req) {
         return new Promise(async(resolve, reject) => {
             try {
-                let query =
-                    "SELECT NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE PROGRAMID=" +
-                    req.params.id;
-                let res = await db.basicQuery(query);
-                resolve(res);
+                let programId = parseInt(req.query.id);
+                if (programId) {
+                    checkProgramID().then((valid) => {
+                        if (valid) {
+                            let query =
+                                "SELECT NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE PROGRAMID=" +
+                                programId;
+                            let res = await db.basicQuery(query);
+                            resolve(res);
+                        } else {
+                            reject({ code: 404, message: "Invalid Program" });
+                        }
+                    })
+                } else {
+                    reject({ code: 400, message: "Invalid Input" });
+                }
             } catch (error) {
-                console.log(error);
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
@@ -34,28 +43,32 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
                 const program = req.body;
-                if (req.user.role === "Seller" && validateProgram(program.name)) {
-                    let query =
-                        "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE) VALUES($1, $2, $3, $4) RETURNING *";
-                    let values = [
-                        program.name,
-                        program.description,
-                        program.status,
-                        program.price,
-                    ];
-                    let res = await db.parameterizedQuery(query, values);
-                    resolve({ message: "Program Added Successfully" });
+                if (req.user.role === "Seller") {
+                    let programValidationResult = await validateProgram(program.name);
+                    if (programValidationResult) {
+                        let query =
+                            "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE) VALUES($1, $2, $3, $4) RETURNING *";
+                        let values = [
+                            program.name,
+                            program.description,
+                            program.status,
+                            program.price,
+                        ];
+                        await db.parameterizedQuery(query, values);
+                        resolve("Program Added Successfully");
+                    } else {
+                        reject({ code: 400, message: "Invalid Input" });
+                    }
                 } else {
-                    reject("Invalid Input");
+                    reject({ code: 403, message: "Access Forbidden" });
                 }
             } catch (error) {
-                console.log(error);
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
@@ -65,49 +78,65 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
                 const { programId, status, price } = req.body;
-                if (req.user.role === "Seller" && validateProgram(program.name)) {
-                    let query =
-                        "UPDATE PROGRAMS SET STATUS=" +
-                        status +
-                        ", PRICE=" +
-                        price +
-                        " WHERE PROGRAMID=" +
-                        programId;
-                    let res = await db.basicQuery(query, values);
-                    resolve({ message: "Program Updated Successfully" });
+                if (req.user.role === "Seller") {
+                    let valid = await checkProgramID(programId);
+                    if (valid) {
+                        let query =
+                            "UPDATE PROGRAMS SET STATUS=" +
+                            status +
+                            ", PRICE=" +
+                            price +
+                            " WHERE PROGRAMID=" +
+                            programId;
+                        await db.basicQuery(query, values);
+                        resolve("Program Updated");
+                    } else {
+                        reject({ code: 404, message: "Program Not Found" });
+                    }
                 } else {
-                    reject("Invalid Input");
+                    reject({ code: 403, message: "Access Forbidden" });
                 }
             } catch (error) {
-                console.log(error);
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
     deleteProgram: function(req) {
         return new Promise(async(resolve, reject) => {
             try {
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    reject({ code: 400, message: errors.array() });
+                    return;
+                }
+
+                const { programId } = req.body;
                 if (req.user.role === "Seller") {
-                    let query = "DELETE * FROM PROGRAMS WHERE PROGRAMID=" + req.params.id;
-                    let res = await db.basicQuery(query);
-                    resolve(res);
+                    let valid = await checkProgramID(programId);
+                    if (valid) {
+                        let query = "DELETE * FROM PROGRAMS WHERE PROGRAMID=" + programId;
+                        await db.basicQuery(query);
+                        resolve("Program Deleted");
+                    } else {
+                        reject({ code: 404, message: "Program Not Found" });
+                    }
                 } else {
-                    reject("You do not have Permissions for this operation");
+                    reject({ code: 403, message: "Access Forbidden" });
                 }
             } catch (error) {
-                console.log(error);
-                reject(error.message);
+                reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
 };
 
-function validateProgram(name) {
+const validateProgram = (name) => {
     return new Promise(async(resolve, reject) => {
         try {
             let query = "SELECT NAME FROM PROGRAMS";
@@ -122,6 +151,21 @@ function validateProgram(name) {
             resolve(flag);
         } catch (error) {
             reject(false);
+        }
+    });
+}
+
+const checkProgramID = (programId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM PROGRAMS WHERE PROGRAMID='" +
+                programId +
+                "');";
+            let res = await db.basicQuery(query);
+            resolve(res[0].exists);
+        } catch (error) {
+            reject(error);
         }
     });
 }
