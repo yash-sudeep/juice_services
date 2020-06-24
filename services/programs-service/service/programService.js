@@ -14,11 +14,11 @@ module.exports = {
         });
     },
     getProgramDescription: function(req) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
                 let programId = parseInt(req.query.id);
                 if (programId) {
-                    checkProgramID().then((valid) => {
+                    checkProgramID().then(async(valid) => {
                         if (valid) {
                             let query =
                                 "SELECT NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE PROGRAMID=" +
