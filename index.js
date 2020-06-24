@@ -17,6 +17,7 @@ app.use(allowCrossDomain);
 
 let db = require("./services/custom-modules/database/index.js");
 require("./services/users-service/routes.js")(app, router);
+require("./services/subscription-services/routes.js")(app, router);
 require("./services/products-service/routes.js")(app, router);
 require("./services/programs-service/routes.js")(app, router);
 
