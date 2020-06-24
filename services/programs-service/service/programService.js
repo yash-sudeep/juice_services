@@ -146,7 +146,6 @@ const validateProgram = (name) => {
             pname.map((el) => program_names.push(el.name));
             if (!program_names.includes(name)) {
                 flag = false;
-                break;
             }
             resolve(flag);
         } catch (error) {
