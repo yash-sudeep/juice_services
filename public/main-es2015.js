@@ -928,11 +928,12 @@ class LoginComponent {
             password: formValues.password
         };
         this.authService.login(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].LOGIN, JSON.stringify(body)).subscribe((res) => {
-            this.authService.token = res.token;
-            delete res.token;
-            this.authService.usrObj = res;
-            console.log(res);
-            this.authService.clientName = res.firstname.charAt(0).toUpperCase() + res.firstname.slice(1) + ' ' + res.lastname.charAt(0).toUpperCase() + res.lastname.slice(1);
+            let body = res.body;
+            this.authService.token = body.token;
+            delete body.token;
+            this.authService.usrObj = body;
+            console.log(body);
+            this.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
             this.authService.isLoggedIn = true;
             this.router.navigate(['/profile'], { relativeTo: this.activatedRoute });
         }, (error) => {

@@ -1875,11 +1875,12 @@
               password: formValues.password
             };
             this.authService.login(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].LOGIN, JSON.stringify(body)).subscribe(function (res) {
-              _this3.authService.token = res.token;
-              delete res.token;
-              _this3.authService.usrObj = res;
-              console.log(res);
-              _this3.authService.clientName = res.firstname.charAt(0).toUpperCase() + res.firstname.slice(1) + ' ' + res.lastname.charAt(0).toUpperCase() + res.lastname.slice(1);
+              var body = res.body;
+              _this3.authService.token = body.token;
+              delete body.token;
+              _this3.authService.usrObj = body;
+              console.log(body);
+              _this3.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
               _this3.authService.isLoggedIn = true;
 
               _this3.router.navigate(['/profile'], {
