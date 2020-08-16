@@ -103,7 +103,7 @@ module.exports = {
                     reject({ code: 400, message: errors.array() });
                     return;
                 }
-
+                
                 const { mobile_number, password } = req.body;
                 findUser(mobile_number)
                     .then((foundUser) => {
