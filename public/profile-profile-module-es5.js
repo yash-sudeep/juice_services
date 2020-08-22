@@ -1235,7 +1235,7 @@
             console.log(formValues);
             var body = {
               name: formValues.userName,
-              mobile_number: formValues.mobileNumber,
+              mobile_number: formValues.addressMobileNumber,
               pincode: formValues.pinCode,
               address: formValues.addressText,
               city: formValues.cityName,
