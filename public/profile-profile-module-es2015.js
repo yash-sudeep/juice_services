@@ -505,10 +505,10 @@ class ProfileComponent {
         this.addressType = '';
     }
     ngOnInit() {
-        this.firstName = this.authService.usrObj.FIRST_NAME;
-        this.lastName = this.authService.usrObj.LAST_NAME;
-        this.emailID = this.authService.usrObj.EMAIL;
-        this.mobileNumber = this.authService.usrObj.MOBILE_NUMBER;
+        this.firstName = this.authService.usrObj.firstname;
+        this.lastName = this.authService.usrObj.lastname;
+        this.emailID = this.authService.usrObj.emailid;
+        this.mobileNumber = this.authService.usrObj.mobilenumber;
         this.fetchAddress();
     }
     activateTab(name) {
@@ -546,15 +546,15 @@ class ProfileComponent {
         if (action === 'EDIT') {
             this.modalTitle = 'Edit Address';
             this.modalBtnText = 'Update';
-            this.userName = this.addressArr[index].NAME;
-            this.addressMobileNumber = this.addressArr[index].MOBILE_NUMBER;
-            this.pinCode = this.addressArr[index].PINCODE;
-            this.addressText = this.addressArr[index].ADDRESS;
-            this.cityName = this.addressArr[index].CITY;
+            this.userName = this.addressArr[index].name;
+            this.addressMobileNumber = this.addressArr[index].mobilenumber;
+            this.pinCode = this.addressArr[index].pincode;
+            this.addressText = this.addressArr[index].address;
+            this.cityName = this.addressArr[index].city;
             this.stateName = 'Maharashtra';
-            this.landmark = this.addressArr[index].LANDMARK;
-            this.addressType = this.addressArr[index].TYPE;
-            this.addressID = this.addressArr[index].ADDRESS_ID;
+            this.landmark = this.addressArr[index].landmark;
+            this.addressType = this.addressArr[index].type;
+            this.addressID = this.addressArr[index].addressid;
         }
         else {
             this.modalTitle = 'New Address';
