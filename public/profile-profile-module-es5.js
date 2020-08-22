@@ -1118,7 +1118,8 @@
           };
           this.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
           this.timerExpired = false;
-          this.timerView = false; // personalForm Fields
+          this.timerView = false;
+          this.addressArr = []; // personalForm Fields
 
           this.firstName = '';
           this.lastName = '';
@@ -1147,10 +1148,10 @@
         _createClass(ProfileComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.firstName = this.authService.usrObj.firstname;
-            this.lastName = this.authService.usrObj.lastname;
-            this.emailID = this.authService.usrObj.emailid;
-            this.mobileNumber = this.authService.usrObj.mobilenumber;
+            this.firstName = this.authService.usrObj.FIRST_NAME;
+            this.lastName = this.authService.usrObj.LAST_NAME;
+            this.emailID = this.authService.usrObj.EMAIL;
+            this.mobileNumber = this.authService.usrObj.MOBILE_NUMBER;
             this.fetchAddress();
           }
         }, {
