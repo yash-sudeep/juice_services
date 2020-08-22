@@ -1218,7 +1218,7 @@
               this.cityName = this.addressArr[index].city;
               this.stateName = 'Maharashtra';
               this.landmark = this.addressArr[index].landmark;
-              this.addressType = this.addressArr[index].type;
+              this.addressType = this.addressArr[index].type.charAt(0).toUpperCase() + this.addressArr[index].type.slice(1);
               this.addressID = this.addressArr[index].addressid;
             } else {
               this.modalTitle = 'New Address';
