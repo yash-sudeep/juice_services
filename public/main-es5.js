@@ -322,7 +322,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r0.programList.length === 1);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r0.programList.length !== 1);
         }
       }
 
@@ -513,7 +513,11 @@
 
             this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe(function (res) {
               var body = res.body;
-              _this2.programList = body['data'];
+              body['data'].forEach(function (element) {
+                if (element.status) {
+                  _this2.programList.push(element);
+                }
+              });
             });
           }
         }, {
