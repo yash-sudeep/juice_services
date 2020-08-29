@@ -90,14 +90,6 @@ module.exports = {
                         ]
                     ]
                 }
-            case 'deleteProduct':
-                {
-                    return [
-                        [
-                            body('productId', 'Invalid Product').isNumeric()
-                        ]
-                    ]
-                }
         }
     },
 };

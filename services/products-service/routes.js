@@ -26,5 +26,5 @@ module.exports = function(app, router) {
     router.put('/products', productController.validate("updateProduct"), productController.updateProduct);
 
     // Delete Products
-    router.delete('/products', productController.validate("deleteProduct"), productController.deleteProduct);
+    router.delete('/products', productController.deleteProduct);
 }
