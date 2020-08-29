@@ -1499,7 +1499,7 @@ const environment = {
     "FORGOT_PWD_VERIFY": "api/user/forgot-password/verify",
     "RESET_PWD": "api/user/password/reset",
     "USER_ADDRESS": "api/user/address",
-    "SIGN_OUT": "/user/signout",
+    "SIGN_OUT": "api/user/signout",
     "OTP_TIMEOUT": 60
 };
 /*

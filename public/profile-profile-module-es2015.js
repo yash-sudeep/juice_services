@@ -617,6 +617,7 @@ class ProfileComponent {
         this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this._authService.token).subscribe((res) => {
             let body = res.body;
             console.log(body);
+            this.fetchAddress();
         }, (error) => {
         });
     }

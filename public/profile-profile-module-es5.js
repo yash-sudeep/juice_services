@@ -1300,9 +1300,13 @@
         }, {
           key: "deleteAddress",
           value: function deleteAddress(addressId) {
+            var _this3 = this;
+
             this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this._authService.token).subscribe(function (res) {
               var body = res.body;
               console.log(body);
+
+              _this3.fetchAddress();
             }, function (error) {});
           }
         }]);
