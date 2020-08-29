@@ -185,14 +185,6 @@ module.exports = {
                         ],
                     ];
                 }
-            case "deleteAddress":
-                {
-                    return [
-                        [
-                            body("addressId", "Invalid Address").isNumeric()
-                        ],
-                    ];
-                }
         }
     },
 };

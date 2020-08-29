@@ -41,6 +41,6 @@ module.exports = function(app, router) {
     router.put('/user/address', userController.validate('updateAddress'), userController.updateAddress);
 
     // Delete Address
-    router.delete('/user/address', userController.validate('deleteAddress'), userController.deleteAddress);
+    router.delete('/user/address', userController.deleteAddress);
 
 }
