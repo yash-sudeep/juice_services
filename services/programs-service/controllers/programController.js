@@ -75,14 +75,6 @@ module.exports = {
                         ]
                     ]
                 }
-            case 'deleteProgram':
-                {
-                    return [
-                        [
-                            body('programId', 'Invalid Program').isNumeric()
-                        ]
-                    ]
-                }
         }
     },
 };
