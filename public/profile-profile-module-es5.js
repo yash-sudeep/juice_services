@@ -1231,6 +1231,8 @@
         }, {
           key: "submit",
           value: function submit(obj) {
+            var _this = this;
+
             var formValues = obj.form.value;
             console.log(formValues);
             var body = {
@@ -1248,6 +1250,8 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this._authService.token).subscribe(function (res) {
                 var body = res.body;
                 console.log(body);
+
+                _this.modalService.dismissAll();
               }, function (error) {});
             } else {
               body['addressId'] = this.addressID;
@@ -1255,6 +1259,8 @@
               this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this._authService.token).subscribe(function (res) {
                 var body = res.body;
                 console.log(body);
+
+                _this.modalService.dismissAll();
               }, function (error) {});
             }
           }
@@ -1268,12 +1274,12 @@
         }, {
           key: "fetchAddress",
           value: function fetchAddress() {
-            var _this = this;
+            var _this2 = this;
 
             this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this._authService.token).subscribe(function (res) {
               var body = res.body;
-              _this.addressArr = body.address;
-              console.log(_this.addressArr);
+              _this2.addressArr = body.address;
+              console.log(_this2.addressArr);
             }, function (error) {});
           }
         }, {
@@ -1284,7 +1290,7 @@
         }, {
           key: "deleteAddress",
           value: function deleteAddress(addressId) {
-            this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this._authService.token).subscribe(function (res) {
+            this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this._authService.token).subscribe(function (res) {
               var body = res.body;
               console.log(body);
             }, function (error) {});
