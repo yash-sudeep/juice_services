@@ -1,8 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const accessTokenSecret = process.env.JWT_AUTH_KEY ?
+const secretKey = process.env.JWT_AUTH_KEY ?
     process.env.JWT_AUTH_KEY :
-    "This is a random secret";
+    "Secret Key";
+const db = require("../database/index");
 
 const hashPassword = (password) => {
     return new Promise((resolve, reject) =>
@@ -12,38 +13,79 @@ const hashPassword = (password) => {
     );
 };
 
-const createToken = (username, userrole) => {
+const createToken = (username, userrole, mobile_number) => {
     return new Promise((resolve, reject) => {
-        const accessToken = jwt.sign({ username: username, role: userrole },
-            accessTokenSecret, { expiresIn: "30m" }
-        );
-        resolve(accessToken);
+        try {
+            const accessToken = jwt.sign({
+                    username: username,
+                    role: userrole,
+                    mobile_number: mobile_number,
+                    exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                },
+                secretKey
+            );
+            resolve(accessToken);
+        } catch (error) {
+            reject(error.message);
+        }
     });
 };
 
 const validateToken = (req, res, next) => {
-    if (req.originalUrl === "/api/signup" || req.originalUrl === "/api/program") {
+    if (
+        req.originalUrl === "/api/user/signup" ||
+        req.originalUrl === "/api/user/signin" ||
+        req.originalUrl === "/api/user/signup/verify" ||
+        req.originalUrl === "/api/user/forgot-password/verify" ||
+        req.originalUrl === "/api//user/forgot-password" || 
+        req.originalUrl === "/api/program" ||
+        req.originalUrl === "/api//program/description"
+    ) {
         next();
     } else {
-        let token = req.headers["Authorization"];
-        if (!token) {
-            return res.status(400).send({
-                status: false,
-                message: "Access Token cannot be empty",
-            });
+        let authHeader = req.headers["authorization"];
+        if (!authHeader) {
+            return res
+                .status(401)
+                .send({ errorCode: 1, message: "Unauthenticated access" });
         }
-
-        jwt.verify(token, accessTokenSecret, (err, user) => {
+        let token = authHeader.split(" ");
+        jwt.verify(token[1], secretKey, (err, userJWT) => {
             if (err) {
-                return res.status(401).send({
-                    status: false,
-                    message: "Unauthorized Access",
-                });
+                return res
+                    .status(401)
+                    .send({ errorCode: 1, message: "Unauthenticated access" });
             }
-            req.user = user;
-            next();
+
+            findByToken(token[1]).then(() => {
+                req.user = userJWT;
+                next();
+            }).catch((error) => {
+                return res
+                    .status(403)
+                    .send({ errorCode: 1, message: error.message });
+            });
         });
     }
+};
+
+const findByToken = (token) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let query =
+                "SELECT EXISTS (SELECT TRUE FROM USERS WHERE TOKEN='" +
+                token +
+                "');";
+            let res = await db.basicQuery(query);
+            if (res[0].exists) {
+                resolve();
+            } else {
+                reject(new Error("Unauthorized access"));
+            }
+        } catch (error) {
+            reject(new Error("Unauthorized access"));
+        }
+    });
 };
 
 module.exports = {

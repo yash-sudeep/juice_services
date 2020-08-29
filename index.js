@@ -17,6 +17,8 @@ app.use(allowCrossDomain);
 
 let db = require("./services/custom-modules/database/index.js");
 require("./services/users-service/routes.js")(app, router);
+require("./services/subscription-service/routes.js")(app, router);
+require("./services/products-service/routes.js")(app, router);
 require("./services/programs-service/routes.js")(app, router);
 
 app.use(tokenValidation);
@@ -37,7 +39,7 @@ var server = app.listen(port, async function() {
         await db.checkConnection();
         console.log("Server started on port " + port);
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 });
 
