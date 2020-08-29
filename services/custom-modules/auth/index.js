@@ -22,7 +22,7 @@ const createToken = (username, userrole) => {
 };
 
 const validateToken = (req, res, next) => {
-    if (req.originalUrl === "/api/signup") {
+    if (req.originalUrl === "/api/signup" || req.originalUrl === "/api/program") {
         next();
     } else {
         let token = req.headers["Authorization"];
