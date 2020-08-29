@@ -2,28 +2,28 @@ const db = require("./../../custom-modules/database/index");
 const { validationResult } = require("express-validator");
 
 module.exports = {
-    getAllProgrammes: function(req) {
-        return new Promise(async(resolve, reject) => {
+    getAllProgrammes: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
-                let query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE FROM PROGRAMS";
-                let res = await db.basicQuery(query);
+                const query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE FROM PROGRAMS";
+                const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
                 reject({ code: 400, message: "Invalid Input" });
             }
         });
     },
-    getProgramDescription: function(req) {
+    getProgramDescription: function (req) {
         return new Promise((resolve, reject) => {
             try {
-                let programId = parseInt(req.query.id);
+                const programId = parseInt(req.query.id);
                 if (programId) {
-                    checkProgramID().then(async(valid) => {
+                    checkProgramID().then(async (valid) => {
                         if (valid) {
-                            let query =
+                            const query =
                                 "SELECT NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE PROGRAMID=" +
                                 programId;
-                            let res = await db.basicQuery(query);
+                            const res = await db.basicQuery(query);
                             resolve(res);
                         } else {
                             reject({ code: 404, message: "Invalid Program" });
@@ -37,8 +37,8 @@ module.exports = {
             }
         });
     },
-    addProgram: function(req) {
-        return new Promise(async(resolve, reject) => {
+    addProgram: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -49,11 +49,11 @@ module.exports = {
 
                 const program = req.body;
                 if (req.user.role === "Seller") {
-                    let programValidationResult = await validateProgram(program.name);
+                    const programValidationResult = await validateProgram(program.name);
                     if (!programValidationResult) {
-                        let query =
+                        const query =
                             "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE) VALUES($1, $2, $3, $4) RETURNING *";
-                        let values = [
+                        const values = [
                             program.name,
                             program.description,
                             program.status,
@@ -72,8 +72,8 @@ module.exports = {
             }
         });
     },
-    updateProgram: function(req) {
-        return new Promise(async(resolve, reject) => {
+    updateProgram: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -84,9 +84,9 @@ module.exports = {
 
                 const { programId, status, price } = req.body;
                 if (req.user.role === "Seller") {
-                    let valid = await checkProgramID(programId);
+                    const valid = await checkProgramID(programId);
                     if (valid) {
-                        let query =
+                        const query =
                             "UPDATE PROGRAMS SET STATUS=" +
                             status +
                             ", PRICE=" +
@@ -106,28 +106,25 @@ module.exports = {
             }
         });
     },
-    deleteProgram: function(req) {
-        return new Promise(async(resolve, reject) => {
+    deleteProgram: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
-                const errors = validationResult(req);
-
-                if (!errors.isEmpty()) {
-                    reject({ code: 400, message: errors.array() });
-                    return;
-                }
-
-                const { programId } = req.body;
-                if (req.user.role === "Seller") {
-                    let valid = await checkProgramID(programId);
-                    if (valid) {
-                        let query = "DELETE FROM PROGRAMS WHERE PROGRAMID=" + programId;
-                        await db.basicQuery(query);
-                        resolve("Program Deleted");
+                const programId = req.query.programId;
+                if (programId) {
+                    if (req.user.role === "Seller") {
+                        const valid = await checkProgramID(programId);
+                        if (valid) {
+                            const query = "DELETE FROM PROGRAMS WHERE PROGRAMID=" + programId;
+                            await db.basicQuery(query);
+                            resolve("Program Deleted");
+                        } else {
+                            reject({ code: 404, message: "Program Not Found" });
+                        }
                     } else {
-                        reject({ code: 404, message: "Program Not Found" });
+                        reject({ code: 403, message: "Access Forbidden" });
                     }
                 } else {
-                    reject({ code: 403, message: "Access Forbidden" });
+                    reject({ code: 400, message: "Invalid Input" });
                 }
             } catch (error) {
                 reject({ code: 400, message: "Invalid Input" });
@@ -137,9 +134,9 @@ module.exports = {
 };
 
 const validateProgram = (name) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            let query = "SELECT NAME FROM PROGRAMS";
+            const query = "SELECT NAME FROM PROGRAMS";
             let pname = await db.basicQuery(query);
             let program_names = [];
             let flag = true;
@@ -155,13 +152,13 @@ const validateProgram = (name) => {
 }
 
 const checkProgramID = (programId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "SELECT EXISTS (SELECT TRUE FROM PROGRAMS WHERE PROGRAMID='" +
                 programId +
                 "');";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
             reject(error);
