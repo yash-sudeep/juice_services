@@ -128,9 +128,7 @@ module.exports = {
                 validateProduct([productId]).then(async(valid) => {
                     if (valid) {
                         if (req.user.userrole === "Seller") {
-                            query =
-                                "UPDATE PRODUCTS SET STATUS=" + status + "WHERE PRODUCTID= ";
-                            productId;
+                            const query = "UPDATE PRODUCTS SET STATUS=" + status + "WHERE PRODUCTID= " + productId;
                             await db.basicQuery(query);
                             resolve("Product Deleted");
                         } else {
@@ -148,20 +146,24 @@ module.exports = {
     deleteProduct: function(req) {
         return new Promise((resolve, reject) => {
             try {
-                const { productId } = req.body;
-                validateProduct([productId]).then(async(valid) => {
-                    if (valid) {
-                        if (req.user.userrole === "Seller") {
-                            query = "DELETE FROM PRODUCTS WHERE PRODUCTID= " + productId;
-                            await db.basicQuery(query);
-                            resolve("Product Deleted");
+                const productId = req.query.productId;
+                if(productId) {
+                    validateProduct([productId]).then(async(valid) => {
+                        if (valid) {
+                            if (req.user.userrole === "Seller") {
+                                const query = "DELETE FROM PRODUCTS WHERE PRODUCTID= " + productId;
+                                await db.basicQuery(query);
+                                resolve("Product Deleted");
+                            } else {
+                                reject({ code: 403, message: "Access Forbidden" });
+                            }
                         } else {
-                            reject({ code: 403, message: "Access Forbidden" });
+                            reject({ code: 404, message: "Product Not Found" });
                         }
-                    } else {
-                        reject({ code: 404, message: "Product Not Found" });
-                    }
-                });
+                    });
+                } else {
+                    reject({ code: 400, message: "Invalid Input" });
+                }
             } catch (error) {
                 reject({ code: 400, message: "Invalid Input" });
             }
