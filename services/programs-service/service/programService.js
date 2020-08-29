@@ -137,7 +137,7 @@ const validateProgram = (name) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = "SELECT NAME FROM PROGRAMS";
-            const pname = await db.basicQuery(query);
+            let pname = await db.basicQuery(query);
             let program_names = [];
             let flag = true;
             pname.map((el) => program_names.push(el.name));
