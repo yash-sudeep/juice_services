@@ -23,5 +23,5 @@ module.exports = function(app, router) {
     router.put('/program', programController.validate("updateProgram"), programController.updateProgram);
 
     // Delete Program
-    router.delete('/program', programController.validate("deleteProgram"), programController.deleteProgram);
+    router.delete('/program', programController.deleteProgram);
 }
