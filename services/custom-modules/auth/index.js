@@ -37,7 +37,9 @@ const validateToken = (req, res, next) => {
         req.originalUrl === "/api/user/signin" ||
         req.originalUrl === "/api/user/signup/verify" ||
         req.originalUrl === "/api/user/forgot-password/verify" ||
-        req.originalUrl === "/api//user/forgot-password"
+        req.originalUrl === "/api//user/forgot-password" || 
+        req.originalUrl === "/api/program" ||
+        req.originalUrl === "/api//program/description"
     ) {
         next();
     } else {
@@ -58,10 +60,10 @@ const validateToken = (req, res, next) => {
             findByToken(token[1]).then(() => {
                 req.user = userJWT;
                 next();
-            }).catch((err) => {
+            }).catch((error) => {
                 return res
                     .status(403)
-                    .send({ errorCode: 1, message: err.message });
+                    .send({ errorCode: 1, message: error.message });
             });
         });
     }
