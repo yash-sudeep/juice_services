@@ -1,13 +1,14 @@
 const auth = require("./../../custom-modules/auth/index");
-const otp = require("./../../custom-modules/otp/index");
+const Otp = require("./../../custom-modules/otp/index");
 const db = require("./../../custom-modules/database/index");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 var moment = require("moment");
+const e = require("express");
 
 module.exports = {
-    signUp: function(req) {
-        return new Promise(async(resolve, reject) => {
+    signUp: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -36,7 +37,7 @@ module.exports = {
                                 )
                                 .then((token) => (user.token = token))
                                 .then(() => createUser(user))
-                                .then((user) => {
+                                .then((userObj) => {
                                     delete user.password_digest;
                                     resolve(user);
                                 })
@@ -55,7 +56,7 @@ module.exports = {
             }
         });
     },
-    verifyUser: function(req) {
+    verifyUser: function (req) {
         return new Promise((resolve, reject) => {
             try {
                 const errors = validationResult(req);
@@ -66,10 +67,10 @@ module.exports = {
                 }
 
                 const { mobile_number } = req.body;
-                validateUser(mobile_number).then(async(validUser) => {
+                validateUser(mobile_number).then(async (validUser) => {
                     if (req.originalUrl === "/api/user/signup/verify") {
                         if (!validUser) {
-                            await otp.sendOtp(mobile_number.toString());
+                            await Otp.sendOtp(mobile_number.toString());
                             resolve({ code: 200, message: "OTP Sent to Your Mobile Number" });
                         } else {
                             reject({
@@ -79,7 +80,7 @@ module.exports = {
                         }
                     } else {
                         if (validUser) {
-                            await otp.sendOtp(mobile_number.toString());
+                            await Otp.sendOtp(mobile_number.toString());
                             resolve({ code: 200, message: "OTP Sent to Your Mobile Number" });
                         } else {
                             reject({
@@ -94,8 +95,8 @@ module.exports = {
             }
         });
     },
-    signIn: function(req) {
-        return new Promise(async(resolve, reject) => {
+    signIn: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -103,7 +104,7 @@ module.exports = {
                     reject({ code: 400, message: errors.array() });
                     return;
                 }
-
+                let user, authToken;
                 const { mobile_number, password } = req.body;
                 findUser(mobile_number)
                     .then((foundUser) => {
@@ -132,11 +133,11 @@ module.exports = {
             }
         });
     },
-    signOut: function(req) {
+    signOut: function (req) {
         return new Promise((resolve, reject) => {
             try {
                 validateUser(req.user.mobile_number)
-                    .then(async(valid) => {
+                    .then(async (valid) => {
                         if (valid) {
                             await updateUserToken("", req.user.mobile_number, false);
                             resolve("User Logged Out Successfully");
@@ -152,8 +153,8 @@ module.exports = {
             }
         });
     },
-    resetPassword: function(req) {
-        return new Promise(async(resolve, reject) => {
+    resetPassword: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -162,8 +163,8 @@ module.exports = {
                     return;
                 }
 
+                let user;
                 const { oldPassword, newPassword } = req.body;
-
                 findUser(req.user.mobile_number)
                     .then((foundUser) => {
                         user = foundUser;
@@ -184,8 +185,8 @@ module.exports = {
             }
         });
     },
-    forgotPassword: function(req) {
-        return new Promise(async(resolve, reject) => {
+    forgotPassword: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -195,12 +196,10 @@ module.exports = {
                 }
 
                 const { password, otp, mobile_number } = req.body;
-                let OTP = await otp.verifyOtp(password, otp);
+                let OTP = await Otp.verifyOtp(password, otp);
                 if (OTP.valid) {
                     findUser(mobile_number)
-                        .then((foundUser) => {
-                            user = foundUser;
-                        })
+                        .then((foundUser) => {})
                         .then(() => auth.hashPassword(password))
                         .then((newHashedPassword) =>
                             updatePassword(newHashedPassword, mobile_number)
@@ -219,9 +218,9 @@ module.exports = {
             }
         });
     },
-    getAddress: function(req) {
+    getAddress: function (req) {
         return new Promise((resolve, reject) => {
-            findUser(req.user.mobile_number).then(async(user) => {
+            findUser(req.user.mobile_number).then(async (user) => {
                 let query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE FROM ADDRESS WHERE USERID=" + user.userid;
                 let res = await db.basicQuery(query);
                 resolve(res);
@@ -230,8 +229,8 @@ module.exports = {
             });
         });
     },
-    addNewAddress: function(req) {
-        return new Promise(async(resolve, reject) => {
+    addNewAddress: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -250,8 +249,8 @@ module.exports = {
             }
         });
     },
-    updateAddress: function(req) {
-        return new Promise(async(resolve, reject) => {
+    updateAddress: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
@@ -275,24 +274,21 @@ module.exports = {
             }
         });
     },
-    deleteAddress: function(req) {
-        return new Promise(async(resolve, reject) => {
+    deleteAddress: function (req) {
+        return new Promise(async (resolve, reject) => {
             try {
-                const errors = validationResult(req);
-
-                if (!errors.isEmpty()) {
-                    reject({ code: 400, message: errors.array() });
-                    return;
-                }
-
-                const { addressId } = req.body;
-                let userId = await getUserID(req.user.mobile_number);
-                let valid = await verifyAddress(addressId, userId);
-                if (valid) {
-                    await deleteAddress(addressId, userId);
-                    resolve("Address Deleted");
+                const addressId = req.query.addressId;
+                if (addressId) {
+                    let userId = await getUserID(req.user.mobile_number);
+                    let valid = await verifyAddress(addressId, userId);
+                    if (valid) {
+                        await deleteAddress(addressId, userId);
+                        resolve("Address Deleted");
+                    } else {
+                        reject({ code: 404, message: "Address Not Registered" });
+                    }
                 } else {
-                    reject({ code: 404, message: "Address Not Registered" });
+                    reject({ code: 400, message: "Invalid Input" });
                 }
             } catch (error) {
                 reject({ code: 400, message: "Invalid Input" });
@@ -302,7 +298,7 @@ module.exports = {
 };
 
 const createUser = (user) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         user.username = user.firstname + user.lastname;
         let query =
             "INSERT INTO USERS (FIRSTNAME,LASTNAME,USERNAME,EMAILID,MOBILENUMBER,USERROLE,TOKEN,ISLOGGEDIN,PASSWORD,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
@@ -328,7 +324,7 @@ const createUser = (user) => {
 };
 
 const validateUser = (mobile_number) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let query =
                 "SELECT EXISTS (SELECT TRUE FROM USERS WHERE MOBILENUMBER='" +
@@ -343,7 +339,7 @@ const validateUser = (mobile_number) => {
 };
 
 const findUser = (mobile_number) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let query =
                 "SELECT * FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
@@ -402,7 +398,7 @@ const updatePassword = (password, mobile_number) => {
 };
 
 const insertAddress = (address) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         let query =
             "INSERT INTO ADDRESS (NAME,MOBILENUMBER,PINCODE,ADDRESS,CITY,STATE,LANDMARK,TYPE,USERID,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
         let values = [
@@ -427,7 +423,7 @@ const insertAddress = (address) => {
 };
 
 const getUserID = (mobile_number) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let query =
                 "SELECT USERID FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
@@ -444,7 +440,7 @@ const getUserID = (mobile_number) => {
 };
 
 const verifyAddress = (addressId, userId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let query =
                 "SELECT EXISTS (SELECT TRUE FROM ADDRESS WHERE ADDRESSID=" +
@@ -491,7 +487,7 @@ const updateAddress = (address) => {
 };
 
 const deleteAddress = (addressId, userId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let query =
                 "DELETE FROM ADDRESS WHERE ADDRESSID=" +
