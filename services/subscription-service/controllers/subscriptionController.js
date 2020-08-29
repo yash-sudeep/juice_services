@@ -64,14 +64,6 @@ module.exports = {
                         ]
                     ]
                 }
-            case 'deleteSubscription':
-                {
-                    return [
-                        [
-                            body('subscriptionId', 'Invalid Subscription').isNumeric()
-                        ]
-                    ]
-                }
         }
     },
 };

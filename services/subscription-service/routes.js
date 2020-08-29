@@ -20,5 +20,5 @@ module.exports = function(app, router) {
     router.put('/subscription', subscriptionController.validate("updateSubscription"), subscriptionController.updateSubscription);
 
     // Delete Subscription
-    router.delete('/subscription', subscriptionController.validate("deleteSubscription"), subscriptionController.deleteSubscription);
+    router.delete('/subscription', subscriptionController.deleteSubscription);
 }
