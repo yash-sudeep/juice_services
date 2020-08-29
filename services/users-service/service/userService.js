@@ -196,7 +196,7 @@ module.exports = {
                 }
 
                 const { password, otp, mobile_number } = req.body;
-                let OTP = await Otp.verifyOtp(password, otp);
+                const OTP = await Otp.verifyOtp(password, otp);
                 if (OTP.valid) {
                     findUser(mobile_number)
                         .then((foundUser) => {})
@@ -221,8 +221,8 @@ module.exports = {
     getAddress: function (req) {
         return new Promise((resolve, reject) => {
             findUser(req.user.mobile_number).then(async (user) => {
-                let query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE FROM ADDRESS WHERE USERID=" + user.userid;
-                let res = await db.basicQuery(query);
+                const query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE FROM ADDRESS WHERE USERID=" + user.userid;
+                const res = await db.basicQuery(query);
                 resolve(res);
             }).catch((err) => {
                 reject({ code: 404, message: err.message });
@@ -240,7 +240,7 @@ module.exports = {
                 }
 
                 const address = req.body;
-                let userId = await getUserID(req.user.mobile_number);
+                const userId = await getUserID(req.user.mobile_number);
                 address.userId = userId;
                 await insertAddress(address);
                 resolve("Address Added");
@@ -260,9 +260,9 @@ module.exports = {
                 }
 
                 const address = req.body;
-                let userId = await getUserID(req.user.mobile_number);
+                const userId = await getUserID(req.user.mobile_number);
                 address.userId = userId;
-                let valid = await verifyAddress(address.addressId, userId);
+                const valid = await verifyAddress(address.addressId, userId);
                 if (valid) {
                     await updateAddress(address);
                     resolve("Address Updated");
@@ -279,8 +279,8 @@ module.exports = {
             try {
                 const addressId = req.query.addressId;
                 if (addressId) {
-                    let userId = await getUserID(req.user.mobile_number);
-                    let valid = await verifyAddress(addressId, userId);
+                    const userId = await getUserID(req.user.mobile_number);
+                    const valid = await verifyAddress(addressId, userId);
                     if (valid) {
                         await deleteAddress(addressId, userId);
                         resolve("Address Deleted");
@@ -300,9 +300,9 @@ module.exports = {
 const createUser = (user) => {
     return new Promise(async (resolve, reject) => {
         user.username = user.firstname + user.lastname;
-        let query =
+        const query =
             "INSERT INTO USERS (FIRSTNAME,LASTNAME,USERNAME,EMAILID,MOBILENUMBER,USERROLE,TOKEN,ISLOGGEDIN,PASSWORD,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
-        let values = [
+        const values = [
             user.firstname,
             user.lastname,
             user.username,
@@ -326,11 +326,11 @@ const createUser = (user) => {
 const validateUser = (mobile_number) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "SELECT EXISTS (SELECT TRUE FROM USERS WHERE MOBILENUMBER='" +
                 mobile_number +
                 "');";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
             reject(error);
@@ -341,9 +341,9 @@ const validateUser = (mobile_number) => {
 const findUser = (mobile_number) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "SELECT * FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             if (res.length > 0) {
                 resolve(res[0]);
             } else {
@@ -370,7 +370,7 @@ const checkPassword = (newPassword, oldPassword) => {
 };
 
 const updateUserToken = (token, mobile_number, logged_in) => {
-    let query =
+    const query =
         "UPDATE USERS SET TOKEN = '" +
         token +
         "', ISLOGGEDIN=" +
@@ -385,7 +385,7 @@ const updateUserToken = (token, mobile_number, logged_in) => {
 };
 
 const updatePassword = (password, mobile_number) => {
-    let query =
+    const query =
         "UPDATE USERS SET PASSWORD = '" +
         password +
         "' WHERE MOBILENUMBER ='" +
@@ -399,9 +399,9 @@ const updatePassword = (password, mobile_number) => {
 
 const insertAddress = (address) => {
     return new Promise(async (resolve, reject) => {
-        let query =
+        const query =
             "INSERT INTO ADDRESS (NAME,MOBILENUMBER,PINCODE,ADDRESS,CITY,STATE,LANDMARK,TYPE,USERID,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
-        let values = [
+        const values = [
             address.name,
             address.mobile_number,
             address.pincode,
@@ -414,7 +414,7 @@ const insertAddress = (address) => {
             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
         ];
         try {
-            let res = await db.parameterizedQuery(query, values);
+            const res = await db.parameterizedQuery(query, values);
             resolve(res);
         } catch (error) {
             reject(error.message);
@@ -425,9 +425,9 @@ const insertAddress = (address) => {
 const getUserID = (mobile_number) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "SELECT USERID FROM USERS WHERE MOBILENUMBER='" + mobile_number + "';";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             if (res.length > 0) {
                 resolve(res[0].userid);
             } else {
@@ -442,13 +442,13 @@ const getUserID = (mobile_number) => {
 const verifyAddress = (addressId, userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "SELECT EXISTS (SELECT TRUE FROM ADDRESS WHERE ADDRESSID=" +
                 addressId +
                 " AND USERID=" +
                 userId +
                 ");";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
             reject(error.message);
@@ -457,7 +457,7 @@ const verifyAddress = (addressId, userId) => {
 };
 
 const updateAddress = (address) => {
-    let query =
+    const query =
         "UPDATE ADDRESS SET NAME='" +
         address.name +
         "', MOBILENUMBER='" +
@@ -489,13 +489,13 @@ const updateAddress = (address) => {
 const deleteAddress = (addressId, userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let query =
+            const query =
                 "DELETE FROM ADDRESS WHERE ADDRESSID=" +
                 addressId +
                 " AND USERID=" +
                 userId +
                 ";";
-            let res = await db.basicQuery(query);
+            const res = await db.basicQuery(query);
             resolve(res);
         } catch (error) {
             reject(error.message);
