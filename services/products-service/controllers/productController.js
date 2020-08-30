@@ -71,7 +71,6 @@ module.exports = {
                             body('name', 'name doesn\'t exists'),
                             body('description', 'description doesn\'t exists'),
                             body('advantages', 'Advantages cannot be empty').isArray({ min: 1 }),
-                            body('disadvantages', 'Disadvantages cannot be empty').isArray({ min: 1 }),
                             body('ingredients', 'Ingredients cannot be empty').isArray({ min: 1 }),
                             body('status').isBoolean(),
                             body('quantity').optional().isNumeric(),
