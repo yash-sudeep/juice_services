@@ -76,7 +76,7 @@ module.exports = {
                         const productValidationResult = await validateProductName(product.name);
                         if (!productValidationResult) {
                             const query =
-                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *";
                             const values = [
                                 product.name,
                                 product.description,
@@ -207,9 +207,9 @@ const validateProductName = (productName) => {
     return new Promise(async(resolve, reject) => {
         try {
             const query =
-                "SELECT EXISTS (SELECT TRUE FROM PRODUCTS WHERE NAME=" +
+                "SELECT EXISTS (SELECT TRUE FROM PRODUCTS WHERE NAME='" +
                 productName +
-                ");";
+                "');";
             const res = await db.basicQuery(query);
             resolve(res[0].exists);
         } catch (error) {
