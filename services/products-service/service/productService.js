@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             try {
                 const query =
-                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true";
+                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -22,7 +22,7 @@ module.exports = {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
                             const query =
-                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
+                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
                                 req.params.id +
                                 "=ANY(PROGRAMID)";
                             const res = await db.basicQuery(query);
@@ -46,7 +46,7 @@ module.exports = {
                 validateProduct([productId]).then(async(valid) => {
                     if (valid) {
                         const query =
-                            "SELECT NAME, DESCRIPTION, ADVANTAGES, DISADVANTAGES, INGREDIENTS FROM PRODUCTS WHERE PRODUCTID=" +
+                            "SELECT NAME, DESCRIPTION, ADVANTAGES, INGREDIENTS FROM PRODUCTS WHERE PRODUCTID=" +
                             productId;
                         const res = await db.basicQuery(query);
                         resolve(res);
@@ -76,15 +76,11 @@ module.exports = {
                         const productValidationResult = await validateProductName(product.name);
                         if (!productValidationResult) {
                             const query =
-                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,DISADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
                             const values = [
                                 product.name,
                                 product.description,
                                 JSON.stringify(product.advantages)
-                                .replace("[", "{")
-                                .replace("]", "}")
-                                .replace(/'/g, '"'),
-                                JSON.stringify(product.disadvantages)
                                 .replace("[", "{")
                                 .replace("]", "}")
                                 .replace(/'/g, '"'),
