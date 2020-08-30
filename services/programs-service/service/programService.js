@@ -1,11 +1,12 @@
 const db = require("./../../custom-modules/database/index");
 const { validationResult } = require("express-validator");
+var moment = require("moment");
 
 module.exports = {
     getAllProgrammes: function (req) {
         return new Promise(async (resolve, reject) => {
             try {
-                const query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE STATUS=true";
+                const query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE,MIN_BUY_CRITERIA FROM PROGRAMS WHERE STATUS=true";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -21,7 +22,7 @@ module.exports = {
                     checkProgramID().then(async (valid) => {
                         if (valid) {
                             const query =
-                                "SELECT NAME,DESCRIPTION,PRICE FROM PROGRAMS WHERE PROGRAMID=" +
+                                "SELECT NAME,DESCRIPTION,PRICE,MIN_BUY_CRITERIA FROM PROGRAMS WHERE PROGRAMID=" +
                                 programId;
                             const res = await db.basicQuery(query);
                             resolve(res);
@@ -52,12 +53,14 @@ module.exports = {
                     const programValidationResult = await validateProgram(program.name);
                     if (!programValidationResult) {
                         const query =
-                            "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE) VALUES($1, $2, $3, $4) RETURNING *";
+                            "INSERT INTO PROGRAMS (NAME,DESCRIPTION,STATUS,PRICE,CREATEDAT,MIN_BUY_CRITERIA) VALUES($1, $2, $3, $4, $5, $6) RETURNING *";
                         const values = [
                             program.name,
                             program.description,
                             program.status,
                             program.price,
+                            moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
+                            program.min_buy_criteria,
                         ];
                         await db.parameterizedQuery(query, values);
                         resolve("Program Added Successfully");
@@ -82,7 +85,7 @@ module.exports = {
                     return;
                 }
 
-                const { programId, status, price } = req.body;
+                const { programId, status, price, minBuyCriteria } = req.body;
                 if (req.user.role === "Seller") {
                     const valid = await checkProgramID(programId);
                     if (valid) {
@@ -91,7 +94,7 @@ module.exports = {
                             status +
                             ", PRICE=" +
                             price +
-                            " WHERE PROGRAMID=" +
+                            ", MIN_BUY_CRITERIA=" + minBuyCriteria + " WHERE PROGRAMID=" +
                             programId;
                         await db.basicQuery(query, values);
                         resolve("Program Updated");
