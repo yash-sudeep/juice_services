@@ -543,6 +543,13 @@
         }, {
           key: "navigateToProgram",
           value: function navigateToProgram(programId) {
+            var _this3 = this;
+
+            this.programList.forEach(function (el) {
+              if (el.programid === programId) {
+                _this3.authService.program = el;
+              }
+            });
             this.router.navigate(['/program'], {
               relativeTo: this.activatedRoute,
               queryParams: {
@@ -2005,7 +2012,7 @@
         }, {
           key: "launchModal",
           value: function launchModal(ref, name) {
-            var _this3 = this;
+            var _this4 = this;
 
             var ngbModalOptions = {
               backdrop: 'static',
@@ -2019,7 +2026,7 @@
 
             this.modalReference = this.modalService.open(ref, ngbModalOptions);
             this.modalReference.result.then(function (result) {}, function (reason) {
-              _this3.otpView = false;
+              _this4.otpView = false;
             });
           }
         }, {
@@ -2072,7 +2079,7 @@
         }, {
           key: "sendOTP",
           value: function sendOTP() {
-            var _this4 = this;
+            var _this5 = this;
 
             console.log('Sending OTP');
 
@@ -2087,12 +2094,12 @@
             this._httpService.postRequest(_url, JSON.stringify({
               mobile_number: this.mobileNumber
             }), '').subscribe(function (res) {
-              clearTimeout(_this4.timeTracker);
-              _this4.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
-              _this4.timerText = 'OTP expires within ' + _this4.timeLeft + ' seconds';
-              _this4.timerView = false;
-              _this4.timeTracker = setInterval(function () {
-                _this4.countdown();
+              clearTimeout(_this5.timeTracker);
+              _this5.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
+              _this5.timerText = 'OTP expires within ' + _this5.timeLeft + ' seconds';
+              _this5.timerView = false;
+              _this5.timeTracker = setInterval(function () {
+                _this5.countdown();
               }, 1000);
             }, function (error) {});
           }
@@ -2105,7 +2112,7 @@
         }, {
           key: "login",
           value: function login() {
-            var _this5 = this;
+            var _this6 = this;
 
             var formValues = this.signInForm.form.value;
             var body = {
@@ -2115,7 +2122,7 @@
             this.authService.login(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].LOGIN, JSON.stringify(body)).subscribe(function (res) {
               var body = res.body;
 
-              _this5.postAuth(body);
+              _this6.postAuth(body);
             }, function (error) {});
           }
         }, {
@@ -2135,7 +2142,7 @@
         }, {
           key: "signUp",
           value: function signUp(OTP) {
-            var _this6 = this;
+            var _this7 = this;
 
             var formValues = this.signUpForm.form.value;
             var body = {
@@ -2151,9 +2158,9 @@
             this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_UP, JSON.stringify(body), '').subscribe(function (res) {
               var body = res.body;
 
-              _this6.postAuth(body);
+              _this7.postAuth(body);
 
-              _this6.modalReference.close();
+              _this7.modalReference.close();
             }, function (error) {});
           }
         }, {
@@ -2825,33 +2832,35 @@
           this.faShoppingCart = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faShoppingCart"];
           this.faShoppingBasket = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faShoppingBasket"];
           this.basketItems = 0;
-          this.minBasketItems = 2;
+          this.minBasketItems = 0;
           this.cartAlert = false;
         }
 
         _createClass(ProgramComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this7 = this;
+            var _this8 = this;
 
+            this.activeProgram = this.authService.program;
+            this.minBasketItems = this.activeProgram['min_buy_criteria'] ? this.activeProgram['min_buy_criteria'] : 0;
             this.activatedRoute.queryParams.subscribe(function (params) {
               var programId = parseInt(params['programId']);
 
-              _this7.getProducts(programId);
+              _this8.getProducts(programId);
             });
           }
         }, {
           key: "open",
           value: function open(ref, index) {
-            var _this8 = this;
+            var _this9 = this;
 
             this.productAdvantages = this.products[index]['advantages'];
             this.modalService.open(ref, {
               size: 'lg'
             }).result.then(function (result) {
-              _this8.closeResult = "Closed with: ".concat(result);
+              _this9.closeResult = "Closed with: ".concat(result);
             }, function (reason) {
-              _this8.closeResult = "Dismissed ".concat(_this8.getDismissReason(reason));
+              _this9.closeResult = "Dismissed ".concat(_this9.getDismissReason(reason));
             });
           }
         }, {
@@ -2868,11 +2877,15 @@
         }, {
           key: "getProducts",
           value: function getProducts(programId) {
-            var _this9 = this;
+            var _this10 = this;
 
             this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
               var body = res.body;
-              _this9.products = body['data'];
+              _this10.products = body['data'];
+
+              _this10.products.forEach(function (el) {
+                el.total = 0;
+              });
             }, function (error) {});
           }
         }, {
@@ -2889,19 +2902,19 @@
         }, {
           key: "validateBasket",
           value: function validateBasket() {
-            var _this10 = this;
+            var _this11 = this;
 
             this.basketItems = 0;
             this.products.forEach(function (el) {
               if (el.total > 0) {
-                _this10.basketItems += el.total;
+                _this11.basketItems += el.total;
               }
             });
 
             if (this.basketItems >= this.minBasketItems) {
               this.cartAlert = true;
               setTimeout(function () {
-                _this10.cartAlert = false;
+                _this11.cartAlert = false;
               }, 5000);
             }
           }

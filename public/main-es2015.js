@@ -249,6 +249,11 @@ class AppComponent {
         });
     }
     navigateToProgram(programId) {
+        this.programList.forEach((el) => {
+            if (el.programid === programId) {
+                this.authService.program = el;
+            }
+        });
         this.router.navigate(['/program'], { relativeTo: this.activatedRoute, queryParams: { programId: programId } });
     }
     ngOnDestroy() {
@@ -1355,10 +1360,12 @@ class ProgramComponent {
         this.faShoppingCart = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faShoppingCart"];
         this.faShoppingBasket = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__["faShoppingBasket"];
         this.basketItems = 0;
-        this.minBasketItems = 2;
+        this.minBasketItems = 0;
         this.cartAlert = false;
     }
     ngOnInit() {
+        this.activeProgram = this.authService.program;
+        this.minBasketItems = this.activeProgram['min_buy_criteria'] ? this.activeProgram['min_buy_criteria'] : 0;
         this.activatedRoute.queryParams.subscribe(params => {
             const programId = parseInt(params['programId']);
             this.getProducts(programId);
@@ -1387,6 +1394,9 @@ class ProgramComponent {
         this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe((res) => {
             let body = res.body;
             this.products = body['data'];
+            this.products.forEach((el) => {
+                el.total = 0;
+            });
         }, (error) => {
         });
     }
