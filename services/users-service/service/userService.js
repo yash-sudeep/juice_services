@@ -264,7 +264,7 @@ module.exports = {
                 address.userId = userId;
                 const valid = await verifyAddress(address.addressId, userId);
                 if (valid) {
-                    await updateAddress(address);
+                    await updateAddress(address, userId);
                     resolve("Address Updated");
                 } else {
                     reject({ code: 404, message: "Address Not Registered" });
@@ -456,7 +456,7 @@ const verifyAddress = (addressId, userId) => {
     });
 };
 
-const updateAddress = (address) => {
+const updateAddress = (address, userId) => {
     const query =
         "UPDATE ADDRESS SET NAME='" +
         address.name +
@@ -477,7 +477,7 @@ const updateAddress = (address) => {
         "', UPDATEDAT='" +
         moment().format("YYYY-MM-DD HH:mm:ss.SSSSS") +
         "' WHERE USERID=" +
-        address.userId +
+        userId +
         " AND ADDRESSID=" +
         address.addressId;
     return db
