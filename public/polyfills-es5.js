@@ -1113,8 +1113,7 @@
       // Attach $localize to the global context, as a side-effect of this module.
 
 
-      _global.$localize = $localize; //# sourceMappingURL=init.js.map
-
+      _global.$localize = $localize;
       /***/
     },
 
