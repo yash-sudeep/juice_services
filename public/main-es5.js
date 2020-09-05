@@ -865,19 +865,29 @@
       /* harmony import */
 
 
-      var _services_http_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! lodash */
+      "./node_modules/lodash/lodash.js");
+      /* harmony import */
+
+
+      var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+      /* harmony import */
+
+
+      var _services_http_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! ../services/http.service */
       "./src/app/services/http.service.ts");
       /* harmony import */
 
 
-      var _services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var _services_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! ../services/auth.service */
       "./src/app/services/auth.service.ts");
       /* harmony import */
 
 
-      var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! @angular/forms */
       "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
 
@@ -889,6 +899,7 @@
             this._httpService = _httpService;
             this.authService = authService;
             this.cartItems = [];
+            this.subscriptions = [];
           }
 
           _createClass(CartComponent, [{
@@ -911,8 +922,28 @@
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].SUBSCRIPTIONS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this4.subscriptions = body['data'];
-                console.log(_this4.subscriptions); // this.subscriptions = new Map();
+                console.log(_this4.subscriptions);
+                var g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](_this4.subscriptions, function (item) {
+                  return item.programid;
+                }); // for(let key in g) {
+                // }
+
+                console.log(g);
+
+                _this4.subscriptions.forEach(function (item) {
+                  _this4.priceMap.set(item.name, item.price);
+                });
               });
+            }
+          }, {
+            key: "getSubscriptionCost",
+            value: function getSubscriptionCost(name) {
+              return this.priceMap.get(name);
+            }
+          }, {
+            key: "getSubscriptionProgramsWise",
+            value: function getSubscriptionProgramsWise(programId) {
+              return this.subscriptionMap.get(programId);
             }
           }]);
 
@@ -920,7 +951,7 @@
         }();
 
         CartComponent.ɵfac = function CartComponent_Factory(t) {
-          return new (t || CartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_2__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]));
+          return new (t || CartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_3__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]));
         };
 
         CartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -1178,7 +1209,7 @@
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             }
           },
-          directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵangular_packages_forms_forms_x"]],
+          directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_5__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["ɵangular_packages_forms_forms_x"]],
           styles: ["th[_ngcontent-%COMP%], td[_ngcontent-%COMP%] {\n  text-align: center;\n  text-transform: uppercase;\n  vertical-align: middle;\n}\n\nselect[_ngcontent-%COMP%] {\n  -moz-text-align-last: center;\n       text-align-last: center;\n  font-weight: 400;\n  text-transform: uppercase;\n}\n\nul[_ngcontent-%COMP%] {\n  list-style-type: none;\n}\n\nul[_ngcontent-%COMP%]    > li[_ngcontent-%COMP%]:before {\n  content: \"-\";\n  margin-right: 1rem;\n}\n\n.total[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n\n.btn-dark[_ngcontent-%COMP%] {\n  width: auto;\n}\n\nth[_ngcontent-%COMP%], td[_ngcontent-%COMP%], td[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], td[_ngcontent-%COMP%]   ul[_ngcontent-%COMP%]   li[_ngcontent-%COMP%], select[_ngcontent-%COMP%] {\n  font-size: 14px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY2FydC9jYXJ0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztFQUVJLGtCQUFBO0VBQ0EseUJBQUE7RUFDQSxzQkFBQTtBQUNKOztBQUVBO0VBQ0ksNEJBQUE7T0FBQSx1QkFBQTtFQUNBLGdCQUFBO0VBQ0EseUJBQUE7QUFDSjs7QUFFQTtFQUNJLHFCQUFBO0FBQ0o7O0FBRUE7RUFDSSxZQUFBO0VBQ0Esa0JBQUE7QUFDSjs7QUFHQTtFQUNJLGlCQUFBO0FBQUo7O0FBR0E7RUFDSSxXQUFBO0FBQUo7O0FBR0E7Ozs7O0VBS0ksZUFBQTtBQUFKIiwiZmlsZSI6InNyYy9hcHAvY2FydC9jYXJ0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsidGgsXHJcbnRkIHtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XHJcbiAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xyXG59XHJcblxyXG5zZWxlY3Qge1xyXG4gICAgdGV4dC1hbGlnbi1sYXN0OiBjZW50ZXI7XHJcbiAgICBmb250LXdlaWdodDogNDAwO1xyXG4gICAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxufVxyXG5cclxudWwge1xyXG4gICAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xyXG59XHJcblxyXG51bD5saTpiZWZvcmUge1xyXG4gICAgY29udGVudDogXCItXCI7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XHJcbiAgICAvLyBkaXNwbGF5OiBibG9jaztcclxufVxyXG5cclxuLnRvdGFsIHRkIHtcclxuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG59XHJcblxyXG4uYnRuLWRhcmsge1xyXG4gICAgd2lkdGg6IGF1dG87XHJcbn1cclxuXHJcbnRoLFxyXG50ZCxcclxudGQgcCxcclxudGQgdWwgbGksXHJcbnNlbGVjdCB7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbn0iXX0= */"]
         });
         return CartComponent;
