@@ -470,13 +470,21 @@ let CartComponent = /*@__PURE__*/ (() => {
                 let body = res.body;
                 this.subscriptions = body['data'];
                 console.log(this.subscriptions);
-                let g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](this.subscriptions, item => item.programid);
-                // for(let key in g) {
-                // }
-                console.log(g);
+                this.subscriptionMap = new Map();
+                let g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](this.subscriptions, (item) => item.programid);
+                for (let key in g) {
+                    let n = [];
+                    g[key].forEach((element) => {
+                        n.push(element.package);
+                    });
+                    this.subscriptionMap.set(key, n);
+                }
+                console.log(this.subscriptionMap);
+                this.priceMap = new Map();
                 this.subscriptions.forEach((item) => {
                     this.priceMap.set(item.name, item.price);
                 });
+                console.log(this.priceMap);
             });
         }
         getSubscriptionCost(name) {

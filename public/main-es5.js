@@ -923,16 +923,32 @@
                 var body = res.body;
                 _this4.subscriptions = body['data'];
                 console.log(_this4.subscriptions);
+                _this4.subscriptionMap = new Map();
                 var g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](_this4.subscriptions, function (item) {
                   return item.programid;
-                }); // for(let key in g) {
-                // }
+                });
 
-                console.log(g);
+                var _loop = function _loop(key) {
+                  var n = [];
+                  g[key].forEach(function (element) {
+                    n.push(element["package"]);
+                  });
+
+                  _this4.subscriptionMap.set(key, n);
+                };
+
+                for (var key in g) {
+                  _loop(key);
+                }
+
+                console.log(_this4.subscriptionMap);
+                _this4.priceMap = new Map();
 
                 _this4.subscriptions.forEach(function (item) {
                   _this4.priceMap.set(item.name, item.price);
                 });
+
+                console.log(_this4.priceMap);
               });
             }
           }, {
