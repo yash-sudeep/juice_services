@@ -492,7 +492,7 @@ function CartComponent_tr_21_Template(rf, ctx) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "td");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "select", 15);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function CartComponent_tr_21_Template_select_change_8_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const item_r1 = ctx.$implicit; const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r7.onChange($event, item_r1.id); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function CartComponent_tr_21_Template_select_change_8_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8); const item_r1 = ctx.$implicit; const i_r2 = ctx.index; const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r7.onChange($event, item_r1.id, i_r2); });
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CartComponent_tr_21_option_9_Template, 2, 1, "option", 9);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -562,24 +562,30 @@ let CartComponent = /*@__PURE__*/ (() => {
                 });
             });
         }
-        onChange(event, programId) {
-            let value;
+        onChange(event, programId, index) {
             let packageName = (event.target.value).toLowerCase();
             this.subscriptions.forEach((el) => {
                 if (el.package === packageName && el.programid === programId) {
                     this.priceMap.set(programId, el.price);
+                    this.cartItems[index].price = el.price;
                 }
             });
             this.totalPrice = 0;
-            for (let [key, value] of this.priceMap) {
-                this.totalPrice += value;
-            }
+            this.cartItems.forEach((el) => {
+                this.totalPrice += el.price;
+            });
         }
         getSubscriptionProgramsWise(programId) {
             return this.subscriptionMap.get(programId);
         }
         getSubscriptionCost(programId) {
-            return this.priceMap.get(programId);
+            try {
+                return this.priceMap.get(programId);
+            }
+            catch (ex) {
+                console.log(ex);
+                return 0;
+            }
         }
     }
     CartComponent.ɵfac = function CartComponent_Factory(t) { return new (t || CartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_3__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"])); };
@@ -1610,7 +1616,7 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                 console.log(o);
             }
             else {
-                localStorage.setItem('cart', JSON.stringify([{ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items }]));
+                localStorage.setItem('cart', JSON.stringify([{ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 }]));
             }
             if (this.authService.isLoggedIn) {
                 this.router.navigate(['/cart'], { relativeTo: this.activatedRoute });

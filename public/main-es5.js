@@ -1,18 +1,4 @@
 (function () {
-  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -989,10 +975,11 @@
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r8);
 
             var item_r1 = ctx.$implicit;
+            var i_r2 = ctx.index;
 
             var ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-            return ctx_r7.onChange($event, item_r1.id);
+            return ctx_r7.onChange($event, item_r1.id, i_r2);
           });
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CartComponent_tr_21_option_9_Template, 2, 1, "option", 9);
@@ -1105,34 +1092,21 @@
             }
           }, {
             key: "onChange",
-            value: function onChange(event, programId) {
+            value: function onChange(event, programId, index) {
               var _this5 = this;
 
-              var value;
               var packageName = event.target.value.toLowerCase();
               this.subscriptions.forEach(function (el) {
                 if (el["package"] === packageName && el.programid === programId) {
                   _this5.priceMap.set(programId, el.price);
+
+                  _this5.cartItems[index].price = el.price;
                 }
               });
               this.totalPrice = 0;
-
-              var _iterator = _createForOfIteratorHelper(this.priceMap),
-                  _step;
-
-              try {
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  var _step$value = _slicedToArray(_step.value, 2),
-                      key = _step$value[0],
-                      _value = _step$value[1];
-
-                  this.totalPrice += _value;
-                }
-              } catch (err) {
-                _iterator.e(err);
-              } finally {
-                _iterator.f();
-              }
+              this.cartItems.forEach(function (el) {
+                _this5.totalPrice += el.price;
+              });
             }
           }, {
             key: "getSubscriptionProgramsWise",
@@ -1142,7 +1116,12 @@
           }, {
             key: "getSubscriptionCost",
             value: function getSubscriptionCost(programId) {
-              return this.priceMap.get(programId);
+              try {
+                return this.priceMap.get(programId);
+              } catch (ex) {
+                console.log(ex);
+                return 0;
+              }
             }
           }]);
 
@@ -3114,7 +3093,8 @@
                 localStorage.setItem('cart', JSON.stringify([{
                   name: this.activeProgram['name'],
                   id: this.activeProgram['programid'],
-                  products: items
+                  products: items,
+                  price: 0
                 }]));
               }
 
