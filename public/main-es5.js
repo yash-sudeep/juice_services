@@ -1090,6 +1090,14 @@
                 });
 
                 _this4.priceMap = new Map();
+
+                _this4.cartItems.forEach(function (cItem) {
+                  _this4.subscriptions.forEach(function (sItem) {
+                    if (cItem.id === sItem.programid && cItem.packages[0].name === sItem["package"]) {
+                      _this4.priceMap.set(Number(cItem.id), Number(sItem.price));
+                    }
+                  });
+                });
               });
             }
           }, {

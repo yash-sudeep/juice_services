@@ -553,6 +553,13 @@ let CartComponent = /*@__PURE__*/ (() => {
                     el.packages = this.subscriptionMap.get(el.id);
                 });
                 this.priceMap = new Map();
+                this.cartItems.forEach((cItem) => {
+                    this.subscriptions.forEach((sItem) => {
+                        if (cItem.id === sItem.programid && cItem.packages[0].name === sItem.package) {
+                            this.priceMap.set(Number(cItem.id), Number(sItem.price));
+                        }
+                    });
+                });
             });
         }
         onChange(event, programId) {
