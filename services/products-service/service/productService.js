@@ -17,7 +17,7 @@ module.exports = {
     getProgramWiseProducts: function(req) {
         return new Promise((resolve, reject) => {
             try {
-                const programId = parseInt(req.query.id);
+                const programId = parseInt(req.query.programId);
                 if (programId) {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
