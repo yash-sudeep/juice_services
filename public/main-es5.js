@@ -934,7 +934,7 @@
                     n.push(element["package"]);
                   });
 
-                  _this4.subscriptionMap.set(key, n);
+                  _this4.subscriptionMap.set(Number(key), n);
                 };
 
                 for (var key in g) {

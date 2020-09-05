@@ -477,7 +477,7 @@ let CartComponent = /*@__PURE__*/ (() => {
                     g[key].forEach((element) => {
                         n.push(element.package);
                     });
-                    this.subscriptionMap.set(key, n);
+                    this.subscriptionMap.set(Number(key), n);
                 }
                 console.log(this.subscriptionMap);
                 this.priceMap = new Map();
