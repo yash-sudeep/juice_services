@@ -1,4 +1,18 @@
 (function () {
+  function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+  function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -911,11 +925,11 @@
         }
 
         if (rf & 2) {
-          var pname_r5 = ctx.$implicit;
+          var pitem_r5 = ctx.$implicit;
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](pname_r5);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](pitem_r5.name);
         }
       }
 
@@ -972,7 +986,7 @@
 
             var ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-            return ctx_r7.getSubscriptionCost($event, item_r1.id);
+            return ctx_r7.onChange($event, item_r1.id);
           });
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](9, CartComponent_tr_21_option_9_Template, 2, 1, "option", 9);
@@ -983,7 +997,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "td");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, "\u20B9500");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -993,6 +1007,8 @@
         if (rf & 2) {
           var item_r1 = ctx.$implicit;
           var i_r2 = ctx.index;
+
+          var ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
@@ -1009,6 +1025,10 @@
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", item_r1.packages);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("\u20B9", ctx_r0.getSubscriptionCost(item_r1.id), "");
         }
       }
 
@@ -1021,6 +1041,7 @@
             this.authService = authService;
             this.cartItems = [];
             this.subscriptions = [];
+            this.totalPrice = 0;
           }
 
           _createClass(CartComponent, [{
@@ -1067,25 +1088,50 @@
                 _this4.cartItems.forEach(function (el) {
                   el.packages = _this4.subscriptionMap.get(el.id);
                 });
+
+                _this4.priceMap = new Map();
               });
             }
           }, {
-            key: "getSubscriptionCost",
-            value: function getSubscriptionCost(event, programId) {
-              console.log(event);
+            key: "onChange",
+            value: function onChange(event, programId) {
+              var _this5 = this;
+
               var value;
-              var packageName;
+              var packageName = event.target.value.toLowerCase();
               this.subscriptions.forEach(function (el) {
-                if (el["package"] === packageName.toLowerCase() && el.programid === programId) {
-                  value = el.price;
+                if (el["package"] === packageName && el.programid === programId) {
+                  _this5.priceMap.set(programId, el.price);
                 }
               });
-              return value;
+              this.totalPrice = 0;
+
+              var _iterator = _createForOfIteratorHelper(this.priceMap),
+                  _step;
+
+              try {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                  var _step$value = _slicedToArray(_step.value, 2),
+                      key = _step$value[0],
+                      _value = _step$value[1];
+
+                  this.totalPrice += _value;
+                }
+              } catch (err) {
+                _iterator.e(err);
+              } finally {
+                _iterator.f();
+              }
             }
           }, {
             key: "getSubscriptionProgramsWise",
             value: function getSubscriptionProgramsWise(programId) {
               return this.subscriptionMap.get(programId);
+            }
+          }, {
+            key: "getSubscriptionCost",
+            value: function getSubscriptionCost(programId) {
+              return this.priceMap.get(programId);
             }
           }]);
 
@@ -1100,7 +1146,7 @@
           type: CartComponent,
           selectors: [["app-cart"]],
           decls: 33,
-          vars: 1,
+          vars: 2,
           consts: [[1, "container", "m-t-2"], [1, "row"], [1, "col-12"], [1, "card"], [1, "card-body"], [1, "table-responsive"], [1, "table", "table-bordered"], ["scope", "col", "colspan", "4", 1, "text-center"], ["scope", "col"], [4, "ngFor", "ngForOf"], [1, "total"], ["colspan", "3", 1, "text-center"], [1, "btn", "btn-dark", "text-uppercase", "float-right", "m-l-1", "m-b-1"], [1, "btn", "btn-outline-dark", "text-uppercase", "float-right", "m-b-1"], ["scope", "row"], [1, "text-left", "f-w-600"], ["id", "exampleFormControlSelect1", 1, "form-control", 3, "change"], [1, "text-left"]],
           template: function CartComponent_Template(rf, ctx) {
             if (rf & 1) {
@@ -1162,7 +1208,7 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](20, "tbody");
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](21, CartComponent_tr_21_Template, 12, 4, "tr", 9);
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](21, CartComponent_tr_21_Template, 12, 5, "tr", 9);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "tr", 10);
 
@@ -1174,7 +1220,7 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](25, "td");
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](26, "\u20B92000");
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](26);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -1221,6 +1267,10 @@
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](21);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.cartItems);
+
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](5);
+
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("\u20B9", ctx.totalPrice, "");
             }
           },
           directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ɵangular_packages_forms_forms_x"]],
@@ -2050,7 +2100,7 @@
           }, {
             key: "launchModal",
             value: function launchModal(ref, name) {
-              var _this5 = this;
+              var _this6 = this;
 
               var ngbModalOptions = {
                 backdrop: 'static',
@@ -2064,7 +2114,7 @@
 
               this.modalReference = this.modalService.open(ref, ngbModalOptions);
               this.modalReference.result.then(function (result) {}, function (reason) {
-                _this5.otpView = false;
+                _this6.otpView = false;
               });
             }
           }, {
@@ -2117,7 +2167,7 @@
           }, {
             key: "sendOTP",
             value: function sendOTP() {
-              var _this6 = this;
+              var _this7 = this;
 
               console.log('Sending OTP');
 
@@ -2132,12 +2182,12 @@
               this._httpService.postRequest(_url, JSON.stringify({
                 mobile_number: this.mobileNumber
               }), '').subscribe(function (res) {
-                clearTimeout(_this6.timeTracker);
-                _this6.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
-                _this6.timerText = 'OTP expires within ' + _this6.timeLeft + ' seconds';
-                _this6.timerView = false;
-                _this6.timeTracker = setInterval(function () {
-                  _this6.countdown();
+                clearTimeout(_this7.timeTracker);
+                _this7.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
+                _this7.timerText = 'OTP expires within ' + _this7.timeLeft + ' seconds';
+                _this7.timerView = false;
+                _this7.timeTracker = setInterval(function () {
+                  _this7.countdown();
                 }, 1000);
               }, function (error) {});
             }
@@ -2150,7 +2200,7 @@
           }, {
             key: "login",
             value: function login() {
-              var _this7 = this;
+              var _this8 = this;
 
               var formValues = this.signInForm.form.value;
               var body = {
@@ -2160,7 +2210,7 @@
               this.authService.login(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].LOGIN, JSON.stringify(body)).subscribe(function (res) {
                 var body = res.body;
 
-                _this7.postAuth(body);
+                _this8.postAuth(body);
               }, function (error) {});
             }
           }, {
@@ -2180,7 +2230,7 @@
           }, {
             key: "signUp",
             value: function signUp(OTP) {
-              var _this8 = this;
+              var _this9 = this;
 
               var formValues = this.signUpForm.form.value;
               var body = {
@@ -2196,9 +2246,9 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_UP, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
 
-                _this8.postAuth(body);
+                _this9.postAuth(body);
 
-                _this8.modalReference.close();
+                _this9.modalReference.close();
               }, function (error) {});
             }
           }, {
@@ -2963,20 +3013,20 @@
           _createClass(ProgramComponent, [{
             key: "ngOnInit",
             value: function ngOnInit() {
-              var _this9 = this;
+              var _this10 = this;
 
               this.activeProgram = this.authService.program;
               this.minBasketItems = this.activeProgram['min_buy_criteria'] ? this.activeProgram['min_buy_criteria'] : 0;
               this.activatedRoute.queryParams.subscribe(function (params) {
                 var programId = parseInt(params['programId']);
 
-                _this9.getProducts(programId);
+                _this10.getProducts(programId);
               });
             }
           }, {
             key: "open",
             value: function open(ref, index) {
-              var _this10 = this;
+              var _this11 = this;
 
               this.productAdvantages = this.products[index]['advantages'];
               this.selectedItemIndex = index;
@@ -2984,9 +3034,9 @@
               this.modalService.open(ref, {
                 size: 'lg'
               }).result.then(function (result) {
-                _this10.closeResult = "Closed with: ".concat(result);
+                _this11.closeResult = "Closed with: ".concat(result);
               }, function (reason) {
-                _this10.closeResult = "Dismissed ".concat(_this10.getDismissReason(reason));
+                _this11.closeResult = "Dismissed ".concat(_this11.getDismissReason(reason));
               });
             }
           }, {
@@ -3003,13 +3053,13 @@
           }, {
             key: "getProducts",
             value: function getProducts(programId) {
-              var _this11 = this;
+              var _this12 = this;
 
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this11.products = body['data'];
+                _this12.products = body['data'];
 
-                _this11.products.forEach(function (el) {
+                _this12.products.forEach(function (el) {
                   el.total = 0;
                 });
               }, function (error) {});
@@ -3029,12 +3079,12 @@
           }, {
             key: "validateBasket",
             value: function validateBasket() {
-              var _this12 = this;
+              var _this13 = this;
 
               this.basketItems = 0;
               this.products.forEach(function (el) {
                 if (el.total > 0) {
-                  _this12.basketItems += el.total;
+                  _this13.basketItems += el.total;
                 }
               });
             }
