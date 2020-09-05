@@ -40,7 +40,7 @@ const validateToken = (req, res, next) => {
         req.originalUrl === "/api//user/forgot-password" || 
         (req.originalUrl === "/api/program" && req.method === 'GET') ||
         req.originalUrl === "/api/program/description" ||
-        (req.originalUrl === "/api/products" && req.method === 'GET')
+        (req.originalUrl.includes("/api/products") && req.method === 'GET')
     ) {
         next();
     } else {
