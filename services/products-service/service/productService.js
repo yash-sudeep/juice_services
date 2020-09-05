@@ -23,7 +23,7 @@ module.exports = {
                         if (valid) {
                             const query =
                                 "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
-                                req.params.id +
+                                programId +
                                 "=ANY(PROGRAMID)";
                             const res = await db.basicQuery(query);
                             resolve(res);
