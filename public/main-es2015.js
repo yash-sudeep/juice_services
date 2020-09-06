@@ -541,7 +541,7 @@ let CartComponent = /*@__PURE__*/ (() => {
         getSubscriptions() {
             this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].SUBSCRIPTIONS, this.authService.token).subscribe((res) => {
                 let body = res.body;
-                this.subscriptions = body['data'];
+                this.subscriptions = body['data'].sort(this._httpService.GetSortOrder('subscriptionid'));
                 this.subscriptionMap = new Map();
                 this.priceMap = new Map();
                 let g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](this.subscriptions, (item) => item.programid);

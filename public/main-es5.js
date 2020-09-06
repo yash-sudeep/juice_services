@@ -1070,7 +1070,7 @@
 
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].SUBSCRIPTIONS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this4.subscriptions = body['data'];
+                _this4.subscriptions = body['data'].sort(_this4._httpService.GetSortOrder('subscriptionid'));
                 _this4.subscriptionMap = new Map();
                 _this4.priceMap = new Map();
                 var g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](_this4.subscriptions, function (item) {
