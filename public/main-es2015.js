@@ -555,8 +555,10 @@ let CartComponent = /*@__PURE__*/ (() => {
                     });
                     this.subscriptionMap.set(Number(key), n);
                 }
-                console.log('subscriptionMap: ', this.subscriptionMap);
-                console.log('priceMap: ', this.priceMap);
+                this.totalPrice = 0;
+                for (let value of this.priceMap.values()) {
+                    this.totalPrice += value;
+                }
                 this.cartItems.forEach((el) => {
                     el.packages = this.subscriptionMap.get(el.id);
                 });
@@ -1053,7 +1055,6 @@ let LoginComponent = /*@__PURE__*/ (() => {
             };
             if (name === 'SignUp') {
                 this.sendOTP();
-                console.log(this.signUpForm.form.value);
             }
             this.modalReference = this.modalService.open(ref, ngbModalOptions);
             this.modalReference.result.then((result) => { }, (reason) => {
@@ -1080,7 +1081,6 @@ let LoginComponent = /*@__PURE__*/ (() => {
         }
         // ========================================================================================================
         onOtpChange($event) {
-            console.log($event);
             let ev = $event;
             this.OTP = ev.toString();
             if (this.OTP.length === 6) {
@@ -1107,7 +1107,6 @@ let LoginComponent = /*@__PURE__*/ (() => {
         }
         // ========================================================================================================
         sendOTP() {
-            console.log('Sending OTP');
             let _url;
             if (!this.signInFormEnabled) {
                 _url = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_UP_VERIFY;
@@ -1153,7 +1152,6 @@ let LoginComponent = /*@__PURE__*/ (() => {
             };
             this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].FORGOT_PWD, JSON.stringify(body), '').subscribe((res) => {
                 let body = res.body;
-                console.log(body);
             }, (error) => {
             });
         }
@@ -1181,7 +1179,6 @@ let LoginComponent = /*@__PURE__*/ (() => {
             this.authService.token = body.token;
             delete body.token;
             this.authService.usrObj = body;
-            console.log(body);
             this.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
             this.authService.isLoggedIn = true;
             if (this.authService.redirectUrl) {
@@ -1625,7 +1622,6 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe((res) => {
                 let body = res.body;
                 this.products = body['data'];
-                console.log(this.products);
                 let cartObj = localStorage.getItem('cart');
                 if (cartObj) {
                     let cartArr = JSON.parse(cartObj);
@@ -1633,7 +1629,6 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     if (o.hasOwnProperty(this.activeProgram['programid'])) {
                         let items = o[this.activeProgram['programid'].toString()][0]['products'];
                         let p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, (item) => item.productid);
-                        console.log(p);
                         this.products.forEach((el) => {
                             if (p.hasOwnProperty(el.productid.toString())) {
                                 el.total = p[el.productid.toString()][0].total;

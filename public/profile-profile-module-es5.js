@@ -1163,8 +1163,6 @@
           }, {
             key: "activateTab",
             value: function activateTab(name) {
-              console.log('Tab: ' + name);
-
               switch (name) {
                 case 'Personal':
                   this.tabs = {
@@ -1202,7 +1200,6 @@
 
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].RESET_PWD, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                console.log(body);
               }, function (error) {});
             } // ========================================================================================================
 
@@ -1243,7 +1240,6 @@
               var _this = this;
 
               var formValues = obj.form.value;
-              console.log(formValues);
               var body = {
                 name: formValues.userName,
                 mobile_number: formValues.addressMobileNumber,
@@ -1258,7 +1254,6 @@
               if (this.addressMode === 'NEW') {
                 this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
-                  console.log(body);
 
                   _this.modalService.dismissAll();
                 }, function (error) {});
@@ -1267,7 +1262,6 @@
 
                 this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
-                  console.log(body);
 
                   _this.modalService.dismissAll();
                 }, function (error) {});
@@ -1290,7 +1284,6 @@
               this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this2.addressArr = body.address;
-                console.log(_this2.addressArr);
               }, function (error) {});
             } // ========================================================================================================
 
@@ -1307,7 +1300,6 @@
 
               this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                console.log(body);
 
                 _this3.fetchAddress();
               }, function (error) {});

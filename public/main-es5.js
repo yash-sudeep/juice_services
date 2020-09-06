@@ -1,4 +1,10 @@
 (function () {
+  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -1088,8 +1094,21 @@
                   _loop(key);
                 }
 
-                console.log('subscriptionMap: ', _this4.subscriptionMap);
-                console.log('priceMap: ', _this4.priceMap);
+                _this4.totalPrice = 0;
+
+                var _iterator = _createForOfIteratorHelper(_this4.priceMap.values()),
+                    _step;
+
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    var value = _step.value;
+                    _this4.totalPrice += value;
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
+                }
 
                 _this4.cartItems.forEach(function (el) {
                   el.packages = _this4.subscriptionMap.get(el.id);
@@ -2112,7 +2131,6 @@
 
               if (name === 'SignUp') {
                 this.sendOTP();
-                console.log(this.signUpForm.form.value);
               }
 
               this.modalReference = this.modalService.open(ref, ngbModalOptions);
@@ -2144,7 +2162,6 @@
           }, {
             key: "onOtpChange",
             value: function onOtpChange($event) {
-              console.log($event);
               var ev = $event;
               this.OTP = ev.toString();
 
@@ -2175,8 +2192,6 @@
             key: "sendOTP",
             value: function sendOTP() {
               var _this7 = this;
-
-              console.log('Sending OTP');
 
               var _url;
 
@@ -2234,7 +2249,6 @@
 
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].FORGOT_PWD, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
-                console.log(body);
               }, function (error) {});
             } // ========================================================================================================
 
@@ -2269,7 +2283,6 @@
               this.authService.token = body.token;
               delete body.token;
               this.authService.usrObj = body;
-              console.log(body);
               this.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
               this.authService.isLoggedIn = true;
 
@@ -3102,7 +3115,6 @@
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this12.products = body['data'];
-                console.log(_this12.products);
                 var cartObj = localStorage.getItem('cart');
 
                 if (cartObj) {
@@ -3117,7 +3129,6 @@
                     var p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, function (item) {
                       return item.productid;
                     });
-                    console.log(p);
 
                     _this12.products.forEach(function (el) {
                       if (p.hasOwnProperty(el.productid.toString())) {

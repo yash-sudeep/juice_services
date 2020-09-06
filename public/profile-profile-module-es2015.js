@@ -537,7 +537,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
         }
         // ========================================================================================================
         activateTab(name) {
-            console.log('Tab: ' + name);
             switch (name) {
                 case 'Personal':
                     this.tabs = { personal: true, address: false, password: false };
@@ -558,7 +557,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             };
             this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].RESET_PWD, JSON.stringify(body), this.authService.token).subscribe((res) => {
                 let body = res.body;
-                console.log(body);
             }, (error) => {
             });
         }
@@ -594,7 +592,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
         // ========================================================================================================
         submit(obj) {
             let formValues = obj.form.value;
-            console.log(formValues);
             let body = {
                 name: formValues.userName,
                 mobile_number: formValues.addressMobileNumber,
@@ -608,7 +605,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             if (this.addressMode === 'NEW') {
                 this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe((res) => {
                     let body = res.body;
-                    console.log(body);
                     this.modalService.dismissAll();
                 }, (error) => {
                 });
@@ -617,7 +613,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
                 body['addressId'] = this.addressID;
                 this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe((res) => {
                     let body = res.body;
-                    console.log(body);
                     this.modalService.dismissAll();
                 }, (error) => {
                 });
@@ -635,7 +630,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this.authService.token).subscribe((res) => {
                 let body = res.body;
                 this.addressArr = body.address;
-                console.log(this.addressArr);
             }, (error) => {
             });
         }
@@ -647,7 +641,6 @@ let ProfileComponent = /*@__PURE__*/ (() => {
         deleteAddress(addressId) {
             this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this.authService.token).subscribe((res) => {
                 let body = res.body;
-                console.log(body);
                 this.fetchAddress();
             }, (error) => {
             });
