@@ -530,16 +530,7 @@
                 _this.router.navigate(['/login'], {
                   relativeTo: _this.activatedRoute
                 });
-              }, function (error) {
-                _this.authService.isLoggedIn = false;
-                _this.authService.token = undefined;
-                _this.authService.clientName = '';
-                _this.authService.usrObj = null;
-
-                _this.router.navigate(['/login'], {
-                  relativeTo: _this.activatedRoute
-                });
-              });
+              }, function (error) {});
             }
           }, {
             key: "getPrograms",
@@ -552,7 +543,7 @@
                 _this2.authService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this2.programList, function (item) {
                   return item.programid;
                 });
-              });
+              }, function (error) {});
             }
           }, {
             key: "navigateToProgram",
@@ -909,19 +900,13 @@
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
-      /*! @angular/router */
-      "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-      /* harmony import */
-
-
-      var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! @angular/common */
       "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
       /* harmony import */
 
 
-      var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! @angular/forms */
       "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
 
@@ -1049,13 +1034,11 @@
 
       var CartComponent = /*@__PURE__*/function () {
         var CartComponent = /*#__PURE__*/function () {
-          function CartComponent(_httpService, authService, router, activatedRoute) {
+          function CartComponent(_httpService, authService) {
             _classCallCheck(this, CartComponent);
 
             this._httpService = _httpService;
             this.authService = authService;
-            this.router = router;
-            this.activatedRoute = activatedRoute;
             this.cartItems = [];
             this.subscriptions = [];
             this.totalPrice = 0;
@@ -1147,6 +1130,16 @@
               } catch (ex) {
                 return 0;
               }
+            } // ========================================================================================================
+
+          }, {
+            key: "ngOnDestroy",
+            value: function ngOnDestroy() {
+              delete this.cartItems;
+              delete this.subscriptions;
+              delete this.priceMap;
+              delete this.subscriptionMap;
+              delete this.totalPrice;
             }
           }]);
 
@@ -1154,7 +1147,7 @@
         }();
 
         CartComponent.ɵfac = function CartComponent_Factory(t) {
-          return new (t || CartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_3__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"]));
+          return new (t || CartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_3__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]));
         };
 
         CartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -1282,7 +1275,7 @@
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("\u20B9", ctx.totalPrice, "");
             }
           },
-          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_6__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_7__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ɵangular_packages_forms_forms_x"]],
+          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ɵangular_packages_forms_forms_x"]],
           styles: ["select[_ngcontent-%COMP%] {\n  -moz-text-align-last: center;\n       text-align-last: center;\n  font-weight: 400;\n  text-transform: uppercase;\n  font-size: 14px;\n}\n\nul[_ngcontent-%COMP%] {\n  list-style-type: none;\n}\n\nul[_ngcontent-%COMP%]    > li[_ngcontent-%COMP%]:before {\n  content: \"-\";\n  margin-right: 1rem;\n}\n\n.btn-dark[_ngcontent-%COMP%] {\n  width: auto;\n}\n\n.table-bordered[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   th[_ngcontent-%COMP%] {\n  border-bottom-width: 1px;\n  text-align: center;\n  text-transform: uppercase;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.table-bordered[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr.total[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  font-weight: bold;\n  text-align: center;\n  text-transform: uppercase;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.table-bordered[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr.total[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 14px;\n}\n\n.table-bordered[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr.total[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]   ul[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  font-size: 14px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY2FydC9jYXJ0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksNEJBQUE7T0FBQSx1QkFBQTtFQUNBLGdCQUFBO0VBQ0EseUJBQUE7RUFDQSxlQUFBO0FBQ0o7O0FBRUE7RUFDSSxxQkFBQTtBQUNKOztBQUNRO0VBQ0ksWUFBQTtFQUNBLGtCQUFBO0FBQ1o7O0FBS0E7RUFDSSxXQUFBO0FBRko7O0FBT1E7RUFDSSx3QkFBQTtFQUNBLGtCQUFBO0VBQ0EseUJBQUE7RUFDQSxzQkFBQTtFQUNBLGVBQUE7QUFKWjs7QUFVWTtFQUNJLGlCQUFBO0VBQ0Esa0JBQUE7RUFDQSx5QkFBQTtFQUNBLHNCQUFBO0VBQ0EsZUFBQTtBQVJoQjs7QUFTZ0I7RUFDSSxlQUFBO0FBUHBCOztBQVVvQjtFQUNJLGVBQUE7QUFSeEIiLCJmaWxlIjoic3JjL2FwcC9jYXJ0L2NhcnQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJzZWxlY3Qge1xyXG4gICAgdGV4dC1hbGlnbi1sYXN0OiBjZW50ZXI7XHJcbiAgICBmb250LXdlaWdodDogNDAwO1xyXG4gICAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxufVxyXG5cclxudWwge1xyXG4gICAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xyXG4gICAgPiBsaSB7XHJcbiAgICAgICAgJjpiZWZvcmUge1xyXG4gICAgICAgICAgICBjb250ZW50OiBcIi1cIjtcclxuICAgICAgICAgICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xyXG4gICAgICAgICAgICAvLyBkaXNwbGF5OiBibG9jaztcclxuICAgICAgICB9XHJcbiAgICB9XHJcbn1cclxuXHJcbi5idG4tZGFyayB7XHJcbiAgICB3aWR0aDogYXV0bztcclxufVxyXG5cclxuLnRhYmxlLWJvcmRlcmVkIHtcclxuICAgIHRoZWFkIHtcclxuICAgICAgICB0aCB7XHJcbiAgICAgICAgICAgIGJvcmRlci1ib3R0b20td2lkdGg6IDFweDtcclxuICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgICAgICAgICB0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xyXG4gICAgICAgICAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xyXG4gICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG5cclxuICAgIHRib2R5IHtcclxuICAgICAgICB0ci50b3RhbCB7XHJcbiAgICAgICAgICAgIHRkIHtcclxuICAgICAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgICAgICAgICAgICAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuICAgICAgICAgICAgICAgIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XHJcbiAgICAgICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICAgICAgICAgICAgICBwIHtcclxuICAgICAgICAgICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgICAgICB1bCB7XHJcbiAgICAgICAgICAgICAgICAgICAgbGkge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XHJcbiAgICAgICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59XHJcbiJdfQ== */"]
         });
         return CartComponent;
@@ -2287,6 +2280,26 @@
                   relativeTo: this.activatedRoute
                 });
               }
+            } // ========================================================================================================
+
+          }, {
+            key: "ngOnDestroy",
+            value: function ngOnDestroy() {
+              delete this.toggleBtn;
+              delete this.signInFormEnabled;
+              delete this.timeLeft;
+              delete this.timerText;
+              delete this.timeTracker;
+              delete this.timerView;
+              delete this.faStopwatch;
+              delete this.otpView;
+              delete this.mobileNumber;
+              delete this.forgotPwdModalRef;
+              delete this.signUpModalRef;
+              delete this.modalReference;
+              delete this.forgotPwdform;
+              delete this.signInForm;
+              delete this.signUpForm;
             }
           }]);
 
@@ -3039,7 +3052,7 @@
 
                 _this10.getProducts(programId);
 
-                _this10.authService.program = _this10.authService.programList[programId.toString()];
+                _this10.authService.program = _this10.authService.programList[programId.toString()][0];
 
                 _this10.setPageData();
               });
@@ -3219,6 +3232,24 @@
                   relativeTo: this.activatedRoute
                 });
               }
+            } // ========================================================================================================
+
+          }, {
+            key: "ngOnDestroy",
+            value: function ngOnDestroy() {
+              delete this.products;
+              delete this.closeResult;
+              delete this.productAdvantages;
+              delete this.basketItems;
+              delete this.minBasketItems;
+              delete this.cartAlert;
+              delete this.activeProgram;
+              delete this.selectedItemCount;
+              delete this.selectedItemIndex;
+              delete this.faMinus;
+              delete this.faMinus;
+              delete this.faShoppingBasket;
+              delete this.faShoppingCart;
             }
           }]);
 

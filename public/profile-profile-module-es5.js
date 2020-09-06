@@ -1311,6 +1311,47 @@
 
                 _this3.fetchAddress();
               }, function (error) {});
+            } // ========================================================================================================
+
+          }, {
+            key: "ngOnDestroy",
+            value: function ngOnDestroy() {
+              delete this.timeLeft;
+              delete this.timerText;
+              delete this.timeTracker;
+              delete this.timerView;
+              delete this.tabs;
+              delete this.OTP;
+              delete this.timerExpired;
+              delete this.timerView;
+              delete this.modalReference;
+              delete this.addressArr;
+              delete this.firstName;
+              delete this.lastName;
+              delete this.emailID;
+              delete this.mobileNumber;
+              delete this.resetPwdForm;
+              delete this.addressMode;
+              delete this.modalTitle;
+              delete this.modalBtnText;
+              delete this.userName;
+              delete this.addressMobileNumber;
+              delete this.pinCode;
+              delete this.addressText;
+              delete this.cityName;
+              delete this.stateName;
+              delete this.landmark;
+              delete this.addressType;
+              delete this.addressID;
+              delete this.faStopwatch;
+              delete this.faAddressCard;
+              delete this.faChevronRight;
+              delete this.faEdit;
+              delete this.faEllipsisV;
+              delete this.faKey;
+              delete this.faPlus;
+              delete this.faTrash;
+              delete this.faUser;
             }
           }]);
 

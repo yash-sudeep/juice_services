@@ -652,6 +652,45 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             }, (error) => {
             });
         }
+        // ========================================================================================================
+        ngOnDestroy() {
+            delete this.timeLeft;
+            delete this.timerText;
+            delete this.timeTracker;
+            delete this.timerView;
+            delete this.tabs;
+            delete this.OTP;
+            delete this.timerExpired;
+            delete this.timerView;
+            delete this.modalReference;
+            delete this.addressArr;
+            delete this.firstName;
+            delete this.lastName;
+            delete this.emailID;
+            delete this.mobileNumber;
+            delete this.resetPwdForm;
+            delete this.addressMode;
+            delete this.modalTitle;
+            delete this.modalBtnText;
+            delete this.userName;
+            delete this.addressMobileNumber;
+            delete this.pinCode;
+            delete this.addressText;
+            delete this.cityName;
+            delete this.stateName;
+            delete this.landmark;
+            delete this.addressType;
+            delete this.addressID;
+            delete this.faStopwatch;
+            delete this.faAddressCard;
+            delete this.faChevronRight;
+            delete this.faEdit;
+            delete this.faEllipsisV;
+            delete this.faKey;
+            delete this.faPlus;
+            delete this.faTrash;
+            delete this.faUser;
+        }
     }
     ProfileComponent.ɵfac = function ProfileComponent_Factory(t) { return new (t || ProfileComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_4__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_5__["NgbModal"])); };
     ProfileComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: ProfileComponent, selectors: [["app-profile"]], decls: 42, vars: 21, consts: [[1, "container", "m-t-2"], [1, "row"], [1, "col-xl-3", "col-lg-12"], [1, "col-12"], [1, "card"], [1, "card-body"], ["src", "https://d19m59y37dris4.cloudfront.net/bubbly-dashboard/1-0/img/avatar-6.jpg", "alt", "Jason Doe", 1, "img-fluid", "rounded-circle", "shadow", 2, "max-width", "2.5rem"], [1, "user-container"], [1, "user-name"], [1, "row", "m-t-2"], [1, "text-left", "text-muted", "p-header", "text-center", "text-uppercase"], [1, "list-group"], [1, "list-group-item", 3, "ngClass", "click"], [1, "icon-left"], [3, "icon"], ["class", "icon-right", 4, "ngIf"], [1, "col-xl-9", "col-lg-12"], [4, "ngIf"], ["addressModal", ""], [1, "icon-right"], [1, "col-xl-12"], [1, "col"], ["for", "firstName"], ["type", "text", "id", "firstName", "name", "firstName", "disabled", "", 1, "form-control", "not-allowed", 3, "ngModel", "ngModelOptions", "ngModelChange"], ["for", "lastName"], ["type", "text", "id", "lastName", "name", "lastName", "disabled", "", 1, "form-control", "not-allowed", 3, "ngModel", "ngModelOptions", "ngModelChange"], [1, "form-group", "m-t-2"], ["for", "emailAddress"], ["type", "email", "id", "emailAddress", "name", "emailAddress", "disabled", "", 1, "form-control", "not-allowed", 3, "ngModel", "ngModelOptions", "ngModelChange"], [1, "form-group"], ["for", "mobileNumber"], ["type", "email", "id", "mobileNumber", "name", "mobileNumber", "disabled", "", 1, "form-control", "not-allowed", 3, "ngModel", "ngModelOptions", "ngModelChange"], [1, "col-xl-4"], [1, "col-xl-8"], ["for", "currentPassword"], ["type", "password", "id", "currentPassword", "minlength", "8", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "newPassword"], ["type", "password", "id", "newPassword", "minlength", "8", "required", "", "autofocus", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "confirmPassword"], ["type", "password", "id", "confirmPassword", "minlength", "8", 1, "form-control", 3, "ngModel", "ngModelChange"], ["type", "button", 1, "btn", "btn-dark", "btn-primary", "mx-auto", "d-block", 3, "disabled"], ["id", "addAddress", 1, "btn", "btn-outline-dark", 3, "click"], [1, "m-r-1", 3, "icon"], ["class", "col-xl-6 col-lg-12", 4, "ngFor", "ngForOf"], [1, "col-xl-6", "col-lg-12"], [1, "card", "m-b-2"], [1, "card-header", "bg-transparent"], [1, "m-b-0", "text-uppercase"], [1, "badge", "badge-secondary"], [1, "dropdown"], ["type", "button", "id", "dropdownMenuButton", 1, "btn", "btn-light", "bg-transparent"], ["aria-labelledby", "dropdownMenuButton", 1, "dropdown-menu"], ["href", "javascript:void(0);", 1, "dropdown-item", 3, "click"], [1, "m-b-0", "text-uppercase", "f-w-400"], [1, "modal-header"], ["type", "button", "aria-label", "Close", 1, "close", 3, "click"], ["aria-hidden", "true"], [1, "modal-body"], [1, "container"], [1, "header", "m-b-2"], [1, "text-center"], [3, "ngSubmit"], ["addressForm", "ngForm"], ["for", "userName"], ["type", "text", "id", "userName", "name", "userName", "required", "", "autofocus", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "addressMobileNumber"], ["type", "text", "id", "addressMobileNumber", "name", "addressMobileNumber", "required", "", "minlength", "10", "maxlength", "10", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "addressText"], ["id", "addressText", "name", "addressText", "rows", "4", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "pinCode"], ["type", "text", "id", "pinCode", "name", "pinCode", "required", "", "minlength", "6", "maxlength", "6", 1, "form-control", 3, "ngModel", "ngModelChange", "keypress"], ["for", "landmark"], ["type", "text", "id", "landmark", "name", "landmark", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "cityName"], ["type", "text", "id", "cityName", "name", "cityName", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "stateName"], ["type", "text", "id", "stateName", "name", "stateName", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], [1, "row", "m-b-2"], [1, "col-12", "form-inline"], ["type", "radio", "id", "addressType", "value", "Home", "name", "addressType", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "addressType1"], ["type", "radio", "id", "addressType", "value", "Office", "name", "addressType", "required", "", 1, "form-control", 3, "ngModel", "ngModelChange"], ["for", "addressType2"], ["type", "submit", 1, "btn", "btn-dark", "btn-block", "d-block", "mx-auto"]], template: function ProfileComponent_Template(rf, ctx) {
