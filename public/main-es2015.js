@@ -1578,21 +1578,22 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe((res) => {
                 let body = res.body;
                 this.products = body['data'];
+                console.log(this.products);
                 let cartObj = localStorage.getItem('cart');
                 if (cartObj) {
                     let cartArr = JSON.parse(cartObj);
                     let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                     if (o.hasOwnProperty(this.activeProgram['programid'])) {
                         let items = o[this.activeProgram['programid'].toString()][0]['products'];
+                        let p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, (item) => item.productid);
+                        console.log(p);
                         this.products.forEach((el) => {
-                            items.forEach((element) => {
-                                if (el.productid === element.productid) {
-                                    el.total = element.total;
-                                }
-                                else {
-                                    el.total = 0;
-                                }
-                            });
+                            if (p.hasOwnProperty(el.productid.toString())) {
+                                el.total = p[el.productid.toString()][0].total;
+                            }
+                            else {
+                                el.total = 0;
+                            }
                         });
                     }
                     else {

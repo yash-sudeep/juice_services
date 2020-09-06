@@ -3041,6 +3041,7 @@
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this12.products = body['data'];
+                console.log(_this12.products);
                 var cartObj = localStorage.getItem('cart');
 
                 if (cartObj) {
@@ -3052,14 +3053,17 @@
                   if (o.hasOwnProperty(_this12.activeProgram['programid'])) {
                     var items = o[_this12.activeProgram['programid'].toString()][0]['products'];
 
+                    var p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, function (item) {
+                      return item.productid;
+                    });
+                    console.log(p);
+
                     _this12.products.forEach(function (el) {
-                      items.forEach(function (element) {
-                        if (el.productid === element.productid) {
-                          el.total = element.total;
-                        } else {
-                          el.total = 0;
-                        }
-                      });
+                      if (p.hasOwnProperty(el.productid.toString())) {
+                        el.total = p[el.productid.toString()][0].total;
+                      } else {
+                        el.total = 0;
+                      }
                     });
                   } else {
                     _this12.products.forEach(function (el) {
