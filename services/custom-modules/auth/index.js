@@ -37,10 +37,11 @@ const validateToken = (req, res, next) => {
         req.originalUrl === "/api/user/signin" ||
         req.originalUrl === "/api/user/signup/verify" ||
         req.originalUrl === "/api/user/forgot-password/verify" ||
-        req.originalUrl === "/api//user/forgot-password" || 
+        req.originalUrl === "/api/user/forgot-password" || 
         (req.originalUrl === "/api/program" && req.method === 'GET') ||
         req.originalUrl === "/api/program/description" ||
-        (req.originalUrl.includes("/api/products") && req.method === 'GET')
+        (req.originalUrl.includes("/api/products") && req.method === 'GET') || 
+        !req.originalUrl.includes('/api')
     ) {
         next();
     } else {
