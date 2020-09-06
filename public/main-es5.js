@@ -3172,12 +3172,8 @@
               this.products.forEach(function (el) {
                 if (p.hasOwnProperty(el.productid.toString())) {
                   el.total = p[el.productid.toString()][0].total;
-                } else {
-                  el.total = 0;
                 }
               });
-              var basketItems = this.getbasketItems(this.products);
-              return basketItems;
             } // ========================================================================================================
 
           }, {
@@ -3185,6 +3181,7 @@
             value: function goToCart() {
               var _this14 = this;
 
+              var items = this.getbasketItems(this.products);
               var cartObj = localStorage.getItem('cart');
 
               if (cartObj) {
@@ -3194,31 +3191,26 @@
                 });
 
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
-                  var items = this.getCartItemsfromStorage(o);
                   cartArr.forEach(function (element) {
                     if (element.id === _this14.activeProgram['programid']) {
                       element.products = items;
                     }
                   });
                 } else {
-                  var _items = this.getbasketItems(this.products);
-
                   cartArr.push({
                     name: this.activeProgram['name'],
                     id: this.activeProgram['programid'],
-                    products: _items,
+                    products: items,
                     price: 0
                   });
                 }
 
                 localStorage.setItem('cart', JSON.stringify(cartArr));
               } else {
-                var _items2 = this.getbasketItems(this.products);
-
                 localStorage.setItem('cart', JSON.stringify([{
                   name: this.activeProgram['name'],
                   id: this.activeProgram['programid'],
-                  products: _items2,
+                  products: items,
                   price: 0
                 }]));
               }
@@ -3252,7 +3244,8 @@
               this.products.forEach(function (el) {
                 el.total = 0;
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "ngOnDestroy",
             value: function ngOnDestroy() {
