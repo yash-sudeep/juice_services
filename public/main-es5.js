@@ -200,31 +200,41 @@
       /* harmony import */
 
 
-      var _services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! lodash */
+      "./node_modules/lodash/lodash.js");
+      /* harmony import */
+
+
+      var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+      /* harmony import */
+
+
+      var _services_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! ./services/auth.service */
       "./src/app/services/auth.service.ts");
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! @angular/router */
       "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
       /* harmony import */
 
 
-      var _services_http_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var _services_http_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! ./services/http.service */
       "./src/app/services/http.service.ts");
       /* harmony import */
 
 
-      var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var _angular_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! @angular/common */
       "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
       /* harmony import */
 
 
-      var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
       /*! @fortawesome/angular-fontawesome */
       "./node_modules/@fortawesome/angular-fontawesome/__ivy_ngcc__/fesm2015/angular-fontawesome.js");
 
@@ -520,7 +530,16 @@
                 _this.router.navigate(['/login'], {
                   relativeTo: _this.activatedRoute
                 });
-              }, function (error) {});
+              }, function (error) {
+                _this.authService.isLoggedIn = false;
+                _this.authService.token = undefined;
+                _this.authService.clientName = '';
+                _this.authService.usrObj = null;
+
+                _this.router.navigate(['/login'], {
+                  relativeTo: _this.activatedRoute
+                });
+              });
             }
           }, {
             key: "getPrograms",
@@ -530,6 +549,9 @@
               this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this2.programList = body['data'];
+                _this2.authService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this2.programList, function (item) {
+                  return item.programid;
+                });
               });
             }
           }, {
@@ -565,7 +587,7 @@
         }();
 
         AppComponent.ɵfac = function AppComponent_Factory(t) {
-          return new (t || AppComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_5__["HttpService"]));
+          return new (t || AppComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_6__["HttpService"]));
         };
 
         AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -677,7 +699,7 @@
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.authService.isLoggedIn);
             }
           },
-          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_6__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_6__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterOutlet"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterLinkWithHref"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_7__["FaIconComponent"]],
+          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_7__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_7__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterOutlet"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterLinkWithHref"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_8__["FaIconComponent"]],
           styles: [".navbar[_ngcontent-%COMP%] {\n  background-color: #fff;\n  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);\n}\n.navbar[_ngcontent-%COMP%]   .navbar-brand[_ngcontent-%COMP%] {\n  margin-left: 2rem;\n  font-size: 1.5rem;\n  text-transform: uppercase;\n}\n.navbar[_ngcontent-%COMP%]   .navbar-collapse[_ngcontent-%COMP%]   .badge-danger[_ngcontent-%COMP%] {\n  position: absolute;\n  margin-left: 10px;\n  margin-top: -5px;\n}\nli[_ngcontent-%COMP%] {\n  width: 100px;\n  line-height: 35px;\n}\nli[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-size: 14px;\n  font-weight: 400;\n  text-transform: uppercase;\n}\nli.active[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\nli.nav-item[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  left: auto;\n  top: 101%;\n  right: 0;\n  border: none;\n  box-shadow: 0 0.125rem 0.8rem rgba(0, 0, 0, 0.1) !important;\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%] {\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  text-align: left;\n}\n.footer[_ngcontent-%COMP%] {\n  background-color: #fff;\n  width: 100%;\n  display: block;\n  margin-top: 10px;\n  padding: 40px 0 20px;\n  position: absolute;\n  bottom: 0;\n  overflow: hidden;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin: 0px 10px;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover {\n  text-decoration: underline;\n}\na.dropdown-item[_ngcontent-%COMP%]:active {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\na.dropdown-item[_ngcontent-%COMP%]:hover {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\n.dropdown-menu[_ngcontent-%COMP%]   .user-name[_ngcontent-%COMP%] {\n  pointer-events: none;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Msc0JBQUE7RUFDQSwyQ0FBQTtBQUNEO0FBQUM7RUFDQyxpQkFBQTtFQUNBLGlCQUFBO0VBQ0EseUJBQUE7QUFFRjtBQUNFO0VBQ0Msa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGdCQUFBO0FBQ0g7QUFJQTtFQUNDLFlBQUE7RUFDQSxpQkFBQTtBQUREO0FBRUM7RUFDQyxlQUFBO0VBQ0EsZ0JBQUE7RUFDQSx5QkFBQTtBQUFGO0FBS0M7RUFDQyxnQkFBQTtBQUZGO0FBTUM7RUFDQyxVQUFBO0VBQ0EsU0FBQTtFQUNBLFFBQUE7RUFDQSxZQUFBO0VBQ0EsMkRBQUE7RUFDQSxrQkFBQTtBQUhGO0FBT0E7RUFJQyxrQkFBQTtBQVBEO0FBSUM7RUFDQyxnQkFBQTtBQUZGO0FBT0E7RUFDQyxzQkFBQTtFQUNBLFdBQUE7RUFDQSxjQUFBO0VBQ0EsZ0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsU0FBQTtFQUNBLGdCQUFBO0FBSkQ7QUFLQztFQUNDLGdCQUFBO0FBSEY7QUFJRTtFQUNDLDBCQUFBO0FBRkg7QUFRQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFPQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFVQztFQUNDLG9CQUFBO0FBUEYiLCJmaWxlIjoic3JjL2FwcC9hcHAuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubmF2YmFyIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO1xyXG5cdGJveC1zaGFkb3c6IDAgMXB4IDFweCAwIHJnYmEoMCwgMCwgMCwgLjE2KTtcclxuXHQubmF2YmFyLWJyYW5kIHtcclxuXHRcdG1hcmdpbi1sZWZ0OiAycmVtO1xyXG5cdFx0Zm9udC1zaXplOiAxLjVyZW07XHJcblx0XHR0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xyXG5cdH1cclxuXHQubmF2YmFyLWNvbGxhcHNlIHtcclxuXHRcdC5iYWRnZS1kYW5nZXIge1xyXG5cdFx0XHRwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0XHRcdG1hcmdpbi1sZWZ0OiAxMHB4O1xyXG5cdFx0XHRtYXJnaW4tdG9wOiAtNXB4O1xyXG5cdFx0fVxyXG5cdH1cclxufVxyXG5cclxubGkge1xyXG5cdHdpZHRoOiAxMDBweDtcclxuXHRsaW5lLWhlaWdodDogMzVweDtcclxuXHRhIHtcclxuXHRcdGZvbnQtc2l6ZTogMTRweDtcclxuXHRcdGZvbnQtd2VpZ2h0OiA0MDA7XHJcblx0XHR0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xyXG5cdH1cclxufVxyXG5cclxubGkuYWN0aXZlIHtcclxuXHRhIHtcclxuXHRcdGZvbnQtd2VpZ2h0OiA1MDA7XHJcblx0fVxyXG59XHJcbmxpLm5hdi1pdGVtIHtcclxuXHQuZHJvcGRvd24tbWVudSB7XHJcblx0XHRsZWZ0OiBhdXRvO1xyXG5cdFx0dG9wOiAxMDElO1xyXG5cdFx0cmlnaHQ6IDA7XHJcblx0XHRib3JkZXI6IG5vbmU7XHJcblx0XHRib3gtc2hhZG93OiAwIDAuMTI1cmVtIDAuOHJlbSByZ2JhKDAsIDAsIDAsIDAuMSkgIWltcG9ydGFudDtcclxuXHRcdHRleHQtYWxpZ246IGNlbnRlcjtcclxuXHR9XHJcbn1cclxuXHJcbiN1c2VyLWRyb3Bkb3duIHtcclxuXHQuZHJvcGRvd24tbWVudSB7XHJcblx0XHR0ZXh0LWFsaWduOiBsZWZ0O1xyXG5cdH1cclxuXHR0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbn1cclxuXHJcbi5mb290ZXIge1xyXG5cdGJhY2tncm91bmQtY29sb3I6ICNmZmY7XHJcblx0d2lkdGg6IDEwMCU7XHJcblx0ZGlzcGxheTogYmxvY2s7XHJcblx0bWFyZ2luLXRvcDogMTBweDtcclxuXHRwYWRkaW5nOiA0MHB4IDAgMjBweDtcclxuXHRwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0Ym90dG9tOiAwO1xyXG5cdG92ZXJmbG93OiBoaWRkZW47XHJcblx0YSB7XHJcblx0XHRtYXJnaW46IDBweCAxMHB4O1xyXG5cdFx0Jjpob3ZlciB7XHJcblx0XHRcdHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xyXG5cdFx0fVxyXG5cdH1cclxufVxyXG5cclxuYS5kcm9wZG93bi1pdGVtIHtcclxuXHQmOmFjdGl2ZSB7XHJcblx0XHRjb2xvcjogIzBjNTQ2MDtcclxuXHRcdGJhY2tncm91bmQtY29sb3I6ICNkMWVjZjE7XHJcblx0XHRib3JkZXItY29sb3I6ICNiZWU1ZWI7XHJcblx0fVxyXG5cdCY6aG92ZXIge1xyXG5cdFx0Y29sb3I6ICMwYzU0NjA7XHJcblx0XHRiYWNrZ3JvdW5kLWNvbG9yOiAjZDFlY2YxO1xyXG5cdFx0Ym9yZGVyLWNvbG9yOiAjYmVlNWViO1xyXG5cdH1cclxufVxyXG5cclxuLmRyb3Bkb3duLW1lbnUge1xyXG5cdC51c2VyLW5hbWUge1xyXG5cdFx0cG9pbnRlci1ldmVudHM6IG5vbmU7XHJcblx0fVxyXG59XHJcbiJdfQ== */"]
         });
         return AppComponent;
@@ -1050,7 +1072,8 @@
               } else {
                 this.cartItems = [];
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "getSubscriptions",
             value: function getSubscriptions() {
@@ -1089,7 +1112,8 @@
                   el.packages = _this4.subscriptionMap.get(el.id);
                 });
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "onChange",
             value: function onChange(event, programId, index) {
@@ -1107,12 +1131,14 @@
               this.cartItems.forEach(function (el) {
                 _this5.totalPrice += el.price;
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "getSubscriptionProgramsWise",
             value: function getSubscriptionProgramsWise(programId) {
               return this.subscriptionMap.get(programId);
-            }
+            } // ========================================================================================================
+
           }, {
             key: "getSubscriptionCost",
             value: function getSubscriptionCost(programId) {
@@ -2079,7 +2105,8 @@
 
           _createClass(LoginComponent, [{
             key: "ngOnInit",
-            value: function ngOnInit() {}
+            value: function ngOnInit() {} // ========================================================================================================
+
           }, {
             key: "launchModal",
             value: function launchModal(ref, name) {
@@ -2099,7 +2126,8 @@
               this.modalReference.result.then(function (result) {}, function (reason) {
                 _this6.otpView = false;
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "toggleBtnHandler",
             value: function toggleBtnHandler() {
@@ -2118,7 +2146,8 @@
                   headerText: 'Create Your Account'
                 };
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "onOtpChange",
             value: function onOtpChange($event) {
@@ -2131,7 +2160,8 @@
                   this.signUp(this.OTP);
                 }
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "countdown",
             value: function countdown() {
@@ -2146,7 +2176,8 @@
                 this.timerText = 'OTP expires within ' + this.timeLeft + ' seconds';
                 this.timeLeft--;
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "sendOTP",
             value: function sendOTP() {
@@ -2173,13 +2204,15 @@
                   _this7.countdown();
                 }, 1000);
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "enablePasswordInput",
             value: function enablePasswordInput() {
               this.sendOTP();
               this.otpView = true;
-            }
+            } // ========================================================================================================
+
           }, {
             key: "login",
             value: function login() {
@@ -2195,7 +2228,8 @@
 
                 _this8.postAuth(body);
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "forgotPassword",
             value: function forgotPassword() {
@@ -2209,7 +2243,8 @@
                 var body = res.body;
                 console.log(body);
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "signUp",
             value: function signUp(OTP) {
@@ -2233,7 +2268,8 @@
 
                 _this9.modalReference.close();
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "postAuth",
             value: function postAuth(body) {
@@ -2998,14 +3034,24 @@
             value: function ngOnInit() {
               var _this10 = this;
 
-              this.activeProgram = this.authService.program;
-              this.minBasketItems = this.activeProgram['min_buy_criteria'] ? this.activeProgram['min_buy_criteria'] : 0;
               this.activatedRoute.queryParams.subscribe(function (params) {
                 var programId = parseInt(params['programId']);
 
                 _this10.getProducts(programId);
+
+                _this10.authService.program = _this10.authService.programList[programId.toString()];
+
+                _this10.setPageData();
               });
-            }
+            } // ========================================================================================================
+
+          }, {
+            key: "setPageData",
+            value: function setPageData() {
+              this.activeProgram = this.authService.program;
+              this.minBasketItems = this.activeProgram['min_buy_criteria'] ? this.activeProgram['min_buy_criteria'] : 0;
+            } // ========================================================================================================
+
           }, {
             key: "open",
             value: function open(ref, index) {
@@ -3021,7 +3067,8 @@
               }, function (reason) {
                 _this11.closeResult = "Dismissed ".concat(_this11.getDismissReason(reason));
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "getDismissReason",
             value: function getDismissReason(reason) {
@@ -3032,7 +3079,8 @@
               } else {
                 return "with: ".concat(reason);
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "getProducts",
             value: function getProducts(programId) {
@@ -3078,7 +3126,8 @@
 
                 _this12.validateBasket();
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "basketOps",
             value: function basketOps(index, operation) {
@@ -3090,7 +3139,8 @@
 
               this.selectedItemCount = this.products[index]['total'];
               this.validateBasket();
-            }
+            } // ========================================================================================================
+
           }, {
             key: "validateBasket",
             value: function validateBasket() {
@@ -3102,7 +3152,8 @@
                   _this13.basketItems += el.total;
                 }
               });
-            }
+            } // ========================================================================================================
+
           }, {
             key: "goToCart",
             value: function goToCart() {
@@ -3122,7 +3173,6 @@
                   var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
                     return item.id;
                   });
-                  console.log(o);
 
                   if (o.hasOwnProperty(_this14.activeProgram['programid'])) {
                     var _loop2 = function _loop2(k) {

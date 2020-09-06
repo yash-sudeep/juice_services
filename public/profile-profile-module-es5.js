@@ -1101,12 +1101,11 @@
 
       var ProfileComponent = /*@__PURE__*/function () {
         var ProfileComponent = /*#__PURE__*/function () {
-          function ProfileComponent(authService, _httpService, _authService, modalService) {
+          function ProfileComponent(authService, _httpService, modalService) {
             _classCallCheck(this, ProfileComponent);
 
             this.authService = authService;
             this._httpService = _httpService;
-            this._authService = _authService;
             this.modalService = modalService;
             this.faChevronRight = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faChevronRight"];
             this.faUser = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__["faUser"];
@@ -1159,7 +1158,8 @@
               this.emailID = this.authService.usrObj.emailid;
               this.mobileNumber = this.authService.usrObj.mobilenumber;
               this.fetchAddress();
-            }
+            } // ========================================================================================================
+
           }, {
             key: "activateTab",
             value: function activateTab(name) {
@@ -1190,7 +1190,8 @@
                   };
                   break;
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "resetPassword",
             value: function resetPassword() {
@@ -1199,11 +1200,12 @@
                 newPassword: this.resetPwdForm.confirmPassword
               };
 
-              this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].RESET_PWD, JSON.stringify(body), this._authService.token).subscribe(function (res) {
+              this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].RESET_PWD, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 console.log(body);
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "launchModal",
             value: function launchModal(ref, action, index) {
@@ -1233,7 +1235,8 @@
 
               this.modalReference = this.modalService.open(ref, ngbModalOptions);
               this.modalReference.result.then(function (result) {}, function (reason) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "submit",
             value: function submit(obj) {
@@ -1253,7 +1256,7 @@
               };
 
               if (this.addressMode === 'NEW') {
-                this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this._authService.token).subscribe(function (res) {
+                this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
                   console.log(body);
 
@@ -1262,43 +1265,47 @@
               } else {
                 body['addressId'] = this.addressID;
 
-                this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this._authService.token).subscribe(function (res) {
+                this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
                   console.log(body);
 
                   _this.modalService.dismissAll();
                 }, function (error) {});
               }
-            }
+            } // ========================================================================================================
+
           }, {
             key: "validate",
             value: function validate(evt) {
               var charCode = evt.which ? evt.which : evt.keyCode;
               if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
               return true;
-            }
+            } // ========================================================================================================
+
           }, {
             key: "fetchAddress",
             value: function fetchAddress() {
               var _this2 = this;
 
-              this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this._authService.token).subscribe(function (res) {
+              this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this2.addressArr = body.address;
                 console.log(_this2.addressArr);
               }, function (error) {});
-            }
+            } // ========================================================================================================
+
           }, {
             key: "editAddress",
             value: function editAddress(index) {
               var body = this.addressArr[index];
-            }
+            } // ========================================================================================================
+
           }, {
             key: "deleteAddress",
             value: function deleteAddress(addressId) {
               var _this3 = this;
 
-              this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this._authService.token).subscribe(function (res) {
+              this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 console.log(body);
 
@@ -1311,7 +1318,7 @@
         }();
 
         ProfileComponent.ɵfac = function ProfileComponent_Factory(t) {
-          return new (t || ProfileComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_4__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_5__["NgbModal"]));
+          return new (t || ProfileComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_http_service__WEBPACK_IMPORTED_MODULE_4__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_5__["NgbModal"]));
         };
 
         ProfileComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
