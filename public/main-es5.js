@@ -1119,7 +1119,6 @@
               try {
                 return this.priceMap.get(programId);
               } catch (ex) {
-                console.log(ex);
                 return 0;
               }
             }
@@ -3042,10 +3041,25 @@
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
                 _this12.products = body['data'];
+                var cartObj = localStorage.getItem('cart');
 
-                _this12.products.forEach(function (el) {
-                  el.total = 0;
-                });
+                if (cartObj) {
+                  var items = JSON.parse(cartObj);
+
+                  _this12.products.forEach(function (el) {
+                    items.forEach(function (element) {
+                      if (el.productid === element.productid) {
+                        el.total = element.total;
+                      } else {
+                        el.total = 0;
+                      }
+                    });
+                  });
+                } else {
+                  _this12.products.forEach(function (el) {
+                    el.total = 0;
+                  });
+                }
               }, function (error) {});
             }
           }, {
@@ -3075,6 +3089,8 @@
           }, {
             key: "goToCart",
             value: function goToCart() {
+              var _this14 = this;
+
               var items = [];
               this.products.forEach(function (element) {
                 if (element.total > 0) {
@@ -3084,11 +3100,40 @@
               var cartObj = localStorage.getItem('cart');
 
               if (cartObj) {
-                var cartArr = JSON.parse(cartObj);
-                var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
-                  return item.name;
-                });
-                console.log(o);
+                (function () {
+                  var cartArr = JSON.parse(cartObj);
+                  var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
+                    return item.id;
+                  });
+                  console.log(o);
+
+                  if (o.hasOwnProperty(_this14.activeProgram['programid'])) {
+                    var _loop2 = function _loop2(k) {
+                      if (k === _this14.activeProgram['programid'].toString()) {
+                        items.forEach(function (item) {
+                          o[k].forEach(function (kItem) {
+                            if (kItem.productid === item.productid) {
+                              kItem.total = item.total;
+                            }
+                          });
+                        });
+                      }
+                    };
+
+                    for (var k in o) {
+                      _loop2(k);
+                    }
+                  } else {
+                    cartArr.push({
+                      name: _this14.activeProgram['name'],
+                      id: _this14.activeProgram['programid'],
+                      products: items,
+                      price: 0
+                    });
+                  }
+
+                  localStorage.setItem('cart', JSON.stringify(cartArr));
+                })();
               } else {
                 localStorage.setItem('cart', JSON.stringify([{
                   name: this.activeProgram['name'],

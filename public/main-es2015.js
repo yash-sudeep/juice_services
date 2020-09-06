@@ -583,7 +583,6 @@ let CartComponent = /*@__PURE__*/ (() => {
                 return this.priceMap.get(programId);
             }
             catch (ex) {
-                console.log(ex);
                 return 0;
             }
         }
@@ -1579,9 +1578,25 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe((res) => {
                 let body = res.body;
                 this.products = body['data'];
-                this.products.forEach((el) => {
-                    el.total = 0;
-                });
+                let cartObj = localStorage.getItem('cart');
+                if (cartObj) {
+                    let items = JSON.parse(cartObj);
+                    this.products.forEach((el) => {
+                        items.forEach((element) => {
+                            if (el.productid === element.productid) {
+                                el.total = element.total;
+                            }
+                            else {
+                                el.total = 0;
+                            }
+                        });
+                    });
+                }
+                else {
+                    this.products.forEach((el) => {
+                        el.total = 0;
+                    });
+                }
             }, (error) => { });
         }
         basketOps(index, operation) {
@@ -1612,8 +1627,25 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             let cartObj = localStorage.getItem('cart');
             if (cartObj) {
                 let cartArr = JSON.parse(cartObj);
-                let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, item => item.name);
+                let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                 console.log(o);
+                if (o.hasOwnProperty(this.activeProgram['programid'])) {
+                    for (let k in o) {
+                        if (k === this.activeProgram['programid'].toString()) {
+                            items.forEach((item) => {
+                                o[k].forEach((kItem) => {
+                                    if (kItem.productid === item.productid) {
+                                        kItem.total = item.total;
+                                    }
+                                });
+                            });
+                        }
+                    }
+                }
+                else {
+                    cartArr.push({ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 });
+                }
+                localStorage.setItem('cart', JSON.stringify(cartArr));
             }
             else {
                 localStorage.setItem('cart', JSON.stringify([{ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 }]));
