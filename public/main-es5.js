@@ -3044,17 +3044,28 @@
                 var cartObj = localStorage.getItem('cart');
 
                 if (cartObj) {
-                  var items = JSON.parse(cartObj);
-
-                  _this12.products.forEach(function (el) {
-                    items.forEach(function (element) {
-                      if (el.productid === element.productid) {
-                        el.total = element.total;
-                      } else {
-                        el.total = 0;
-                      }
-                    });
+                  var cartArr = JSON.parse(cartObj);
+                  var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
+                    return item.id;
                   });
+
+                  if (o.hasOwnProperty(_this12.activeProgram['programid'])) {
+                    var items = o[_this12.activeProgram['programid'].toString()][0]['products'];
+
+                    _this12.products.forEach(function (el) {
+                      items.forEach(function (element) {
+                        if (el.productid === element.productid) {
+                          el.total = element.total;
+                        } else {
+                          el.total = 0;
+                        }
+                      });
+                    });
+                  } else {
+                    _this12.products.forEach(function (el) {
+                      el.total = 0;
+                    });
+                  }
                 } else {
                   _this12.products.forEach(function (el) {
                     el.total = 0;

@@ -1580,17 +1580,26 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                 this.products = body['data'];
                 let cartObj = localStorage.getItem('cart');
                 if (cartObj) {
-                    let items = JSON.parse(cartObj);
-                    this.products.forEach((el) => {
-                        items.forEach((element) => {
-                            if (el.productid === element.productid) {
-                                el.total = element.total;
-                            }
-                            else {
-                                el.total = 0;
-                            }
+                    let cartArr = JSON.parse(cartObj);
+                    let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
+                    if (o.hasOwnProperty(this.activeProgram['programid'])) {
+                        let items = o[this.activeProgram['programid'].toString()][0]['products'];
+                        this.products.forEach((el) => {
+                            items.forEach((element) => {
+                                if (el.productid === element.productid) {
+                                    el.total = element.total;
+                                }
+                                else {
+                                    el.total = 0;
+                                }
+                            });
                         });
-                    });
+                    }
+                    else {
+                        this.products.forEach((el) => {
+                            el.total = 0;
+                        });
+                    }
                 }
                 else {
                     this.products.forEach((el) => {
