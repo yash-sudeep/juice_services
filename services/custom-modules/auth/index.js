@@ -53,15 +53,9 @@ const validateToken = (req, res, next) => {
         let token = authHeader.split(" ");
         jwt.verify(token[1], secretKey, (err, userJWT) => {
             if (err) {
-                if (err) {
-                    if(req.originalUrl === '/api/user/signout') {
-                        next();
-                    } else {
-                        return res
-                            .status(401)
-                            .send({ errorCode: 1, message: "Unauthenticated access" });
-                    }
-                }
+                return res
+                    .status(401)
+                    .send({ errorCode: 1, message: "Unauthenticated access" });
             }
 
             findByToken(token[1]).then(() => {
