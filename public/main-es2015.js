@@ -1628,6 +1628,7 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                     if (o.hasOwnProperty(this.activeProgram['programid'])) {
                         this.getCartItemsfromStorage(o);
+                        this.setDefaultValue();
                     }
                     else {
                         this.setDefaultValue();
@@ -1711,7 +1712,9 @@ let ProgramComponent = /*@__PURE__*/ (() => {
         // ========================================================================================================
         setDefaultValue() {
             this.products.forEach((el) => {
-                el.total = 0;
+                if (!el.hasOwnProperty('total')) {
+                    el.total = 0;
+                }
             });
         }
         // ========================================================================================================

@@ -3125,6 +3125,8 @@
 
                   if (o.hasOwnProperty(_this12.activeProgram['programid'])) {
                     _this12.getCartItemsfromStorage(o);
+
+                    _this12.setDefaultValue();
                   } else {
                     _this12.setDefaultValue();
                   }
@@ -3242,7 +3244,9 @@
             key: "setDefaultValue",
             value: function setDefaultValue() {
               this.products.forEach(function (el) {
-                el.total = 0;
+                if (!el.hasOwnProperty('total')) {
+                  el.total = 0;
+                }
               });
             } // ========================================================================================================
 
