@@ -3176,6 +3176,8 @@
                   el.total = 0;
                 }
               });
+              var basketItems = this.getbasketItems(this.products);
+              return basketItems;
             } // ========================================================================================================
 
           }, {
@@ -3192,15 +3194,14 @@
                 });
 
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
-                  this.getCartItemsfromStorage(o);
-                  var items = this.getbasketItems();
+                  var items = this.getCartItemsfromStorage(o);
                   cartArr.forEach(function (element) {
                     if (element.id === _this14.activeProgram['programid']) {
                       element.products = items;
                     }
                   });
                 } else {
-                  var _items = this.getbasketItems();
+                  var _items = this.getbasketItems(this.products);
 
                   cartArr.push({
                     name: this.activeProgram['name'],
@@ -3212,7 +3213,7 @@
 
                 localStorage.setItem('cart', JSON.stringify(cartArr));
               } else {
-                var _items2 = this.getbasketItems();
+                var _items2 = this.getbasketItems(this.products);
 
                 localStorage.setItem('cart', JSON.stringify([{
                   name: this.activeProgram['name'],
@@ -3235,9 +3236,9 @@
 
           }, {
             key: "getbasketItems",
-            value: function getbasketItems() {
+            value: function getbasketItems(arr) {
               var items = [];
-              this.products.forEach(function (element) {
+              arr.forEach(function (element) {
                 if (element.total > 0) {
                   items.push(element);
                 }

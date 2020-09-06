@@ -1671,6 +1671,8 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     el.total = 0;
                 }
             });
+            let basketItems = this.getbasketItems(this.products);
+            return basketItems;
         }
         // ========================================================================================================
         goToCart() {
@@ -1679,8 +1681,7 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                 let cartArr = JSON.parse(cartObj);
                 let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
-                    this.getCartItemsfromStorage(o);
-                    let items = this.getbasketItems();
+                    let items = this.getCartItemsfromStorage(o);
                     cartArr.forEach((element) => {
                         if (element.id === this.activeProgram['programid']) {
                             element.products = items;
@@ -1688,13 +1689,13 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     });
                 }
                 else {
-                    let items = this.getbasketItems();
+                    let items = this.getbasketItems(this.products);
                     cartArr.push({ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 });
                 }
                 localStorage.setItem('cart', JSON.stringify(cartArr));
             }
             else {
-                let items = this.getbasketItems();
+                let items = this.getbasketItems(this.products);
                 localStorage.setItem('cart', JSON.stringify([{ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 }]));
             }
             if (this.authService.isLoggedIn) {
@@ -1705,9 +1706,9 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             }
         }
         // ========================================================================================================
-        getbasketItems() {
+        getbasketItems(arr) {
             let items = [];
-            this.products.forEach((element) => {
+            arr.forEach((element) => {
                 if (element.total > 0) {
                     items.push(element);
                 }
