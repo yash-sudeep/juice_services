@@ -3124,28 +3124,12 @@
                   });
 
                   if (o.hasOwnProperty(_this12.activeProgram['programid'])) {
-                    var items = o[_this12.activeProgram['programid'].toString()][0]['products'];
-
-                    var p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, function (item) {
-                      return item.productid;
-                    });
-
-                    _this12.products.forEach(function (el) {
-                      if (p.hasOwnProperty(el.productid.toString())) {
-                        el.total = p[el.productid.toString()][0].total;
-                      } else {
-                        el.total = 0;
-                      }
-                    });
+                    _this12.getCartItemsfromStorage(o);
                   } else {
-                    _this12.products.forEach(function (el) {
-                      el.total = 0;
-                    });
+                    _this12.setDefaultValue();
                   }
                 } else {
-                  _this12.products.forEach(function (el) {
-                    el.total = 0;
-                  });
+                  _this12.setDefaultValue();
                 }
 
                 _this12.validateBasket();
@@ -3179,57 +3163,61 @@
             } // ========================================================================================================
 
           }, {
+            key: "getCartItemsfromStorage",
+            value: function getCartItemsfromStorage(o) {
+              var items = o[this.activeProgram['programid'].toString()][0]['products'];
+              var p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, function (item) {
+                return item.productid;
+              });
+              this.products.forEach(function (el) {
+                if (p.hasOwnProperty(el.productid.toString())) {
+                  el.total = p[el.productid.toString()][0].total;
+                } else {
+                  el.total = 0;
+                }
+              });
+            } // ========================================================================================================
+
+          }, {
             key: "goToCart",
             value: function goToCart() {
               var _this14 = this;
 
-              var items = [];
-              this.products.forEach(function (element) {
-                if (element.total > 0) {
-                  items.push(element);
-                }
-              });
               var cartObj = localStorage.getItem('cart');
 
               if (cartObj) {
-                (function () {
-                  var cartArr = JSON.parse(cartObj);
-                  var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
-                    return item.id;
-                  });
+                var cartArr = JSON.parse(cartObj);
+                var o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, function (item) {
+                  return item.id;
+                });
 
-                  if (o.hasOwnProperty(_this14.activeProgram['programid'])) {
-                    var _loop2 = function _loop2(k) {
-                      if (k === _this14.activeProgram['programid'].toString()) {
-                        items.forEach(function (item) {
-                          o[k].forEach(function (kItem) {
-                            if (kItem.productid === item.productid) {
-                              kItem.total = item.total;
-                            }
-                          });
-                        });
-                      }
-                    };
-
-                    for (var k in o) {
-                      _loop2(k);
+                if (o.hasOwnProperty(this.activeProgram['programid'])) {
+                  this.getCartItemsfromStorage(o);
+                  var items = this.getbasketItems();
+                  cartArr.forEach(function (element) {
+                    if (element.id === _this14.activeProgram['programid']) {
+                      element.products = items;
                     }
-                  } else {
-                    cartArr.push({
-                      name: _this14.activeProgram['name'],
-                      id: _this14.activeProgram['programid'],
-                      products: items,
-                      price: 0
-                    });
-                  }
+                  });
+                } else {
+                  var _items = this.getbasketItems();
 
-                  localStorage.setItem('cart', JSON.stringify(cartArr));
-                })();
+                  cartArr.push({
+                    name: this.activeProgram['name'],
+                    id: this.activeProgram['programid'],
+                    products: _items,
+                    price: 0
+                  });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cartArr));
               } else {
+                var _items2 = this.getbasketItems();
+
                 localStorage.setItem('cart', JSON.stringify([{
                   name: this.activeProgram['name'],
                   id: this.activeProgram['programid'],
-                  products: items,
+                  products: _items2,
                   price: 0
                 }]));
               }
@@ -3245,6 +3233,25 @@
               }
             } // ========================================================================================================
 
+          }, {
+            key: "getbasketItems",
+            value: function getbasketItems() {
+              var items = [];
+              this.products.forEach(function (element) {
+                if (element.total > 0) {
+                  items.push(element);
+                }
+              });
+              return items;
+            } // ========================================================================================================
+
+          }, {
+            key: "setDefaultValue",
+            value: function setDefaultValue() {
+              this.products.forEach(function (el) {
+                el.total = 0;
+              });
+            }
           }, {
             key: "ngOnDestroy",
             value: function ngOnDestroy() {

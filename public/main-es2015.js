@@ -1627,27 +1627,14 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     let cartArr = JSON.parse(cartObj);
                     let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                     if (o.hasOwnProperty(this.activeProgram['programid'])) {
-                        let items = o[this.activeProgram['programid'].toString()][0]['products'];
-                        let p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, (item) => item.productid);
-                        this.products.forEach((el) => {
-                            if (p.hasOwnProperty(el.productid.toString())) {
-                                el.total = p[el.productid.toString()][0].total;
-                            }
-                            else {
-                                el.total = 0;
-                            }
-                        });
+                        this.getCartItemsfromStorage(o);
                     }
                     else {
-                        this.products.forEach((el) => {
-                            el.total = 0;
-                        });
+                        this.setDefaultValue();
                     }
                 }
                 else {
-                    this.products.forEach((el) => {
-                        el.total = 0;
-                    });
+                    this.setDefaultValue();
                 }
                 this.validateBasket();
             }, (error) => { });
@@ -1673,36 +1660,41 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             });
         }
         // ========================================================================================================
-        goToCart() {
-            let items = [];
-            this.products.forEach((element) => {
-                if (element.total > 0) {
-                    items.push(element);
+        getCartItemsfromStorage(o) {
+            let items = o[this.activeProgram['programid'].toString()][0]['products'];
+            let p = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](items, (item) => item.productid);
+            this.products.forEach((el) => {
+                if (p.hasOwnProperty(el.productid.toString())) {
+                    el.total = p[el.productid.toString()][0].total;
+                }
+                else {
+                    el.total = 0;
                 }
             });
+        }
+        // ========================================================================================================
+        goToCart() {
             let cartObj = localStorage.getItem('cart');
             if (cartObj) {
                 let cartArr = JSON.parse(cartObj);
                 let o = lodash__WEBPACK_IMPORTED_MODULE_4__["groupBy"](cartArr, (item) => item.id);
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
-                    for (let k in o) {
-                        if (k === this.activeProgram['programid'].toString()) {
-                            items.forEach((item) => {
-                                o[k].forEach((kItem) => {
-                                    if (kItem.productid === item.productid) {
-                                        kItem.total = item.total;
-                                    }
-                                });
-                            });
+                    this.getCartItemsfromStorage(o);
+                    let items = this.getbasketItems();
+                    cartArr.forEach((element) => {
+                        if (element.id === this.activeProgram['programid']) {
+                            element.products = items;
                         }
-                    }
+                    });
                 }
                 else {
+                    let items = this.getbasketItems();
                     cartArr.push({ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 });
                 }
                 localStorage.setItem('cart', JSON.stringify(cartArr));
             }
             else {
+                let items = this.getbasketItems();
                 localStorage.setItem('cart', JSON.stringify([{ name: this.activeProgram['name'], id: this.activeProgram['programid'], products: items, price: 0 }]));
             }
             if (this.authService.isLoggedIn) {
@@ -1713,6 +1705,21 @@ let ProgramComponent = /*@__PURE__*/ (() => {
             }
         }
         // ========================================================================================================
+        getbasketItems() {
+            let items = [];
+            this.products.forEach((element) => {
+                if (element.total > 0) {
+                    items.push(element);
+                }
+            });
+            return items;
+        }
+        // ========================================================================================================
+        setDefaultValue() {
+            this.products.forEach((el) => {
+                el.total = 0;
+            });
+        }
         ngOnDestroy() {
             delete this.products;
             delete this.closeResult;
