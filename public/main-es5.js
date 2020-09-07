@@ -2353,7 +2353,9 @@
                 var body = res.body;
 
                 _this8.postAuth(body);
-              }, function (error) {});
+              }, function (error) {
+                _this8.dataService.handleErrorResponse(error);
+              });
             } // ========================================================================================================
 
           }, {
@@ -3732,22 +3734,34 @@
 
           _createClass(DataService, [{
             key: "displayAlert",
-            value: function displayAlert(type, message, options) {
+            value: function displayAlert(type, message, position) {
               switch (type) {
                 case 'success':
-                  this.alertService.success(message, 'Success', options);
+                  this.alertService.success(message, 'Success', {
+                    timeOut: 5000,
+                    positionClass: position
+                  });
                   break;
 
                 case 'error':
-                  this.alertService.error(message, 'Success', options);
+                  this.alertService.error(message, 'Error', {
+                    timeOut: 5000,
+                    positionClass: position
+                  });
                   break;
 
                 case 'warning':
-                  this.alertService.warning(message, 'Success', options);
+                  this.alertService.warning(message, 'Warning', {
+                    timeOut: 5000,
+                    positionClass: position
+                  });
                   break;
 
                 case 'info':
-                  this.alertService.info(message, 'Success', options);
+                  this.alertService.info(message, 'Information', {
+                    timeOut: 5000,
+                    positionClass: position
+                  });
                   break;
               }
             }
@@ -3764,9 +3778,7 @@
                 });
               }
 
-              this.displayAlert('error', error.message, {
-                timeOut: 5000
-              });
+              this.displayAlert('error', error.error.message, 'toast-top-right');
               console.log(error);
             }
           }]);
