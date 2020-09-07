@@ -562,7 +562,7 @@
                   relativeTo: _this.activatedRoute
                 });
               }, function (error) {
-                _this.authService.handleUnauthorization();
+                _this.dataService.handleErrorResponse(error);
               });
             }
           }, {
@@ -576,7 +576,9 @@
                 _this2.dataService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this2.programList, function (item) {
                   return item.programid;
                 });
-              }, function (error) {});
+              }, function (error) {
+                _this2.dataService.handleErrorResponse(error);
+              });
             }
           }, {
             key: "navigateToProgram",
@@ -1224,7 +1226,7 @@
                   });
                 }
               }, function (error) {
-                console.log(error);
+                _this4.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -2320,7 +2322,9 @@
                 _this7.timeTracker = setInterval(function () {
                   _this7.countdown();
                 }, 1000);
-              }, function (error) {});
+              }, function (error) {
+                _this7.dataService.handleErrorResponse(error);
+              });
             } // ========================================================================================================
 
           }, {
@@ -2350,6 +2354,8 @@
           }, {
             key: "forgotPassword",
             value: function forgotPassword() {
+              var _this9 = this;
+
               var body = {
                 mobile_number: this.forgotPwdform.mobileNumber,
                 password: this.forgotPwdform.confirmPassword,
@@ -2358,13 +2364,15 @@
 
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].FORGOT_PWD, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
-              }, function (error) {});
+              }, function (error) {
+                _this9.dataService.handleErrorResponse(error);
+              });
             } // ========================================================================================================
 
           }, {
             key: "signUp",
             value: function signUp(OTP) {
-              var _this9 = this;
+              var _this10 = this;
 
               var formValues = this.signUpForm.form.value;
               var body = {
@@ -2380,10 +2388,12 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_UP, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
 
-                _this9.postAuth(body);
+                _this10.postAuth(body);
 
-                _this9.modalReference.close();
-              }, function (error) {});
+                _this10.modalReference.close();
+              }, function (error) {
+                _this10.dataService.handleErrorResponse(error);
+              });
             } // ========================================================================================================
 
           }, {
@@ -3185,16 +3195,16 @@
           _createClass(ProgramComponent, [{
             key: "ngOnInit",
             value: function ngOnInit() {
-              var _this10 = this;
+              var _this11 = this;
 
               this.activatedRoute.queryParams.subscribe(function (params) {
                 var programId = parseInt(params['programId']);
 
-                _this10.getProducts(programId);
+                _this11.getProducts(programId);
 
-                _this10.dataService.program = _this10.dataService.programList[programId.toString()][0];
+                _this11.dataService.program = _this11.dataService.programList[programId.toString()][0];
 
-                _this10.setPageData();
+                _this11.setPageData();
               });
             } // ========================================================================================================
 
@@ -3208,7 +3218,7 @@
           }, {
             key: "open",
             value: function open(ref, index) {
-              var _this11 = this;
+              var _this12 = this;
 
               this.productAdvantages = this.products[index]['advantages'];
               this.selectedItemIndex = index;
@@ -3216,9 +3226,9 @@
               this.modalService.open(ref, {
                 size: 'lg'
               }).result.then(function (result) {
-                _this11.closeResult = "Closed with: ".concat(result);
+                _this12.closeResult = "Closed with: ".concat(result);
               }, function (reason) {
-                _this11.closeResult = "Dismissed ".concat(_this11.getDismissReason(reason));
+                _this12.closeResult = "Dismissed ".concat(_this12.getDismissReason(reason));
               });
             } // ========================================================================================================
 
@@ -3237,12 +3247,12 @@
           }, {
             key: "getProducts",
             value: function getProducts(programId) {
-              var _this12 = this;
+              var _this13 = this;
 
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this12.products = body['data'];
-                var cartArr = _this12.dataService.cartData; // let cartObj = localStorage.getItem('cart');
+                _this13.products = body['data'];
+                var cartArr = _this13.dataService.cartData; // let cartObj = localStorage.getItem('cart');
 
                 if (cartArr) {
                   // let cartArr = JSON.parse(cartObj);
@@ -3250,19 +3260,21 @@
                     return item.id;
                   });
 
-                  if (o.hasOwnProperty(_this12.activeProgram['programid'])) {
-                    _this12.getCartItemsfromStorage(o);
+                  if (o.hasOwnProperty(_this13.activeProgram['programid'])) {
+                    _this13.getCartItemsfromStorage(o);
 
-                    _this12.setDefaultValue();
+                    _this13.setDefaultValue();
                   } else {
-                    _this12.setDefaultValue();
+                    _this13.setDefaultValue();
                   }
                 } else {
-                  _this12.setDefaultValue();
+                  _this13.setDefaultValue();
                 }
 
-                _this12.validateBasket();
-              }, function (error) {});
+                _this13.validateBasket();
+              }, function (error) {
+                _this13.dataService.handleErrorResponse(error);
+              });
             } // ========================================================================================================
 
           }, {
@@ -3281,12 +3293,12 @@
           }, {
             key: "validateBasket",
             value: function validateBasket() {
-              var _this13 = this;
+              var _this14 = this;
 
               this.basketItems = 0;
               this.products.forEach(function (el) {
                 if (el.total > 0) {
-                  _this13.basketItems += el.total;
+                  _this14.basketItems += el.total;
                 }
               });
             } // ========================================================================================================
@@ -3308,7 +3320,7 @@
           }, {
             key: "goToCart",
             value: function goToCart() {
-              var _this14 = this;
+              var _this15 = this;
 
               var items = this.getbasketItems(this.products); // let cartObj = localStorage.getItem('cart');
 
@@ -3322,7 +3334,7 @@
 
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
                   cartArr.forEach(function (element) {
-                    if (element.id === _this14.activeProgram['programid']) {
+                    if (element.id === _this15.activeProgram['programid']) {
                       element.products = items;
                     }
                   });
@@ -3616,28 +3628,13 @@
       var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
       /*! ./http.service */
       "./src/app/services/http.service.ts");
-      /* harmony import */
-
-
-      var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-      /*! @angular/router */
-      "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-      /* harmony import */
-
-
-      var _data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! ./data.service */
-      "./src/app/services/data.service.ts");
 
       var AuthService = /*@__PURE__*/function () {
         var AuthService = /*#__PURE__*/function () {
-          function AuthService(_httpService, router, activatedRoute, dataService) {
+          function AuthService(_httpService) {
             _classCallCheck(this, AuthService);
 
             this._httpService = _httpService;
-            this.router = router;
-            this.activatedRoute = activatedRoute;
-            this.dataService = dataService;
             this.isLoggedIn = false;
             this.token = "";
           }
@@ -3652,25 +3649,13 @@
             value: function logout(uri) {
               return this._httpService.deleteRequest(uri, this.token);
             }
-          }, {
-            key: "handleUnauthorization",
-            value: function handleUnauthorization() {
-              this.isLoggedIn = false;
-              this.token = undefined;
-              this.clientName = '';
-              this.usrObj = null;
-              this.router.navigate(['/login'], {
-                relativeTo: this.activatedRoute
-              });
-              this.dataService.displayAlert('error', 'Unauthorized Access');
-            }
           }]);
 
           return AuthService;
         }();
 
         AuthService.ɵfac = function AuthService_Factory(t) {
-          return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_data_service__WEBPACK_IMPORTED_MODULE_3__["DataService"]));
+          return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]));
         };
 
         AuthService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
@@ -3715,13 +3700,28 @@
       var ngx_alerts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
       /*! ngx-alerts */
       "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
+      /* harmony import */
+
+
+      var _auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! ./auth.service */
+      "./src/app/services/auth.service.ts");
+      /* harmony import */
+
+
+      var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! @angular/router */
+      "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 
       var DataService = /*@__PURE__*/function () {
         var DataService = /*#__PURE__*/function () {
-          function DataService(alertService) {
+          function DataService(alertService, authService, router, activatedRoute) {
             _classCallCheck(this, DataService);
 
             this.alertService = alertService;
+            this.authService = authService;
+            this.router = router;
+            this.activatedRoute = activatedRoute;
             this.cartItems = 0;
           }
 
@@ -3746,13 +3746,29 @@
                   break;
               }
             }
+          }, {
+            key: "handleErrorResponse",
+            value: function handleErrorResponse(error) {
+              if (error.status === 401) {
+                this.authService.isLoggedIn = false;
+                this.authService.token = undefined;
+                this.authService.clientName = '';
+                this.authService.usrObj = null;
+                this.router.navigate(['/login'], {
+                  relativeTo: this.activatedRoute
+                });
+              }
+
+              this.displayAlert('error', error.message);
+              console.error(error);
+            }
           }]);
 
           return DataService;
         }();
 
         DataService.ɵfac = function DataService_Factory(t) {
-          return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"]));
+          return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_auth_service__WEBPACK_IMPORTED_MODULE_2__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"]));
         };
 
         DataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
@@ -3893,7 +3909,6 @@
           }, {
             key: "errorHandler",
             value: function errorHandler(error) {
-              console.log(error);
               return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error || "Server Error");
             }
           }]);

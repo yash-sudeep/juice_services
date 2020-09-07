@@ -275,7 +275,7 @@ let AppComponent = /*@__PURE__*/ (() => {
                 this.authService.usrObj = null;
                 this.router.navigate(['/login'], { relativeTo: this.activatedRoute });
             }, (error) => {
-                this.authService.handleUnauthorization();
+                this.dataService.handleErrorResponse(error);
             });
         }
         getPrograms() {
@@ -283,7 +283,9 @@ let AppComponent = /*@__PURE__*/ (() => {
                 let body = res.body;
                 this.programList = body['data'];
                 this.dataService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](this.programList, (item) => item.programid);
-            }, (error) => { });
+            }, (error) => {
+                this.dataService.handleErrorResponse(error);
+            });
         }
         navigateToProgram(programId) {
             this.programList.forEach((el) => {
@@ -625,7 +627,7 @@ let CartComponent = /*@__PURE__*/ (() => {
                     });
                 }
             }, (error) => {
-                console.log(error);
+                this.dataService.handleErrorResponse(error);
             });
         }
         // ========================================================================================================
@@ -1185,6 +1187,7 @@ let LoginComponent = /*@__PURE__*/ (() => {
                     this.countdown();
                 }, 1000);
             }, (error) => {
+                this.dataService.handleErrorResponse(error);
             });
         }
         // ========================================================================================================
@@ -1215,6 +1218,7 @@ let LoginComponent = /*@__PURE__*/ (() => {
             this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].FORGOT_PWD, JSON.stringify(body), '').subscribe((res) => {
                 let body = res.body;
             }, (error) => {
+                this.dataService.handleErrorResponse(error);
             });
         }
         // ========================================================================================================
@@ -1234,6 +1238,7 @@ let LoginComponent = /*@__PURE__*/ (() => {
                 this.postAuth(body);
                 this.modalReference.close();
             }, (error) => {
+                this.dataService.handleErrorResponse(error);
             });
         }
         // ========================================================================================================
@@ -1715,7 +1720,9 @@ let ProgramComponent = /*@__PURE__*/ (() => {
                     this.setDefaultValue();
                 }
                 this.validateBasket();
-            }, (error) => { });
+            }, (error) => {
+                this.dataService.handleErrorResponse(error);
+            });
         }
         // ========================================================================================================
         basketOps(index, operation) {
@@ -1930,20 +1937,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthService", function() { return AuthService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./http.service */ "./src/app/services/http.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-/* harmony import */ var _data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./data.service */ "./src/app/services/data.service.ts");
-
-
 
 
 
 let AuthService = /*@__PURE__*/ (() => {
     class AuthService {
-        constructor(_httpService, router, activatedRoute, dataService) {
+        constructor(_httpService) {
             this._httpService = _httpService;
-            this.router = router;
-            this.activatedRoute = activatedRoute;
-            this.dataService = dataService;
             this.isLoggedIn = false;
             this.token = "";
         }
@@ -1953,16 +1953,8 @@ let AuthService = /*@__PURE__*/ (() => {
         logout(uri) {
             return this._httpService.deleteRequest(uri, this.token);
         }
-        handleUnauthorization() {
-            this.isLoggedIn = false;
-            this.token = undefined;
-            this.clientName = '';
-            this.usrObj = null;
-            this.router.navigate(['/login'], { relativeTo: this.activatedRoute });
-            this.dataService.displayAlert('error', 'Unauthorized Access');
-        }
     }
-    AuthService.ɵfac = function AuthService_Factory(t) { return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_data_service__WEBPACK_IMPORTED_MODULE_3__["DataService"])); };
+    AuthService.ɵfac = function AuthService_Factory(t) { return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"])); };
     AuthService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: AuthService, factory: AuthService.ɵfac, providedIn: 'root' });
     return AuthService;
 })();
@@ -1983,13 +1975,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var ngx_alerts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ngx-alerts */ "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
+/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
+
+
 
 
 
 let DataService = /*@__PURE__*/ (() => {
     class DataService {
-        constructor(alertService) {
+        constructor(alertService, authService, router, activatedRoute) {
             this.alertService = alertService;
+            this.authService = authService;
+            this.router = router;
+            this.activatedRoute = activatedRoute;
             this.cartItems = 0;
         }
         displayAlert(type, message) {
@@ -2008,8 +2007,19 @@ let DataService = /*@__PURE__*/ (() => {
                     break;
             }
         }
+        handleErrorResponse(error) {
+            if (error.status === 401) {
+                this.authService.isLoggedIn = false;
+                this.authService.token = undefined;
+                this.authService.clientName = '';
+                this.authService.usrObj = null;
+                this.router.navigate(['/login'], { relativeTo: this.activatedRoute });
+            }
+            this.displayAlert('error', error.message);
+            console.error(error);
+        }
     }
-    DataService.ɵfac = function DataService_Factory(t) { return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"])); };
+    DataService.ɵfac = function DataService_Factory(t) { return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_auth_service__WEBPACK_IMPORTED_MODULE_2__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"])); };
     DataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: DataService, factory: DataService.ɵfac, providedIn: 'root' });
     return DataService;
 })();
@@ -2081,7 +2091,6 @@ let HttpService = /*@__PURE__*/ (() => {
             };
         }
         errorHandler(error) {
-            console.log(error);
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error || "Server Error");
         }
         ;
