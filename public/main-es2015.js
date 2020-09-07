@@ -624,6 +624,8 @@ let CartComponent = /*@__PURE__*/ (() => {
                         el.packages = this.subscriptionMap.get(el.id);
                     });
                 }
+            }, (error) => {
+                console.log(error);
             });
         }
         // ========================================================================================================
