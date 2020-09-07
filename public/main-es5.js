@@ -561,7 +561,9 @@
                 _this.router.navigate(['/login'], {
                   relativeTo: _this.activatedRoute
                 });
-              }, function (error) {});
+              }, function (error) {
+                _this.authService.handleUnauthorization();
+              });
             }
           }, {
             key: "getPrograms",
@@ -851,6 +853,12 @@
       var _services_auth_guard_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(
       /*! ./services/auth-guard.service */
       "./src/app/services/auth-guard.service.ts");
+      /* harmony import */
+
+
+      var ngx_alerts__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(
+      /*! ngx-alerts */
+      "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
 
       var AppModule = /*@__PURE__*/function () {
         var AppModule = function AppModule() {
@@ -866,7 +874,11 @@
             return new (t || AppModule)();
           },
           providers: [_services_auth_service__WEBPACK_IMPORTED_MODULE_13__["AuthService"], _services_http_service__WEBPACK_IMPORTED_MODULE_15__["HttpService"], _services_auth_guard_service__WEBPACK_IMPORTED_MODULE_16__["AuthGuardService"], _services_data_service__WEBPACK_IMPORTED_MODULE_14__["DataService"]],
-          imports: [[_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"], ng_otp_input__WEBPACK_IMPORTED_MODULE_8__["NgOtpInputModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]]]
+          imports: [[_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"], ng_otp_input__WEBPACK_IMPORTED_MODULE_8__["NgOtpInputModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], ngx_alerts__WEBPACK_IMPORTED_MODULE_17__["AlertModule"].forRoot({
+            maxMessages: 5,
+            timeout: 5000,
+            position: 'right'
+          })]]
         });
         return AppModule;
       }();
@@ -874,7 +886,7 @@
       (function () {
         (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsetNgModuleScope"](AppModule, {
           declarations: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"], _main_main_component__WEBPACK_IMPORTED_MODULE_6__["MainComponent"], _login_login_component__WEBPACK_IMPORTED_MODULE_7__["LoginComponent"], _program_program_component__WEBPACK_IMPORTED_MODULE_11__["ProgramComponent"], _cart_cart_component__WEBPACK_IMPORTED_MODULE_12__["CartComponent"]],
-          imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"], ng_otp_input__WEBPACK_IMPORTED_MODULE_8__["NgOtpInputModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]]
+          imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"], ng_otp_input__WEBPACK_IMPORTED_MODULE_8__["NgOtpInputModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], ngx_alerts__WEBPACK_IMPORTED_MODULE_17__["AlertModule"]]
         });
       })();
       /***/
@@ -2380,6 +2392,7 @@
               this.authService.usrObj = body;
               this.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
               this.authService.isLoggedIn = true;
+              sessionStorage.setItem('token', this.authService.token);
               var cartItem = localStorage.getItem('cart');
 
               if (cartItem) {
@@ -3601,13 +3614,28 @@
       var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
       /*! ./http.service */
       "./src/app/services/http.service.ts");
+      /* harmony import */
+
+
+      var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! @angular/router */
+      "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
+      /* harmony import */
+
+
+      var _data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! ./data.service */
+      "./src/app/services/data.service.ts");
 
       var AuthService = /*@__PURE__*/function () {
         var AuthService = /*#__PURE__*/function () {
-          function AuthService(_httpService) {
+          function AuthService(_httpService, router, activatedRoute, dataService) {
             _classCallCheck(this, AuthService);
 
             this._httpService = _httpService;
+            this.router = router;
+            this.activatedRoute = activatedRoute;
+            this.dataService = dataService;
             this.isLoggedIn = false;
             this.token = "";
           }
@@ -3622,13 +3650,25 @@
             value: function logout(uri) {
               return this._httpService.deleteRequest(uri, this.token);
             }
+          }, {
+            key: "handleUnauthorization",
+            value: function handleUnauthorization() {
+              this.isLoggedIn = false;
+              this.token = undefined;
+              this.clientName = '';
+              this.usrObj = null;
+              this.router.navigate(['/login'], {
+                relativeTo: this.activatedRoute
+              });
+              this.dataService.displayAlert('error', 'Unauthorized Access');
+            }
           }]);
 
           return AuthService;
         }();
 
         AuthService.ɵfac = function AuthService_Factory(t) {
-          return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]));
+          return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_data_service__WEBPACK_IMPORTED_MODULE_3__["DataService"]));
         };
 
         AuthService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
@@ -3667,16 +3707,50 @@
       var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
       /*! @angular/core */
       "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+      /* harmony import */
+
+
+      var ngx_alerts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! ngx-alerts */
+      "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
 
       var DataService = /*@__PURE__*/function () {
-        var DataService = function DataService() {
-          _classCallCheck(this, DataService);
+        var DataService = /*#__PURE__*/function () {
+          function DataService(alertService) {
+            _classCallCheck(this, DataService);
 
-          this.cartItems = 0;
-        };
+            this.alertService = alertService;
+            this.cartItems = 0;
+          }
+
+          _createClass(DataService, [{
+            key: "displayAlert",
+            value: function displayAlert(type, message) {
+              switch (type) {
+                case 'success':
+                  this.alertService.success(message);
+                  break;
+
+                case 'error':
+                  this.alertService.danger(message);
+                  break;
+
+                case 'warning':
+                  this.alertService.warning(message);
+                  break;
+
+                case 'info':
+                  this.alertService.info(message);
+                  break;
+              }
+            }
+          }]);
+
+          return DataService;
+        }();
 
         DataService.ɵfac = function DataService_Factory(t) {
-          return new (t || DataService)();
+          return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"]));
         };
 
         DataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
@@ -3747,7 +3821,7 @@
             key: "getRequest",
             value: function getRequest(uri, token) {
               var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
               });
               return this._httpClient.get(this._url + encodeURI(uri), {
                 headers: headers,
@@ -3759,7 +3833,7 @@
             value: function postRequest(uri, body, token) {
               var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
               });
               return this._httpClient.post(this._url + uri, body, {
                 headers: headers,
@@ -3771,7 +3845,7 @@
             value: function putRequest(uri, body, token) {
               var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
               });
               return this._httpClient.put(this._url + uri, body, {
                 headers: headers,
@@ -3782,7 +3856,7 @@
             key: "deleteRequest",
             value: function deleteRequest(uri, token) {
               var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
               });
               return this._httpClient["delete"](this._url + encodeURI(uri), {
                 headers: headers,
@@ -3793,7 +3867,7 @@
             key: "fileDownload",
             value: function fileDownload(uri, token) {
               var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
               });
               return this._httpClient.get(this._url + encodeURI(uri), {
                 headers: headers,
@@ -3817,6 +3891,7 @@
           }, {
             key: "errorHandler",
             value: function errorHandler(error) {
+              console.log(error);
               return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error || "Server Error");
             }
           }]);

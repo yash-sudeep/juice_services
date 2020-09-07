@@ -274,7 +274,9 @@ let AppComponent = /*@__PURE__*/ (() => {
                 this.authService.clientName = '';
                 this.authService.usrObj = null;
                 this.router.navigate(['/login'], { relativeTo: this.activatedRoute });
-            }, (error) => { });
+            }, (error) => {
+                this.authService.handleUnauthorization();
+            });
         }
         getPrograms() {
             this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe((res) => {
@@ -390,6 +392,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_data_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./services/data.service */ "./src/app/services/data.service.ts");
 /* harmony import */ var _services_http_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./services/http.service */ "./src/app/services/http.service.ts");
 /* harmony import */ var _services_auth_guard_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./services/auth-guard.service */ "./src/app/services/auth-guard.service.ts");
+/* harmony import */ var ngx_alerts__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ngx-alerts */ "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
+
+
 
 
 
@@ -420,7 +425,8 @@ let AppModule = /*@__PURE__*/ (() => {
                 _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
+                ngx_alerts__WEBPACK_IMPORTED_MODULE_17__["AlertModule"].forRoot({ maxMessages: 5, timeout: 5000, position: 'right' })
             ]] });
     return AppModule;
 })();
@@ -436,7 +442,7 @@ let AppModule = /*@__PURE__*/ (() => {
             _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FontAwesomeModule"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbModalModule"],
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__["NgbTooltipModule"],
-            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]] });
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], ngx_alerts__WEBPACK_IMPORTED_MODULE_17__["AlertModule"]] });
 })();
 
 
@@ -1235,6 +1241,7 @@ let LoginComponent = /*@__PURE__*/ (() => {
             this.authService.usrObj = body;
             this.authService.clientName = body.firstname.charAt(0).toUpperCase() + body.firstname.slice(1) + ' ' + body.lastname.charAt(0).toUpperCase() + body.lastname.slice(1);
             this.authService.isLoggedIn = true;
+            sessionStorage.setItem('token', this.authService.token);
             let cartItem = localStorage.getItem('cart');
             if (cartItem) {
                 let cartArr = JSON.parse(cartItem);
@@ -1921,13 +1928,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthService", function() { return AuthService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./http.service */ "./src/app/services/http.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
+/* harmony import */ var _data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./data.service */ "./src/app/services/data.service.ts");
+
+
 
 
 
 let AuthService = /*@__PURE__*/ (() => {
     class AuthService {
-        constructor(_httpService) {
+        constructor(_httpService, router, activatedRoute, dataService) {
             this._httpService = _httpService;
+            this.router = router;
+            this.activatedRoute = activatedRoute;
+            this.dataService = dataService;
             this.isLoggedIn = false;
             this.token = "";
         }
@@ -1937,8 +1951,16 @@ let AuthService = /*@__PURE__*/ (() => {
         logout(uri) {
             return this._httpService.deleteRequest(uri, this.token);
         }
+        handleUnauthorization() {
+            this.isLoggedIn = false;
+            this.token = undefined;
+            this.clientName = '';
+            this.usrObj = null;
+            this.router.navigate(['/login'], { relativeTo: this.activatedRoute });
+            this.dataService.displayAlert('error', 'Unauthorized Access');
+        }
     }
-    AuthService.ɵfac = function AuthService_Factory(t) { return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"])); };
+    AuthService.ɵfac = function AuthService_Factory(t) { return new (t || AuthService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_data_service__WEBPACK_IMPORTED_MODULE_3__["DataService"])); };
     AuthService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: AuthService, factory: AuthService.ɵfac, providedIn: 'root' });
     return AuthService;
 })();
@@ -1958,15 +1980,34 @@ let AuthService = /*@__PURE__*/ (() => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var ngx_alerts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ngx-alerts */ "./node_modules/ngx-alerts/__ivy_ngcc__/fesm2015/ngx-alerts.js");
+
 
 
 let DataService = /*@__PURE__*/ (() => {
     class DataService {
-        constructor() {
+        constructor(alertService) {
+            this.alertService = alertService;
             this.cartItems = 0;
         }
+        displayAlert(type, message) {
+            switch (type) {
+                case 'success':
+                    this.alertService.success(message);
+                    break;
+                case 'error':
+                    this.alertService.danger(message);
+                    break;
+                case 'warning':
+                    this.alertService.warning(message);
+                    break;
+                case 'info':
+                    this.alertService.info(message);
+                    break;
+            }
+        }
     }
-    DataService.ɵfac = function DataService_Factory(t) { return new (t || DataService)(); };
+    DataService.ɵfac = function DataService_Factory(t) { return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_alerts__WEBPACK_IMPORTED_MODULE_1__["AlertService"])); };
     DataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: DataService, factory: DataService.ɵfac, providedIn: 'root' });
     return DataService;
 })();
@@ -2002,27 +2043,27 @@ let HttpService = /*@__PURE__*/ (() => {
             this._url = "https://juicedelivery.herokuapp.com/";
         }
         getRequest(uri, token) {
-            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + token });
+            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + sessionStorage.getItem('token') });
             return this._httpClient.get(this._url + encodeURI(uri), { headers: headers, observe: 'response' })
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.errorHandler));
         }
         postRequest(uri, body, token) {
-            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('token') });
             return this._httpClient.post(this._url + uri, body, { headers: headers, observe: 'response' })
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.errorHandler));
         }
         putRequest(uri, body, token) {
-            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('token') });
             return this._httpClient.put(this._url + uri, body, { headers: headers, observe: 'response' })
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.errorHandler));
         }
         deleteRequest(uri, token) {
-            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + token });
+            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + sessionStorage.getItem('token') });
             return this._httpClient.delete(this._url + encodeURI(uri), { headers: headers, observe: 'response' })
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.errorHandler));
         }
         fileDownload(uri, token) {
-            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + token });
+            let headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Authorization': 'Bearer ' + sessionStorage.getItem('token') });
             return this._httpClient.get(this._url + encodeURI(uri), { headers: headers, observe: 'response', responseType: 'blob' })
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.errorHandler));
         }
@@ -2038,6 +2079,7 @@ let HttpService = /*@__PURE__*/ (() => {
             };
         }
         errorHandler(error) {
+            console.log(error);
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error || "Server Error");
         }
         ;
