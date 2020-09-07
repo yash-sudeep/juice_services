@@ -3775,7 +3775,7 @@
               }
 
               this.displayAlert('error', error.message);
-              console.error(error);
+              console.log(error);
             }
           }]);
 
