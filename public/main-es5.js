@@ -1210,21 +1210,7 @@
                 }
 
                 if (_this4.cartItems.length > 0) {
-                  _this4.totalPrice = 0;
-
-                  var _iterator = _createForOfIteratorHelper(_this4.priceMap.values()),
-                      _step;
-
-                  try {
-                    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                      var value = _step.value;
-                      _this4.totalPrice += value;
-                    }
-                  } catch (err) {
-                    _iterator.e(err);
-                  } finally {
-                    _iterator.f();
-                  }
+                  _this4.calculateTotalPrice();
 
                   _this4.cartItems.forEach(function (el) {
                     el.packages = _this4.subscriptionMap.get(el.id);
@@ -1264,9 +1250,30 @@
             key: "getSubscriptionCost",
             value: function getSubscriptionCost(programId) {
               try {
+                this.calculateTotalPrice();
                 return this.priceMap.get(programId);
               } catch (ex) {
                 return 0;
+              }
+            } // ========================================================================================================
+
+          }, {
+            key: "calculateTotalPrice",
+            value: function calculateTotalPrice() {
+              this.totalPrice = 0;
+
+              var _iterator = _createForOfIteratorHelper(this.priceMap.values()),
+                  _step;
+
+              try {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                  var value = _step.value;
+                  this.totalPrice += value;
+                }
+              } catch (err) {
+                _iterator.e(err);
+              } finally {
+                _iterator.f();
               }
             } // ========================================================================================================
 

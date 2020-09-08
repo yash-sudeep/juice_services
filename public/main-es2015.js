@@ -625,10 +625,7 @@ let CartComponent = /*@__PURE__*/ (() => {
                     this.subscriptionMap.set(Number(key), n);
                 }
                 if (this.cartItems.length > 0) {
-                    this.totalPrice = 0;
-                    for (let value of this.priceMap.values()) {
-                        this.totalPrice += value;
-                    }
+                    this.calculateTotalPrice();
                     this.cartItems.forEach((el) => {
                         el.packages = this.subscriptionMap.get(el.id);
                     });
@@ -658,10 +655,18 @@ let CartComponent = /*@__PURE__*/ (() => {
         // ========================================================================================================
         getSubscriptionCost(programId) {
             try {
+                this.calculateTotalPrice();
                 return this.priceMap.get(programId);
             }
             catch (ex) {
                 return 0;
+            }
+        }
+        // ========================================================================================================
+        calculateTotalPrice() {
+            this.totalPrice = 0;
+            for (let value of this.priceMap.values()) {
+                this.totalPrice += value;
             }
         }
         // ========================================================================================================
