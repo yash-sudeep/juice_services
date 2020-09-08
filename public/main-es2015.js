@@ -1427,7 +1427,7 @@ function ProgramComponent_div_1_Template(rf, ctx) {
     if (rf & 2) {
         const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" Minimum ", ctx_r0.minBasketItems, " products should be in the basket in this program to proceed to Cart ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" Minimum ", ctx_r0.minBasketItems, " products should be in the basket in this program in order to be able to proceed to Cart ");
     }
 }
 function ProgramComponent_div_3_ng_container_7_Template(rf, ctx) {
