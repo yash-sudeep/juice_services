@@ -572,7 +572,7 @@
 
               this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this2.programList = body['data'];
+                _this2.programList = body['data'].sort(_this2._httpService.GetSortOrder('programid'));
                 _this2.dataService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this2.programList, function (item) {
                   return item.programid;
                 });
@@ -2901,12 +2901,6 @@
         }
       }
 
-      var _c0 = function _c0(a0) {
-        return {
-          "animate__heartBeat": a0
-        };
-      };
-
       function ProgramComponent_button_6_Template(rf, ctx) {
         if (rf & 1) {
           var _r20 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
@@ -2930,8 +2924,6 @@
 
         if (rf & 2) {
           var ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](3, _c0, ctx_r1.basketItems >= ctx_r1.minBasketItems))("disabled", ctx_r1.basketItems < ctx_r1.minBasketItems);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
@@ -3297,11 +3289,11 @@
               });
 
               if (this.basketItems > 0 && this.basketItems < this.minBasketItems) {
-                this.dataService.displayAlert('info', 'MINIMUM 2 ITEMS TO BE ADDED IN THE BASKET IN THIS PROGRAM IN ORDER TO BE ABLE TO PROCEED TO CART', 'toast-top-right');
+                this.dataService.displayAlert('info', 'MINIMUM 2 ITEMS TO BE ADDED IN THE BASKET IN THIS PROGRAM IN ORDER TO BE ABLE TO PROCEED TO CART', 'toast-top-full-width');
               }
 
               if (this.basketItems > 0 && this.basketItems >= this.minBasketItems) {
-                this.dataService.displayAlert('success', 'YOU CAN PROCEED TO CART NOW', 'toast-top-right');
+                this.dataService.displayAlert('success', 'YOU CAN PROCEED TO CART NOW', 'toast-top-full-width');
               }
             } // ========================================================================================================
 
@@ -3432,7 +3424,7 @@
           selectors: [["app-program"]],
           decls: 9,
           vars: 2,
-          consts: [[1, "container"], [1, "row", "m-t-2"], ["class", "col-xl-4 col-lg-4 col-md-6 col-sm-12", 4, "ngFor", "ngForOf"], [1, "container-fluid"], [1, "row"], [1, "col-12"], ["class", "btn btn-xl btn-dark float-right text-uppercase animate__animated animate__infinite", 3, "ngClass", "disabled", "click", 4, "ngIf"], ["content", ""], [1, "col-xl-4", "col-lg-4", "col-md-6", "col-sm-12"], [1, "card", "m-b-1"], ["src", "./assets/images/dummy.png", "alt", "item.name", 1, "card-img-top", 3, "click"], [1, "card-body"], [1, "card-title", "text-center", "text-uppercase"], [4, "ngIf"], [1, "col-xl-8", "col-lg-12", "d-block", "mx-auto"], [1, "input-group"], [1, "input-group-prepend"], ["type", "button", "id", "button-addon1", 1, "btn", "btn-outline-dark", 3, "click"], [3, "icon"], ["type", "text", "placeholder", "", "aria-label", "Example text with button addon", "aria-describedby", "button-addon1", "disabled", "", 1, "form-control", 3, "value"], [1, "input-group-append"], ["type", "button", "id", "button-addon2", 1, "btn", "btn-outline-dark", 3, "click"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", 3, "click"], [1, "m-r-1", 3, "icon"], [1, "btn", "btn-xl", "btn-dark", "float-right", "text-uppercase", "animate__animated", "animate__infinite", 3, "ngClass", "disabled", "click"], [1, "modal-header"], ["type", "button", "aria-label", "Close", 1, "close", 3, "click"], ["aria-hidden", "true"], [1, "modal-body"], [1, "text-center", "f-w-700"], [1, "col-xl-4", "col-lg-12"], ["src", "./assets/images/dummy.png", "alt", "Product Image", 1, "modal-image", "m-b-1", 2, "width", "100%"], [1, "col-xl-8", "col-lg-12"], [1, "text-left", "m-b-2", "m-t-1"], [1, "card"], ["id", "advantages", 1, "card-header"], [1, "m-b-0"], [4, "ngFor", "ngForOf"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block"]],
+          consts: [[1, "container"], [1, "row", "m-t-2"], ["class", "col-xl-4 col-lg-4 col-md-6 col-sm-12", 4, "ngFor", "ngForOf"], [1, "container-fluid"], [1, "row"], [1, "col-12"], ["class", "btn btn-xl btn-dark float-right text-uppercase animate__animated animate__heartBeat animate__infinite", 3, "click", 4, "ngIf"], ["content", ""], [1, "col-xl-4", "col-lg-4", "col-md-6", "col-sm-12"], [1, "card", "m-b-1"], ["src", "./assets/images/dummy.png", "alt", "item.name", 1, "card-img-top", 3, "click"], [1, "card-body"], [1, "card-title", "text-center", "text-uppercase"], [4, "ngIf"], [1, "col-xl-8", "col-lg-12", "d-block", "mx-auto"], [1, "input-group"], [1, "input-group-prepend"], ["type", "button", "id", "button-addon1", 1, "btn", "btn-dark", "basketBtn", 3, "click"], [3, "icon"], ["type", "text", "placeholder", "", "aria-label", "Example text with button addon", "aria-describedby", "button-addon1", "disabled", "", 1, "form-control", 3, "value"], [1, "input-group-append"], ["type", "button", "id", "button-addon2", 1, "btn", "btn-dark", "basketBtn", 3, "click"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn", 3, "click"], [1, "m-r-1", 3, "icon"], [1, "btn", "btn-xl", "btn-dark", "float-right", "text-uppercase", "animate__animated", "animate__heartBeat", "animate__infinite", 3, "click"], [1, "modal-header"], ["type", "button", "aria-label", "Close", 1, "close", 3, "click"], ["aria-hidden", "true"], [1, "modal-body"], [1, "text-center", "f-w-700"], [1, "col-xl-4", "col-lg-12"], ["src", "./assets/images/dummy.png", "alt", "Product Image", 1, "modal-image", "m-b-1", 2, "width", "100%"], [1, "col-xl-8", "col-lg-12"], [1, "text-left", "m-b-2", "m-t-1"], [1, "card"], ["id", "advantages", 1, "card-header"], [1, "m-b-0"], [4, "ngFor", "ngForOf"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn"]],
           template: function ProgramComponent_Template(rf, ctx) {
             if (rf & 1) {
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
@@ -3451,7 +3443,7 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "div", 5);
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](6, ProgramComponent_button_6_Template, 3, 5, "button", 6);
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](6, ProgramComponent_button_6_Template, 3, 1, "button", 6);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -3469,11 +3461,11 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.basketItems > 0);
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.basketItems >= ctx.minBasketItems);
             }
           },
-          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_9__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgIf"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__["FaIconComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgClass"]],
-          styles: [".card-img-top[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 10%;\n  margin-bottom: 0px;\n}\n\n#advantages[_ngcontent-%COMP%], #disadvantages[_ngcontent-%COMP%], #ingredients[_ngcontent-%COMP%] {\n  background-color: transparent;\n}\n\n.expand[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 0;\n}\n\n.btn-link[_ngcontent-%COMP%]:focus, .btn-link[_ngcontent-%COMP%]:hover {\n  box-shadow: none;\n  text-decoration: none !important;\n}\n\n.modal-image[_ngcontent-%COMP%] {\n  height: auto;\n  max-height: 250px;\n}\n\ninput.form-control[_ngcontent-%COMP%] {\n  border-top-color: #343a40;\n  border-bottom-color: #343a40;\n  color: #343a40;\n  text-align: center;\n  font-size: x-large;\n}\n\n.btn-outline-dark[_ngcontent-%COMP%], input[_ngcontent-%COMP%] {\n  height: 45px;\n  font-weight: 500;\n}\n\n.container-fluid[_ngcontent-%COMP%] {\n  position: -webkit-sticky;\n  position: sticky;\n  z-index: 50;\n  bottom: 50px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn[_ngcontent-%COMP%] {\n  border-radius: 50px;\n  margin-right: 10px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcHJvZ3JhbS9wcm9ncmFtLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksVUFBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUNKOztBQUVBO0VBQ0ksNkJBQUE7QUFDSjs7QUFFQTtFQUNJLGtCQUFBO0VBQ0EsUUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7RUFDQSxnQ0FBQTtBQUNKOztBQUVBO0VBQ0ksWUFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSx5QkFBQTtFQUNBLDRCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7QUFDSjs7QUFFQTtFQUNJLFlBQUE7RUFDQSxnQkFBQTtBQUNKOztBQUVBO0VBQ0ksd0JBQUE7RUFBQSxnQkFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0FBQ0o7O0FBQ0k7RUFDSSxtQkFBQTtFQUNBLGtCQUFBO0FBQ1IiLCJmaWxlIjoic3JjL2FwcC9wcm9ncmFtL3Byb2dyYW0uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2FyZC1pbWctdG9wIHtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBtYXJnaW46IDEwJTtcclxuICAgIG1hcmdpbi1ib3R0b206IDBweDtcclxufVxyXG5cclxuI2FkdmFudGFnZXMsICNkaXNhZHZhbnRhZ2VzLCAjaW5ncmVkaWVudHMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogdHJhbnNwYXJlbnQ7XHJcbn1cclxuXHJcbi5leHBhbmQge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgcmlnaHQ6IDA7XHJcbn1cclxuXHJcbi5idG4tbGluazpmb2N1cywgLmJ0bi1saW5rOmhvdmVyIHtcclxuICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuLm1vZGFsLWltYWdlIHtcclxuICAgIGhlaWdodDogYXV0bztcclxuICAgIG1heC1oZWlnaHQ6IDI1MHB4O1xyXG59XHJcblxyXG5pbnB1dC5mb3JtLWNvbnRyb2wge1xyXG4gICAgYm9yZGVyLXRvcC1jb2xvcjogIzM0M2E0MDtcclxuICAgIGJvcmRlci1ib3R0b20tY29sb3I6ICMzNDNhNDA7XHJcbiAgICBjb2xvcjogIzM0M2E0MDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIGZvbnQtc2l6ZTogeC1sYXJnZTtcclxufVxyXG5cclxuLmJ0bi1vdXRsaW5lLWRhcmssIGlucHV0IHtcclxuICAgIGhlaWdodDogNDVweDtcclxuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbn1cclxuXHJcbi5jb250YWluZXItZmx1aWQge1xyXG4gICAgcG9zaXRpb246IHN0aWNreTtcclxuICAgIHotaW5kZXg6IDUwO1xyXG4gICAgYm90dG9tOiA1MHB4O1xyXG5cclxuICAgICYgLmJ0biB7XHJcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNTBweDtcclxuICAgICAgICBtYXJnaW4tcmlnaHQ6IDEwcHg7XHJcbiAgICB9XHJcbn0iXX0= */"]
+          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_9__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgIf"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__["FaIconComponent"]],
+          styles: [".card-img-top[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 10%;\n  margin-bottom: 0px;\n}\n\n#advantages[_ngcontent-%COMP%], #disadvantages[_ngcontent-%COMP%], #ingredients[_ngcontent-%COMP%] {\n  background-color: transparent;\n}\n\n.expand[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 0;\n}\n\n.btn-link[_ngcontent-%COMP%]:focus, .btn-link[_ngcontent-%COMP%]:hover {\n  box-shadow: none;\n  text-decoration: none !important;\n}\n\n.modal-image[_ngcontent-%COMP%] {\n  height: auto;\n  max-height: 250px;\n}\n\ninput.form-control[_ngcontent-%COMP%] {\n  border-top-color: #343a40;\n  border-bottom-color: #343a40;\n  color: #343a40;\n  text-align: center;\n  font-size: x-large;\n}\n\n.btn-dark.basketBtn[_ngcontent-%COMP%], input[_ngcontent-%COMP%] {\n  height: 45px;\n  font-weight: 500;\n}\n\n.container-fluid[_ngcontent-%COMP%] {\n  position: -webkit-sticky;\n  position: sticky;\n  z-index: 50;\n  bottom: 50px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn[_ngcontent-%COMP%] {\n  border-radius: 50px;\n  margin-right: 10px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcHJvZ3JhbS9wcm9ncmFtLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksVUFBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUNKOztBQUVBO0VBQ0ksNkJBQUE7QUFDSjs7QUFFQTtFQUNJLGtCQUFBO0VBQ0EsUUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7RUFDQSxnQ0FBQTtBQUNKOztBQUVBO0VBQ0ksWUFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSx5QkFBQTtFQUNBLDRCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7QUFDSjs7QUFFQTtFQUNJLFlBQUE7RUFDQSxnQkFBQTtBQUNKOztBQUVBO0VBQ0ksd0JBQUE7RUFBQSxnQkFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0FBQ0o7O0FBQ0k7RUFDSSxtQkFBQTtFQUNBLGtCQUFBO0FBQ1IiLCJmaWxlIjoic3JjL2FwcC9wcm9ncmFtL3Byb2dyYW0uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2FyZC1pbWctdG9wIHtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBtYXJnaW46IDEwJTtcclxuICAgIG1hcmdpbi1ib3R0b206IDBweDtcclxufVxyXG5cclxuI2FkdmFudGFnZXMsICNkaXNhZHZhbnRhZ2VzLCAjaW5ncmVkaWVudHMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogdHJhbnNwYXJlbnQ7XHJcbn1cclxuXHJcbi5leHBhbmQge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgcmlnaHQ6IDA7XHJcbn1cclxuXHJcbi5idG4tbGluazpmb2N1cywgLmJ0bi1saW5rOmhvdmVyIHtcclxuICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuLm1vZGFsLWltYWdlIHtcclxuICAgIGhlaWdodDogYXV0bztcclxuICAgIG1heC1oZWlnaHQ6IDI1MHB4O1xyXG59XHJcblxyXG5pbnB1dC5mb3JtLWNvbnRyb2wge1xyXG4gICAgYm9yZGVyLXRvcC1jb2xvcjogIzM0M2E0MDtcclxuICAgIGJvcmRlci1ib3R0b20tY29sb3I6ICMzNDNhNDA7XHJcbiAgICBjb2xvcjogIzM0M2E0MDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIGZvbnQtc2l6ZTogeC1sYXJnZTtcclxufVxyXG5cclxuLmJ0bi1kYXJrLmJhc2tldEJ0biwgaW5wdXQge1xyXG4gICAgaGVpZ2h0OiA0NXB4O1xyXG4gICAgZm9udC13ZWlnaHQ6IDUwMDtcclxufVxyXG5cclxuLmNvbnRhaW5lci1mbHVpZCB7XHJcbiAgICBwb3NpdGlvbjogc3RpY2t5O1xyXG4gICAgei1pbmRleDogNTA7XHJcbiAgICBib3R0b206IDUwcHg7XHJcblxyXG4gICAgJiAuYnRuIHtcclxuICAgICAgICBib3JkZXItcmFkaXVzOiA1MHB4O1xyXG4gICAgICAgIG1hcmdpbi1yaWdodDogMTBweDtcclxuICAgIH1cclxufSJdfQ== */"]
         });
         return ProgramComponent;
       }();
