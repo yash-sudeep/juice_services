@@ -2003,7 +2003,7 @@ let DataService = /*@__PURE__*/ (() => {
                     this.alertService.success(message, 'Success', { timeOut: 5000, positionClass: position });
                     break;
                 case 'error':
-                    this.alertService.error(message, 'Error', { timeOut: 5000, positionClass: position });
+                    this.alertService.error(message, 'Error', { timeOut: 10000, positionClass: position });
                     break;
                 case 'warning':
                     this.alertService.warning(message, 'Warning', { timeOut: 5000, positionClass: position });

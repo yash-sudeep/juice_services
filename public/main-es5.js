@@ -3751,7 +3751,7 @@
 
                 case 'error':
                   this.alertService.error(message, 'Error', {
-                    timeOut: 5000,
+                    timeOut: 10000,
                     positionClass: position
                   });
                   break;
