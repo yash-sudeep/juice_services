@@ -432,7 +432,6 @@ let AppModule = /*@__PURE__*/ (() => {
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_11__["NgbTooltipModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
                 ngx_toastr__WEBPACK_IMPORTED_MODULE_18__["ToastrModule"].forRoot({
-                    timeOut: 10000,
                     preventDuplicates: true,
                 })
             ]] });

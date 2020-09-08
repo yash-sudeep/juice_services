@@ -883,7 +883,6 @@
           },
           providers: [_services_auth_service__WEBPACK_IMPORTED_MODULE_14__["AuthService"], _services_http_service__WEBPACK_IMPORTED_MODULE_16__["HttpService"], _services_auth_guard_service__WEBPACK_IMPORTED_MODULE_17__["AuthGuardService"], _services_data_service__WEBPACK_IMPORTED_MODULE_15__["DataService"]],
           imports: [[_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_1__["BrowserAnimationsModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_5__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"], ng_otp_input__WEBPACK_IMPORTED_MODULE_9__["NgOtpInputModule"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__["FontAwesomeModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_11__["NgbModalModule"], _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_11__["NgbTooltipModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"], ngx_toastr__WEBPACK_IMPORTED_MODULE_18__["ToastrModule"].forRoot({
-            timeOut: 10000,
             preventDuplicates: true
           })]]
         });
