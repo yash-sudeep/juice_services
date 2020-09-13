@@ -156,7 +156,7 @@ function ProfileComponent_ng_container_37_Template(rf, ctx) {
     if (rf & 2) {
         const ctx_r3 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](9, _c0, ctx_r3.dataService.isMobile));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](9, _c0, ctx_r3.isMobileView));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](7);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx_r3.firstName)("ngModelOptions", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](11, _c1));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
@@ -537,6 +537,7 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             this.stateName = 'Maharashtra';
             this.landmark = '';
             this.addressType = '';
+            this.isMobileView = false;
         }
         ngOnInit() {
             this.firstName = this.authService.usrObj.firstname;
@@ -544,6 +545,9 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             this.emailID = this.authService.usrObj.emailid;
             this.mobileNumber = this.authService.usrObj.mobilenumber;
             this.fetchAddress();
+            this.dataService.isMobile.subscribe((val) => {
+                this.isMobileView = val;
+            });
         }
         // ========================================================================================================
         activateTab(name) {
@@ -672,6 +676,7 @@ let ProfileComponent = /*@__PURE__*/ (() => {
             delete this.timerView;
             delete this.modalReference;
             delete this.addressArr;
+            delete this.isMobileView;
             delete this.firstName;
             delete this.lastName;
             delete this.emailID;

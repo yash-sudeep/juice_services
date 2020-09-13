@@ -348,7 +348,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](9, _c0, ctx_r3.dataService.isMobile));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](9, _c0, ctx_r3.isMobileView));
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](7);
 
@@ -1173,16 +1173,22 @@
             this.stateName = 'Maharashtra';
             this.landmark = '';
             this.addressType = '';
+            this.isMobileView = false;
           }
 
           _createClass(ProfileComponent, [{
             key: "ngOnInit",
             value: function ngOnInit() {
+              var _this = this;
+
               this.firstName = this.authService.usrObj.firstname;
               this.lastName = this.authService.usrObj.lastname;
               this.emailID = this.authService.usrObj.emailid;
               this.mobileNumber = this.authService.usrObj.mobilenumber;
               this.fetchAddress();
+              this.dataService.isMobile.subscribe(function (val) {
+                _this.isMobileView = val;
+              });
             } // ========================================================================================================
 
           }, {
@@ -1218,7 +1224,7 @@
           }, {
             key: "resetPassword",
             value: function resetPassword() {
-              var _this = this;
+              var _this2 = this;
 
               var body = {
                 oldPassword: this.resetPwdForm.newPassword,
@@ -1228,7 +1234,7 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].RESET_PWD, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                 var body = res.body;
               }, function (error) {
-                _this.dataService.handleErrorResponse(error);
+                _this2.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -1266,7 +1272,7 @@
           }, {
             key: "submit",
             value: function submit(obj) {
-              var _this2 = this;
+              var _this3 = this;
 
               var formValues = obj.form.value;
               var body = {
@@ -1284,9 +1290,9 @@
                 this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
 
-                  _this2.modalService.dismissAll();
+                  _this3.modalService.dismissAll();
                 }, function (error) {
-                  _this2.dataService.handleErrorResponse(error);
+                  _this3.dataService.handleErrorResponse(error);
                 });
               } else {
                 body['addressId'] = this.addressID;
@@ -1294,9 +1300,9 @@
                 this._httpService.putRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, JSON.stringify(body), this.authService.token).subscribe(function (res) {
                   var body = res.body;
 
-                  _this2.modalService.dismissAll();
+                  _this3.modalService.dismissAll();
                 }, function (error) {
-                  _this2.dataService.handleErrorResponse(error);
+                  _this3.dataService.handleErrorResponse(error);
                 });
               }
             } // ========================================================================================================
@@ -1312,13 +1318,13 @@
           }, {
             key: "fetchAddress",
             value: function fetchAddress() {
-              var _this3 = this;
+              var _this4 = this;
 
               this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this3.addressArr = body.address;
+                _this4.addressArr = body.address;
               }, function (error) {
-                _this3.dataService.handleErrorResponse(error);
+                _this4.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -1331,14 +1337,14 @@
           }, {
             key: "deleteAddress",
             value: function deleteAddress(addressId) {
-              var _this4 = this;
+              var _this5 = this;
 
               this._httpService.deleteRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].USER_ADDRESS + "?addressId=" + addressId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
 
-                _this4.fetchAddress();
+                _this5.fetchAddress();
               }, function (error) {
-                _this4.dataService.handleErrorResponse(error);
+                _this5.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -1355,6 +1361,7 @@
               delete this.timerView;
               delete this.modalReference;
               delete this.addressArr;
+              delete this.isMobileView;
               delete this.firstName;
               delete this.lastName;
               delete this.emailID;

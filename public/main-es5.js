@@ -455,7 +455,7 @@
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](5, _c0, ctx_r2.dataService.isMobile));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](5, _c0, ctx_r2.isMobileView));
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
 
@@ -540,39 +540,28 @@
           _createClass(AppComponent, [{
             key: "ngOnInit",
             value: function ngOnInit() {
+              var _this = this;
+
               this.getPrograms();
+              this.dataService.isMobile.subscribe(function (val) {
+                _this.isMobileView = val;
+              });
             } // ========================================================================================================
 
           }, {
             key: "logout",
             value: function logout() {
-              var _this = this;
+              var _this2 = this;
 
               this.authService.logout(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_OUT).subscribe(function (res) {
                 var body = res.body;
-                _this.authService.isLoggedIn = false;
-                _this.authService.token = undefined;
-                _this.authService.clientName = '';
-                _this.authService.usrObj = null;
+                _this2.authService.isLoggedIn = false;
+                _this2.authService.token = undefined;
+                _this2.authService.clientName = '';
+                _this2.authService.usrObj = null;
 
-                _this.router.navigate(['/login'], {
-                  relativeTo: _this.activatedRoute
-                });
-              }, function (error) {
-                _this.dataService.handleErrorResponse(error);
-              });
-            } // ========================================================================================================
-
-          }, {
-            key: "getPrograms",
-            value: function getPrograms() {
-              var _this2 = this;
-
-              this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe(function (res) {
-                var body = res.body;
-                _this2.programList = body['data'].sort(_this2._httpService.GetSortOrder('programid'));
-                _this2.dataService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this2.programList, function (item) {
-                  return item.programid;
+                _this2.router.navigate(['/login'], {
+                  relativeTo: _this2.activatedRoute
                 });
               }, function (error) {
                 _this2.dataService.handleErrorResponse(error);
@@ -580,13 +569,29 @@
             } // ========================================================================================================
 
           }, {
+            key: "getPrograms",
+            value: function getPrograms() {
+              var _this3 = this;
+
+              this._httpService.getRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].PROGRAM_LIST, this.authService.token).subscribe(function (res) {
+                var body = res.body;
+                _this3.programList = body['data'].sort(_this3._httpService.GetSortOrder('programid'));
+                _this3.dataService.programList = lodash__WEBPACK_IMPORTED_MODULE_3__["groupBy"](_this3.programList, function (item) {
+                  return item.programid;
+                });
+              }, function (error) {
+                _this3.dataService.handleErrorResponse(error);
+              });
+            } // ========================================================================================================
+
+          }, {
             key: "navigateToProgram",
             value: function navigateToProgram(programId) {
-              var _this3 = this;
+              var _this4 = this;
 
               this.programList.forEach(function (el) {
                 if (el.programid === programId) {
-                  _this3.dataService.program = el;
+                  _this4.dataService.program = el;
                 }
               });
               this.router.navigate(['/program'], {
@@ -607,6 +612,7 @@
             key: "ngOnDestroy",
             value: function ngOnDestroy() {
               delete this.programList;
+              delete this.isMobileView;
               delete this.faBell;
               delete this.faBoxOpen;
               delete this.faIdCard;
@@ -739,7 +745,7 @@
             }
           },
           directives: [_angular_common__WEBPACK_IMPORTED_MODULE_8__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_8__["NgIf"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterOutlet"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterLinkWithHref"], _angular_common__WEBPACK_IMPORTED_MODULE_8__["NgClass"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_9__["FaIconComponent"]],
-          styles: [".navbar[_ngcontent-%COMP%] {\n  background-color: #fff;\n  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);\n}\n.navbar[_ngcontent-%COMP%]   .navbar-brand[_ngcontent-%COMP%] {\n  margin-left: 2rem;\n  font-size: 1.5rem;\n  text-transform: uppercase;\n}\n.navbar[_ngcontent-%COMP%]   .navbar-collapse[_ngcontent-%COMP%]   .badge-danger[_ngcontent-%COMP%] {\n  position: absolute;\n  margin-left: 10px;\n  margin-top: -5px;\n}\nli[_ngcontent-%COMP%] {\n  width: 100px;\n  line-height: 35px;\n}\nli[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-size: 14px;\n  font-weight: 400;\n  text-transform: uppercase;\n}\nli.active[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\nli.nav-item[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  left: auto;\n  top: 101%;\n  right: 0;\n  border: none;\n  box-shadow: 0 0.125rem 0.8rem rgba(0, 0, 0, 0.1) !important;\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%] {\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  text-align: left;\n}\n.footer[_ngcontent-%COMP%] {\n  background-color: #fff;\n  width: 100%;\n  display: block;\n  margin-top: 10px;\n  padding: 40px 0 20px;\n  position: absolute;\n  bottom: 0;\n  overflow: hidden;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin: 0px 10px;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover {\n  text-decoration: underline;\n}\na.dropdown-item[_ngcontent-%COMP%]:active {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\na.dropdown-item[_ngcontent-%COMP%]:hover {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\n.dropdown-menu[_ngcontent-%COMP%]   .user-name[_ngcontent-%COMP%] {\n  pointer-events: none;\n}\nimg[_ngcontent-%COMP%]   .img-fluid[_ngcontent-%COMP%] {\n  max-width: 2.5rem;\n}\nimg[_ngcontent-%COMP%]   .mobileView[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 0;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Msc0JBQUE7RUFDQSwyQ0FBQTtBQUNEO0FBQUM7RUFDQyxpQkFBQTtFQUNBLGlCQUFBO0VBQ0EseUJBQUE7QUFFRjtBQUNFO0VBQ0Msa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGdCQUFBO0FBQ0g7QUFJQTtFQUNDLFlBQUE7RUFDQSxpQkFBQTtBQUREO0FBRUM7RUFDQyxlQUFBO0VBQ0EsZ0JBQUE7RUFDQSx5QkFBQTtBQUFGO0FBS0M7RUFDQyxnQkFBQTtBQUZGO0FBTUM7RUFDQyxVQUFBO0VBQ0EsU0FBQTtFQUNBLFFBQUE7RUFDQSxZQUFBO0VBQ0EsMkRBQUE7RUFDQSxrQkFBQTtBQUhGO0FBT0E7RUFJQyxrQkFBQTtBQVBEO0FBSUM7RUFDQyxnQkFBQTtBQUZGO0FBT0E7RUFDQyxzQkFBQTtFQUNBLFdBQUE7RUFDQSxjQUFBO0VBQ0EsZ0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsU0FBQTtFQUNBLGdCQUFBO0FBSkQ7QUFLQztFQUNDLGdCQUFBO0FBSEY7QUFJRTtFQUNDLDBCQUFBO0FBRkg7QUFRQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFPQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFVQztFQUNDLG9CQUFBO0FBUEY7QUFZQztFQUNDLGlCQUFBO0FBVEY7QUFZQztFQUNDLGtCQUFBO0VBQ0EsT0FBQTtBQVZGIiwiZmlsZSI6InNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm5hdmJhciB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogI2ZmZjtcclxuXHRib3gtc2hhZG93OiAwIDFweCAxcHggMCByZ2JhKDAsIDAsIDAsIC4xNik7XHJcblx0Lm5hdmJhci1icmFuZCB7XHJcblx0XHRtYXJnaW4tbGVmdDogMnJlbTtcclxuXHRcdGZvbnQtc2l6ZTogMS41cmVtO1xyXG5cdFx0dGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuXHR9XHJcblx0Lm5hdmJhci1jb2xsYXBzZSB7XHJcblx0XHQuYmFkZ2UtZGFuZ2VyIHtcclxuXHRcdFx0cG9zaXRpb246IGFic29sdXRlO1xyXG5cdFx0XHRtYXJnaW4tbGVmdDogMTBweDtcclxuXHRcdFx0bWFyZ2luLXRvcDogLTVweDtcclxuXHRcdH1cclxuXHR9XHJcbn1cclxuXHJcbmxpIHtcclxuXHR3aWR0aDogMTAwcHg7XHJcblx0bGluZS1oZWlnaHQ6IDM1cHg7XHJcblx0YSB7XHJcblx0XHRmb250LXNpemU6IDE0cHg7XHJcblx0XHRmb250LXdlaWdodDogNDAwO1xyXG5cdFx0dGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuXHR9XHJcbn1cclxuXHJcbmxpLmFjdGl2ZSB7XHJcblx0YSB7XHJcblx0XHRmb250LXdlaWdodDogNTAwO1xyXG5cdH1cclxufVxyXG5saS5uYXYtaXRlbSB7XHJcblx0LmRyb3Bkb3duLW1lbnUge1xyXG5cdFx0bGVmdDogYXV0bztcclxuXHRcdHRvcDogMTAxJTtcclxuXHRcdHJpZ2h0OiAwO1xyXG5cdFx0Ym9yZGVyOiBub25lO1xyXG5cdFx0Ym94LXNoYWRvdzogMCAwLjEyNXJlbSAwLjhyZW0gcmdiYSgwLCAwLCAwLCAwLjEpICFpbXBvcnRhbnQ7XHJcblx0XHR0ZXh0LWFsaWduOiBjZW50ZXI7XHJcblx0fVxyXG59XHJcblxyXG4jdXNlci1kcm9wZG93biB7XHJcblx0LmRyb3Bkb3duLW1lbnUge1xyXG5cdFx0dGV4dC1hbGlnbjogbGVmdDtcclxuXHR9XHJcblx0dGV4dC1hbGlnbjogY2VudGVyO1xyXG59XHJcblxyXG4uZm9vdGVyIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO1xyXG5cdHdpZHRoOiAxMDAlO1xyXG5cdGRpc3BsYXk6IGJsb2NrO1xyXG5cdG1hcmdpbi10b3A6IDEwcHg7XHJcblx0cGFkZGluZzogNDBweCAwIDIwcHg7XHJcblx0cG9zaXRpb246IGFic29sdXRlO1xyXG5cdGJvdHRvbTogMDtcclxuXHRvdmVyZmxvdzogaGlkZGVuO1xyXG5cdGEge1xyXG5cdFx0bWFyZ2luOiAwcHggMTBweDtcclxuXHRcdCY6aG92ZXIge1xyXG5cdFx0XHR0ZXh0LWRlY29yYXRpb246IHVuZGVybGluZTtcclxuXHRcdH1cclxuXHR9XHJcbn1cclxuXHJcbmEuZHJvcGRvd24taXRlbSB7XHJcblx0JjphY3RpdmUge1xyXG5cdFx0Y29sb3I6ICMwYzU0NjA7XHJcblx0XHRiYWNrZ3JvdW5kLWNvbG9yOiAjZDFlY2YxO1xyXG5cdFx0Ym9yZGVyLWNvbG9yOiAjYmVlNWViO1xyXG5cdH1cclxuXHQmOmhvdmVyIHtcclxuXHRcdGNvbG9yOiAjMGM1NDYwO1xyXG5cdFx0YmFja2dyb3VuZC1jb2xvcjogI2QxZWNmMTtcclxuXHRcdGJvcmRlci1jb2xvcjogI2JlZTVlYjtcclxuXHR9XHJcbn1cclxuXHJcbi5kcm9wZG93bi1tZW51IHtcclxuXHQudXNlci1uYW1lIHtcclxuXHRcdHBvaW50ZXItZXZlbnRzOiBub25lO1xyXG5cdH1cclxufVxyXG5cclxuaW1nIHtcclxuXHQuaW1nLWZsdWlkIHtcclxuXHRcdG1heC13aWR0aDogMi41cmVtO1xyXG5cdH1cclxuXHJcblx0Lm1vYmlsZVZpZXcge1xyXG5cdFx0cG9zaXRpb246IGFic29sdXRlO1xyXG5cdFx0bGVmdDogMDtcclxuXHR9XHJcbn0iXX0= */"]
+          styles: [".navbar[_ngcontent-%COMP%] {\n  background-color: #fff;\n  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);\n}\n.navbar[_ngcontent-%COMP%]   .navbar-brand[_ngcontent-%COMP%] {\n  margin-left: 2rem;\n  font-size: 1.5rem;\n  text-transform: uppercase;\n}\n.navbar[_ngcontent-%COMP%]   .navbar-collapse[_ngcontent-%COMP%]   .badge-danger[_ngcontent-%COMP%] {\n  position: absolute;\n  margin-left: 10px;\n  margin-top: -5px;\n}\nli[_ngcontent-%COMP%] {\n  width: 100px;\n  line-height: 35px;\n}\nli[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-size: 14px;\n  font-weight: 400;\n  text-transform: uppercase;\n}\nli.active[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\nli.nav-item[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  left: auto;\n  top: 101%;\n  right: 0;\n  border: none;\n  box-shadow: 0 0.125rem 0.8rem rgba(0, 0, 0, 0.1) !important;\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%] {\n  text-align: center;\n}\n#user-dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  text-align: left;\n}\n.footer[_ngcontent-%COMP%] {\n  background-color: #fff;\n  width: 100%;\n  display: block;\n  margin-top: 10px;\n  padding: 40px 0 20px;\n  position: absolute;\n  bottom: 0;\n  overflow: hidden;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin: 0px 10px;\n}\n.footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%]:hover {\n  text-decoration: underline;\n}\na.dropdown-item[_ngcontent-%COMP%]:active {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\na.dropdown-item[_ngcontent-%COMP%]:hover {\n  color: #0c5460;\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\n.dropdown-menu[_ngcontent-%COMP%]   .user-name[_ngcontent-%COMP%] {\n  pointer-events: none;\n}\nimg.img-fluid[_ngcontent-%COMP%] {\n  max-width: 2.5rem;\n}\nimg.mobileView[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 0;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Msc0JBQUE7RUFDQSwyQ0FBQTtBQUNEO0FBQUM7RUFDQyxpQkFBQTtFQUNBLGlCQUFBO0VBQ0EseUJBQUE7QUFFRjtBQUNFO0VBQ0Msa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGdCQUFBO0FBQ0g7QUFJQTtFQUNDLFlBQUE7RUFDQSxpQkFBQTtBQUREO0FBRUM7RUFDQyxlQUFBO0VBQ0EsZ0JBQUE7RUFDQSx5QkFBQTtBQUFGO0FBS0M7RUFDQyxnQkFBQTtBQUZGO0FBTUM7RUFDQyxVQUFBO0VBQ0EsU0FBQTtFQUNBLFFBQUE7RUFDQSxZQUFBO0VBQ0EsMkRBQUE7RUFDQSxrQkFBQTtBQUhGO0FBT0E7RUFJQyxrQkFBQTtBQVBEO0FBSUM7RUFDQyxnQkFBQTtBQUZGO0FBT0E7RUFDQyxzQkFBQTtFQUNBLFdBQUE7RUFDQSxjQUFBO0VBQ0EsZ0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsU0FBQTtFQUNBLGdCQUFBO0FBSkQ7QUFLQztFQUNDLGdCQUFBO0FBSEY7QUFJRTtFQUNDLDBCQUFBO0FBRkg7QUFRQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFPQztFQUNDLGNBQUE7RUFDQSx5QkFBQTtFQUNBLHFCQUFBO0FBTEY7QUFVQztFQUNDLG9CQUFBO0FBUEY7QUFXQTtFQUNDLGlCQUFBO0FBUkQ7QUFXQTtFQUNDLGtCQUFBO0VBQ0EsT0FBQTtBQVJEIiwiZmlsZSI6InNyYy9hcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm5hdmJhciB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogI2ZmZjtcclxuXHRib3gtc2hhZG93OiAwIDFweCAxcHggMCByZ2JhKDAsIDAsIDAsIC4xNik7XHJcblx0Lm5hdmJhci1icmFuZCB7XHJcblx0XHRtYXJnaW4tbGVmdDogMnJlbTtcclxuXHRcdGZvbnQtc2l6ZTogMS41cmVtO1xyXG5cdFx0dGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuXHR9XHJcblx0Lm5hdmJhci1jb2xsYXBzZSB7XHJcblx0XHQuYmFkZ2UtZGFuZ2VyIHtcclxuXHRcdFx0cG9zaXRpb246IGFic29sdXRlO1xyXG5cdFx0XHRtYXJnaW4tbGVmdDogMTBweDtcclxuXHRcdFx0bWFyZ2luLXRvcDogLTVweDtcclxuXHRcdH1cclxuXHR9XHJcbn1cclxuXHJcbmxpIHtcclxuXHR3aWR0aDogMTAwcHg7XHJcblx0bGluZS1oZWlnaHQ6IDM1cHg7XHJcblx0YSB7XHJcblx0XHRmb250LXNpemU6IDE0cHg7XHJcblx0XHRmb250LXdlaWdodDogNDAwO1xyXG5cdFx0dGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcclxuXHR9XHJcbn1cclxuXHJcbmxpLmFjdGl2ZSB7XHJcblx0YSB7XHJcblx0XHRmb250LXdlaWdodDogNTAwO1xyXG5cdH1cclxufVxyXG5saS5uYXYtaXRlbSB7XHJcblx0LmRyb3Bkb3duLW1lbnUge1xyXG5cdFx0bGVmdDogYXV0bztcclxuXHRcdHRvcDogMTAxJTtcclxuXHRcdHJpZ2h0OiAwO1xyXG5cdFx0Ym9yZGVyOiBub25lO1xyXG5cdFx0Ym94LXNoYWRvdzogMCAwLjEyNXJlbSAwLjhyZW0gcmdiYSgwLCAwLCAwLCAwLjEpICFpbXBvcnRhbnQ7XHJcblx0XHR0ZXh0LWFsaWduOiBjZW50ZXI7XHJcblx0fVxyXG59XHJcblxyXG4jdXNlci1kcm9wZG93biB7XHJcblx0LmRyb3Bkb3duLW1lbnUge1xyXG5cdFx0dGV4dC1hbGlnbjogbGVmdDtcclxuXHR9XHJcblx0dGV4dC1hbGlnbjogY2VudGVyO1xyXG59XHJcblxyXG4uZm9vdGVyIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO1xyXG5cdHdpZHRoOiAxMDAlO1xyXG5cdGRpc3BsYXk6IGJsb2NrO1xyXG5cdG1hcmdpbi10b3A6IDEwcHg7XHJcblx0cGFkZGluZzogNDBweCAwIDIwcHg7XHJcblx0cG9zaXRpb246IGFic29sdXRlO1xyXG5cdGJvdHRvbTogMDtcclxuXHRvdmVyZmxvdzogaGlkZGVuO1xyXG5cdGEge1xyXG5cdFx0bWFyZ2luOiAwcHggMTBweDtcclxuXHRcdCY6aG92ZXIge1xyXG5cdFx0XHR0ZXh0LWRlY29yYXRpb246IHVuZGVybGluZTtcclxuXHRcdH1cclxuXHR9XHJcbn1cclxuXHJcbmEuZHJvcGRvd24taXRlbSB7XHJcblx0JjphY3RpdmUge1xyXG5cdFx0Y29sb3I6ICMwYzU0NjA7XHJcblx0XHRiYWNrZ3JvdW5kLWNvbG9yOiAjZDFlY2YxO1xyXG5cdFx0Ym9yZGVyLWNvbG9yOiAjYmVlNWViO1xyXG5cdH1cclxuXHQmOmhvdmVyIHtcclxuXHRcdGNvbG9yOiAjMGM1NDYwO1xyXG5cdFx0YmFja2dyb3VuZC1jb2xvcjogI2QxZWNmMTtcclxuXHRcdGJvcmRlci1jb2xvcjogI2JlZTVlYjtcclxuXHR9XHJcbn1cclxuXHJcbi5kcm9wZG93bi1tZW51IHtcclxuXHQudXNlci1uYW1lIHtcclxuXHRcdHBvaW50ZXItZXZlbnRzOiBub25lO1xyXG5cdH1cclxufVxyXG5cclxuaW1nLmltZy1mbHVpZCB7XHJcblx0bWF4LXdpZHRoOiAyLjVyZW07XHJcbn1cclxuXHJcbmltZy5tb2JpbGVWaWV3IHtcclxuXHRwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0bGVmdDogMDtcclxufSJdfQ== */"]
         });
         return AppComponent;
       }();
@@ -1193,14 +1199,14 @@
           }, {
             key: "getSubscriptions",
             value: function getSubscriptions() {
-              var _this4 = this;
+              var _this5 = this;
 
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].SUBSCRIPTIONS, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this4.subscriptions = body['data'].sort(_this4._httpService.GetSortOrder('subscriptionid'));
-                _this4.subscriptionMap = new Map();
-                _this4.priceMap = new Map();
-                var g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](_this4.subscriptions, function (item) {
+                _this5.subscriptions = body['data'].sort(_this5._httpService.GetSortOrder('subscriptionid'));
+                _this5.subscriptionMap = new Map();
+                _this5.priceMap = new Map();
+                var g = lodash__WEBPACK_IMPORTED_MODULE_2__["groupBy"](_this5.subscriptions, function (item) {
                   return item.programid;
                 });
 
@@ -1208,47 +1214,47 @@
                   var n = [];
                   g[key].forEach(function (element, index) {
                     if (index === 0) {
-                      _this4.priceMap.set(Number(key), Number(element.price));
+                      _this5.priceMap.set(Number(key), Number(element.price));
                     }
 
                     n.push(element["package"].toUpperCase());
                   });
 
-                  _this4.subscriptionMap.set(Number(key), n);
+                  _this5.subscriptionMap.set(Number(key), n);
                 };
 
                 for (var key in g) {
                   _loop(key);
                 }
 
-                if (_this4.cartItems.length > 0) {
-                  _this4.calculateTotalPrice();
+                if (_this5.cartItems.length > 0) {
+                  _this5.calculateTotalPrice();
 
-                  _this4.cartItems.forEach(function (el) {
-                    el.packages = _this4.subscriptionMap.get(el.id);
+                  _this5.cartItems.forEach(function (el) {
+                    el.packages = _this5.subscriptionMap.get(el.id);
                   });
                 }
               }, function (error) {
-                _this4.dataService.handleErrorResponse(error);
+                _this5.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
           }, {
             key: "onChange",
             value: function onChange(event, programId, index) {
-              var _this5 = this;
+              var _this6 = this;
 
               var packageName = event.target.value.toLowerCase();
               this.subscriptions.forEach(function (el) {
                 if (el["package"] === packageName && el.programid === programId) {
-                  _this5.priceMap.set(programId, el.price);
+                  _this6.priceMap.set(programId, el.price);
 
-                  _this5.cartItems[index].price = el.price;
+                  _this6.cartItems[index].price = el.price;
                 }
               });
               this.totalPrice = 0;
               this.cartItems.forEach(function (el) {
-                _this5.totalPrice += el.price;
+                _this6.totalPrice += el.price;
               });
             } // ========================================================================================================
 
@@ -2264,7 +2270,7 @@
           }, {
             key: "launchModal",
             value: function launchModal(ref, name) {
-              var _this6 = this;
+              var _this7 = this;
 
               var ngbModalOptions = {
                 backdrop: 'static',
@@ -2277,7 +2283,7 @@
 
               this.modalReference = this.modalService.open(ref, ngbModalOptions);
               this.modalReference.result.then(function (result) {}, function (reason) {
-                _this6.otpView = false;
+                _this7.otpView = false;
               });
             } // ========================================================================================================
 
@@ -2333,7 +2339,7 @@
           }, {
             key: "sendOTP",
             value: function sendOTP() {
-              var _this7 = this;
+              var _this8 = this;
 
               var _url;
 
@@ -2346,15 +2352,15 @@
               this._httpService.postRequest(_url, JSON.stringify({
                 mobile_number: this.mobileNumber
               }), '').subscribe(function (res) {
-                clearTimeout(_this7.timeTracker);
-                _this7.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
-                _this7.timerText = 'OTP expires within ' + _this7.timeLeft + ' seconds';
-                _this7.timerView = false;
-                _this7.timeTracker = setInterval(function () {
-                  _this7.countdown();
+                clearTimeout(_this8.timeTracker);
+                _this8.timeLeft = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].OTP_TIMEOUT;
+                _this8.timerText = 'OTP expires within ' + _this8.timeLeft + ' seconds';
+                _this8.timerView = false;
+                _this8.timeTracker = setInterval(function () {
+                  _this8.countdown();
                 }, 1000);
               }, function (error) {
-                _this7.dataService.handleErrorResponse(error);
+                _this8.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -2368,7 +2374,7 @@
           }, {
             key: "login",
             value: function login() {
-              var _this8 = this;
+              var _this9 = this;
 
               var formValues = this.signInForm.form.value;
               var body = {
@@ -2378,16 +2384,16 @@
               this.authService.login(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].LOGIN, JSON.stringify(body)).subscribe(function (res) {
                 var body = res.body;
 
-                _this8.postAuth(body);
+                _this9.postAuth(body);
               }, function (error) {
-                _this8.dataService.handleErrorResponse(error);
+                _this9.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
           }, {
             key: "forgotPassword",
             value: function forgotPassword() {
-              var _this9 = this;
+              var _this10 = this;
 
               var body = {
                 mobile_number: this.forgotPwdform.mobileNumber,
@@ -2398,14 +2404,14 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].FORGOT_PWD, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
               }, function (error) {
-                _this9.dataService.handleErrorResponse(error);
+                _this10.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
           }, {
             key: "signUp",
             value: function signUp(OTP) {
-              var _this10 = this;
+              var _this11 = this;
 
               var formValues = this.signUpForm.form.value;
               var body = {
@@ -2421,11 +2427,11 @@
               this._httpService.postRequest(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].SIGN_UP, JSON.stringify(body), '').subscribe(function (res) {
                 var body = res.body;
 
-                _this10.postAuth(body);
+                _this11.postAuth(body);
 
-                _this10.modalReference.close();
+                _this11.modalReference.close();
               }, function (error) {
-                _this10.dataService.handleErrorResponse(error);
+                _this11.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -2938,11 +2944,12 @@
         }
       }
 
-      var _c0 = function _c0(a0, a1, a2) {
+      var _c0 = function _c0(a0, a1, a2, a3) {
         return {
           "animate__pulse": a0,
           "float-right": a1,
-          "mx-auto": a2
+          "d-block": a2,
+          "mx-auto": a3
         };
       };
 
@@ -2970,7 +2977,7 @@
         if (rf & 2) {
           var ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction3"](3, _c0, ctx_r2.basketItems >= ctx_r2.minBasketItems, !ctx_r2.dataService.isMobile, ctx_r2.dataService.isMobile))("disabled", ctx_r2.basketItems < ctx_r2.minBasketItems);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction4"](3, _c0, ctx_r2.basketItems >= ctx_r2.minBasketItems, !ctx_r2.isMobileView, !ctx_r2.isMobileView, !ctx_r2.isMobileView))("disabled", ctx_r2.basketItems < ctx_r2.minBasketItems);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
@@ -3201,6 +3208,12 @@
         }
       }
 
+      var _c1 = function _c1(a0) {
+        return {
+          "mobile-display": a0
+        };
+      };
+
       var ProgramComponent = /*@__PURE__*/function () {
         var ProgramComponent = /*#__PURE__*/function () {
           function ProgramComponent(modalService, activatedRoute, _httpService, authService, router, dataService) {
@@ -3223,21 +3236,25 @@
             this.cartAlert = false;
             this.selectedItemCount = 0;
             this.selectedItemIndex = 0;
+            this.isMobileView = false;
           }
 
           _createClass(ProgramComponent, [{
             key: "ngOnInit",
             value: function ngOnInit() {
-              var _this11 = this;
+              var _this12 = this;
 
               this.activatedRoute.queryParams.subscribe(function (params) {
                 var programId = parseInt(params['programId']);
 
-                _this11.getProducts(programId);
+                _this12.getProducts(programId);
 
-                _this11.dataService.program = _this11.dataService.programList[programId.toString()][0];
+                _this12.dataService.program = _this12.dataService.programList[programId.toString()][0];
 
-                _this11.setPageData();
+                _this12.setPageData();
+              });
+              this.dataService.isMobile.subscribe(function (val) {
+                _this12.isMobileView = val;
               });
             } // ========================================================================================================
 
@@ -3251,7 +3268,7 @@
           }, {
             key: "open",
             value: function open(ref, index) {
-              var _this12 = this;
+              var _this13 = this;
 
               this.productAdvantages = this.products[index]['advantages'];
               this.selectedItemIndex = index;
@@ -3259,9 +3276,9 @@
               this.modalService.open(ref, {
                 size: 'lg'
               }).result.then(function (result) {
-                _this12.closeResult = "Closed with: ".concat(result);
+                _this13.closeResult = "Closed with: ".concat(result);
               }, function (reason) {
-                _this12.closeResult = "Dismissed ".concat(_this12.getDismissReason(reason));
+                _this13.closeResult = "Dismissed ".concat(_this13.getDismissReason(reason));
               });
             } // ========================================================================================================
 
@@ -3280,12 +3297,12 @@
           }, {
             key: "getProducts",
             value: function getProducts(programId) {
-              var _this13 = this;
+              var _this14 = this;
 
               this._httpService.getRequest(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].PRODUCTS_LIST + "?programId=" + programId, this.authService.token).subscribe(function (res) {
                 var body = res.body;
-                _this13.products = body['data'];
-                var cartArr = _this13.dataService.cartData; // let cartObj = localStorage.getItem('cart');
+                _this14.products = body['data'];
+                var cartArr = _this14.dataService.cartData; // let cartObj = localStorage.getItem('cart');
 
                 if (cartArr) {
                   // let cartArr = JSON.parse(cartObj);
@@ -3293,20 +3310,20 @@
                     return item.id;
                   });
 
-                  if (o.hasOwnProperty(_this13.activeProgram['programid'])) {
-                    _this13.getCartItemsfromStorage(o);
+                  if (o.hasOwnProperty(_this14.activeProgram['programid'])) {
+                    _this14.getCartItemsfromStorage(o);
 
-                    _this13.setDefaultValue();
+                    _this14.setDefaultValue();
                   } else {
-                    _this13.setDefaultValue();
+                    _this14.setDefaultValue();
                   }
                 } else {
-                  _this13.setDefaultValue();
+                  _this14.setDefaultValue();
                 }
 
-                _this13.validateBasket();
+                _this14.validateBasket();
               }, function (error) {
-                _this13.dataService.handleErrorResponse(error);
+                _this14.dataService.handleErrorResponse(error);
               });
             } // ========================================================================================================
 
@@ -3326,12 +3343,12 @@
           }, {
             key: "validateBasket",
             value: function validateBasket() {
-              var _this14 = this;
+              var _this15 = this;
 
               this.basketItems = 0;
               this.products.forEach(function (el) {
                 if (el.total > 0) {
-                  _this14.basketItems += el.total;
+                  _this15.basketItems += el.total;
                 }
               });
             } // ========================================================================================================
@@ -3353,7 +3370,7 @@
           }, {
             key: "goToCart",
             value: function goToCart() {
-              var _this15 = this;
+              var _this16 = this;
 
               var items = this.getbasketItems(this.products); // let cartObj = localStorage.getItem('cart');
 
@@ -3367,7 +3384,7 @@
 
                 if (o.hasOwnProperty(this.activeProgram['programid'])) {
                   cartArr.forEach(function (element) {
-                    if (element.id === _this15.activeProgram['programid']) {
+                    if (element.id === _this16.activeProgram['programid']) {
                       element.products = items;
                     }
                   });
@@ -3444,6 +3461,7 @@
               delete this.activeProgram;
               delete this.selectedItemCount;
               delete this.selectedItemIndex;
+              delete this.isMobileView;
               delete this.faMinus;
               delete this.faMinus;
               delete this.faShoppingBasket;
@@ -3462,8 +3480,8 @@
           type: ProgramComponent,
           selectors: [["app-program"]],
           decls: 10,
-          vars: 3,
-          consts: [[1, "container"], ["class", "alert alert-info text-uppercase animate__animated animate__slideInRight", "role", "alert", 4, "ngIf"], [1, "row", "m-t-2"], ["class", "col-xl-4 col-lg-4 col-md-6 col-sm-12", 4, "ngFor", "ngForOf"], [1, "container-fluid"], [1, "row"], [1, "col-12"], ["class", "btn btn-xl btn-dark d-block text-uppercase animate__animated animate__infinite", 3, "ngClass", "disabled", "click", 4, "ngIf"], ["content", ""], ["role", "alert", 1, "alert", "alert-info", "text-uppercase", "animate__animated", "animate__slideInRight"], [1, "col-xl-4", "col-lg-4", "col-md-6", "col-sm-12"], [1, "card", "m-b-1"], ["src", "./assets/images/dummy.png", "alt", "item.name", 1, "card-img-top", 3, "click"], [1, "card-body"], [1, "card-title", "text-center", "text-uppercase"], [4, "ngIf"], [1, "col-xl-8", "col-lg-12", "d-block", "mx-auto"], [1, "input-group"], [1, "input-group-prepend"], ["type", "button", "id", "button-addon1", 1, "btn", "btn-dark", "basketBtn", 3, "click"], [3, "icon"], ["type", "text", "placeholder", "", "aria-label", "Example text with button addon", "aria-describedby", "button-addon1", "disabled", "", 1, "form-control", 3, "value"], [1, "input-group-append"], ["type", "button", "id", "button-addon2", 1, "btn", "btn-dark", "basketBtn", 3, "click"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn", 3, "click"], [1, "m-r-1", 3, "icon"], [1, "btn", "btn-xl", "btn-dark", "d-block", "text-uppercase", "animate__animated", "animate__infinite", 3, "ngClass", "disabled", "click"], [1, "modal-header"], ["type", "button", "aria-label", "Close", 1, "close", 3, "click"], ["aria-hidden", "true"], [1, "modal-body"], [1, "text-center", "f-w-700"], [1, "col-xl-4", "col-lg-12"], ["src", "./assets/images/dummy.png", "alt", "Product Image", 1, "modal-image", "m-b-1", 2, "width", "100%"], [1, "col-xl-8", "col-lg-12"], [1, "text-left", "m-b-2", "m-t-1"], [1, "card"], ["id", "advantages", 1, "card-header"], [1, "m-b-0"], [4, "ngFor", "ngForOf"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn"]],
+          vars: 6,
+          consts: [[1, "container"], ["class", "alert alert-info text-uppercase animate__animated animate__slideInRight", "role", "alert", 4, "ngIf"], [1, "row", "m-t-2"], ["class", "col-xl-4 col-lg-4 col-md-6 col-sm-12", 4, "ngFor", "ngForOf"], [1, "container-fluid"], [1, "row"], [1, "col-12", 3, "ngClass"], ["class", "btn btn-xl btn-dark text-uppercase animate__animated animate__infinite", 3, "ngClass", "disabled", "click", 4, "ngIf"], ["content", ""], ["role", "alert", 1, "alert", "alert-info", "text-uppercase", "animate__animated", "animate__slideInRight"], [1, "col-xl-4", "col-lg-4", "col-md-6", "col-sm-12"], [1, "card", "m-b-1"], ["src", "./assets/images/dummy.png", "alt", "item.name", 1, "card-img-top", 3, "click"], [1, "card-body"], [1, "card-title", "text-center", "text-uppercase"], [4, "ngIf"], [1, "col-xl-8", "col-lg-12", "d-block", "mx-auto"], [1, "input-group"], [1, "input-group-prepend"], ["type", "button", "id", "button-addon1", 1, "btn", "btn-dark", "basketBtn", 3, "click"], [3, "icon"], ["type", "text", "placeholder", "", "aria-label", "Example text with button addon", "aria-describedby", "button-addon1", "disabled", "", 1, "form-control", 3, "value"], [1, "input-group-append"], ["type", "button", "id", "button-addon2", 1, "btn", "btn-dark", "basketBtn", 3, "click"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn", 3, "click"], [1, "m-r-1", 3, "icon"], [1, "btn", "btn-xl", "btn-dark", "text-uppercase", "animate__animated", "animate__infinite", 3, "ngClass", "disabled", "click"], [1, "modal-header"], ["type", "button", "aria-label", "Close", 1, "close", 3, "click"], ["aria-hidden", "true"], [1, "modal-body"], [1, "text-center", "f-w-700"], [1, "col-xl-4", "col-lg-12"], ["src", "./assets/images/dummy.png", "alt", "Product Image", 1, "modal-image", "m-b-1", 2, "width", "100%"], [1, "col-xl-8", "col-lg-12"], [1, "text-left", "m-b-2", "m-t-1"], [1, "card"], ["id", "advantages", 1, "card-header"], [1, "m-b-0"], [4, "ngFor", "ngForOf"], ["type", "button", 1, "btn", "btn-dark", "btn-block", "mx-auto", "d-block", "basketBtn"]],
           template: function ProgramComponent_Template(rf, ctx) {
             if (rf & 1) {
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
@@ -3484,7 +3502,7 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 6);
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](7, ProgramComponent_button_7_Template, 3, 7, "button", 7);
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](7, ProgramComponent_button_7_Template, 3, 8, "button", 7);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -3504,13 +3522,17 @@
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.products);
 
-              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](4, _c1, ctx.isMobileView));
+
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
               _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.basketItems > 0);
             }
           },
-          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_9__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgForOf"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__["FaIconComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgClass"]],
-          styles: [".card-img-top[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 10%;\n  margin-bottom: 0px;\n}\n\n#advantages[_ngcontent-%COMP%], #disadvantages[_ngcontent-%COMP%], #ingredients[_ngcontent-%COMP%] {\n  background-color: transparent;\n}\n\n.expand[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 0;\n}\n\n.btn-link[_ngcontent-%COMP%]:focus, .btn-link[_ngcontent-%COMP%]:hover {\n  box-shadow: none;\n  text-decoration: none !important;\n}\n\n.modal-image[_ngcontent-%COMP%] {\n  height: auto;\n  max-height: 250px;\n}\n\ninput.form-control[_ngcontent-%COMP%] {\n  border-top-color: #343a40;\n  border-bottom-color: #343a40;\n  color: #343a40;\n  text-align: center;\n  font-size: x-large;\n}\n\n.btn-dark.basketBtn[_ngcontent-%COMP%], input[_ngcontent-%COMP%] {\n  height: 45px;\n  font-weight: 500;\n  width: auto;\n}\n\n.container-fluid[_ngcontent-%COMP%] {\n  position: -webkit-sticky;\n  position: sticky;\n  z-index: 50;\n  bottom: 50px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn[_ngcontent-%COMP%] {\n  border-radius: 50px;\n  margin-right: 10px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn.animate__animated[_ngcontent-%COMP%] {\n  width: 200px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcHJvZ3JhbS9wcm9ncmFtLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksVUFBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUNKOztBQUVBO0VBQ0ksNkJBQUE7QUFDSjs7QUFFQTtFQUNJLGtCQUFBO0VBQ0EsUUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7RUFDQSxnQ0FBQTtBQUNKOztBQUVBO0VBQ0ksWUFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSx5QkFBQTtFQUNBLDRCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7QUFDSjs7QUFFQTtFQUNJLFlBQUE7RUFDQSxnQkFBQTtFQUNBLFdBQUE7QUFDSjs7QUFFQTtFQUNJLHdCQUFBO0VBQUEsZ0JBQUE7RUFDQSxXQUFBO0VBQ0EsWUFBQTtBQUNKOztBQUNJO0VBQ0ksbUJBQUE7RUFDQSxrQkFBQTtBQUNSOztBQUVJO0VBQ0ksWUFBQTtBQUFSIiwiZmlsZSI6InNyYy9hcHAvcHJvZ3JhbS9wcm9ncmFtLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNhcmQtaW1nLXRvcCB7XHJcbiAgICB3aWR0aDogODAlO1xyXG4gICAgbWFyZ2luOiAxMCU7XHJcbiAgICBtYXJnaW4tYm90dG9tOiAwcHg7XHJcbn1cclxuXHJcbiNhZHZhbnRhZ2VzLCAjZGlzYWR2YW50YWdlcywgI2luZ3JlZGllbnRzIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50O1xyXG59XHJcblxyXG4uZXhwYW5kIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHJpZ2h0OiAwO1xyXG59XHJcblxyXG4uYnRuLWxpbms6Zm9jdXMsIC5idG4tbGluazpob3ZlciB7XHJcbiAgICBib3gtc2hhZG93OiBub25lO1xyXG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lICFpbXBvcnRhbnQ7XHJcbn1cclxuXHJcbi5tb2RhbC1pbWFnZSB7XHJcbiAgICBoZWlnaHQ6IGF1dG87XHJcbiAgICBtYXgtaGVpZ2h0OiAyNTBweDtcclxufVxyXG5cclxuaW5wdXQuZm9ybS1jb250cm9sIHtcclxuICAgIGJvcmRlci10b3AtY29sb3I6ICMzNDNhNDA7XHJcbiAgICBib3JkZXItYm90dG9tLWNvbG9yOiAjMzQzYTQwO1xyXG4gICAgY29sb3I6ICMzNDNhNDA7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBmb250LXNpemU6IHgtbGFyZ2U7XHJcbn1cclxuXHJcbi5idG4tZGFyay5iYXNrZXRCdG4sIGlucHV0IHtcclxuICAgIGhlaWdodDogNDVweDtcclxuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgICB3aWR0aDogYXV0bztcclxufVxyXG5cclxuLmNvbnRhaW5lci1mbHVpZCB7XHJcbiAgICBwb3NpdGlvbjogc3RpY2t5O1xyXG4gICAgei1pbmRleDogNTA7XHJcbiAgICBib3R0b206IDUwcHg7XHJcblxyXG4gICAgJiAuYnRuIHtcclxuICAgICAgICBib3JkZXItcmFkaXVzOiA1MHB4O1xyXG4gICAgICAgIG1hcmdpbi1yaWdodDogMTBweDtcclxuICAgIH1cclxuXHJcbiAgICAmIC5idG4uYW5pbWF0ZV9fYW5pbWF0ZWQge1xyXG4gICAgICAgIHdpZHRoOiAyMDBweDtcclxuICAgIH1cclxufSJdfQ== */"]
+          directives: [_angular_common__WEBPACK_IMPORTED_MODULE_9__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_9__["NgClass"], _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__["FaIconComponent"]],
+          styles: [".card-img-top[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 10%;\n  margin-bottom: 0px;\n}\n\n#advantages[_ngcontent-%COMP%], #disadvantages[_ngcontent-%COMP%], #ingredients[_ngcontent-%COMP%] {\n  background-color: transparent;\n}\n\n.expand[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 0;\n}\n\n.btn-link[_ngcontent-%COMP%]:focus, .btn-link[_ngcontent-%COMP%]:hover {\n  box-shadow: none;\n  text-decoration: none !important;\n}\n\n.modal-image[_ngcontent-%COMP%] {\n  height: auto;\n  max-height: 250px;\n}\n\ninput.form-control[_ngcontent-%COMP%] {\n  border-top-color: #343a40;\n  border-bottom-color: #343a40;\n  color: #343a40;\n  text-align: center;\n  font-size: x-large;\n}\n\n.btn-dark.basketBtn[_ngcontent-%COMP%], input[_ngcontent-%COMP%] {\n  height: 45px;\n  font-weight: 500;\n  width: auto;\n}\n\n.container-fluid[_ngcontent-%COMP%] {\n  position: -webkit-sticky;\n  position: sticky;\n  z-index: 50;\n  bottom: 50px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn[_ngcontent-%COMP%] {\n  border-radius: 50px;\n  margin-right: 10px;\n}\n\n.container-fluid[_ngcontent-%COMP%]   .btn.animate__animated[_ngcontent-%COMP%] {\n  width: 200px;\n}\n\n.mobile-display[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcHJvZ3JhbS9wcm9ncmFtLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksVUFBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUNKOztBQUVBO0VBQ0ksNkJBQUE7QUFDSjs7QUFFQTtFQUNJLGtCQUFBO0VBQ0EsUUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7RUFDQSxnQ0FBQTtBQUNKOztBQUVBO0VBQ0ksWUFBQTtFQUNBLGlCQUFBO0FBQ0o7O0FBRUE7RUFDSSx5QkFBQTtFQUNBLDRCQUFBO0VBQ0EsY0FBQTtFQUNBLGtCQUFBO0VBQ0Esa0JBQUE7QUFDSjs7QUFFQTtFQUNJLFlBQUE7RUFDQSxnQkFBQTtFQUNBLFdBQUE7QUFDSjs7QUFFQTtFQUNJLHdCQUFBO0VBQUEsZ0JBQUE7RUFDQSxXQUFBO0VBQ0EsWUFBQTtBQUNKOztBQUNJO0VBQ0ksbUJBQUE7RUFDQSxrQkFBQTtBQUNSOztBQUVJO0VBQ0ksWUFBQTtBQUFSOztBQUlBO0VBQ0ksYUFBQTtFQUNBLHVCQUFBO0FBREoiLCJmaWxlIjoic3JjL2FwcC9wcm9ncmFtL3Byb2dyYW0uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY2FyZC1pbWctdG9wIHtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBtYXJnaW46IDEwJTtcclxuICAgIG1hcmdpbi1ib3R0b206IDBweDtcclxufVxyXG5cclxuI2FkdmFudGFnZXMsICNkaXNhZHZhbnRhZ2VzLCAjaW5ncmVkaWVudHMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogdHJhbnNwYXJlbnQ7XHJcbn1cclxuXHJcbi5leHBhbmQge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgcmlnaHQ6IDA7XHJcbn1cclxuXHJcbi5idG4tbGluazpmb2N1cywgLmJ0bi1saW5rOmhvdmVyIHtcclxuICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuLm1vZGFsLWltYWdlIHtcclxuICAgIGhlaWdodDogYXV0bztcclxuICAgIG1heC1oZWlnaHQ6IDI1MHB4O1xyXG59XHJcblxyXG5pbnB1dC5mb3JtLWNvbnRyb2wge1xyXG4gICAgYm9yZGVyLXRvcC1jb2xvcjogIzM0M2E0MDtcclxuICAgIGJvcmRlci1ib3R0b20tY29sb3I6ICMzNDNhNDA7XHJcbiAgICBjb2xvcjogIzM0M2E0MDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIGZvbnQtc2l6ZTogeC1sYXJnZTtcclxufVxyXG5cclxuLmJ0bi1kYXJrLmJhc2tldEJ0biwgaW5wdXQge1xyXG4gICAgaGVpZ2h0OiA0NXB4O1xyXG4gICAgZm9udC13ZWlnaHQ6IDUwMDtcclxuICAgIHdpZHRoOiBhdXRvO1xyXG59XHJcblxyXG4uY29udGFpbmVyLWZsdWlkIHtcclxuICAgIHBvc2l0aW9uOiBzdGlja3k7XHJcbiAgICB6LWluZGV4OiA1MDtcclxuICAgIGJvdHRvbTogNTBweDtcclxuXHJcbiAgICAmIC5idG4ge1xyXG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDUwcHg7XHJcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiAxMHB4O1xyXG4gICAgfVxyXG5cclxuICAgICYgLmJ0bi5hbmltYXRlX19hbmltYXRlZCB7XHJcbiAgICAgICAgd2lkdGg6IDIwMHB4O1xyXG4gICAgfVxyXG59XHJcblxyXG4ubW9iaWxlLWRpc3BsYXkge1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xyXG59Il19 */"]
         });
         return ProgramComponent;
       }();
@@ -3724,19 +3746,25 @@
       /* harmony import */
 
 
-      var ngx_toastr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! rxjs */
+      "./node_modules/rxjs/_esm2015/index.js");
+      /* harmony import */
+
+
+      var ngx_toastr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
       /*! ngx-toastr */
       "./node_modules/ngx-toastr/__ivy_ngcc__/fesm2015/ngx-toastr.js");
       /* harmony import */
 
 
-      var _auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      var _auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! ./auth.service */
       "./src/app/services/auth.service.ts");
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @angular/router */
       "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 
@@ -3750,6 +3778,7 @@
             this.router = router;
             this.activatedRoute = activatedRoute;
             this.cartItems = 0;
+            this.isMobile = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
           }
 
           _createClass(DataService, [{
@@ -3810,7 +3839,7 @@
                 check = true;
               }
 
-              this.isMobile = check;
+              this.isMobile.next(check);
               return check;
             }
           }]);
@@ -3819,7 +3848,7 @@
         }();
 
         DataService.ɵfac = function DataService_Factory(t) {
-          return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_toastr__WEBPACK_IMPORTED_MODULE_1__["ToastrService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_auth_service__WEBPACK_IMPORTED_MODULE_2__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"]));
+          return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](ngx_toastr__WEBPACK_IMPORTED_MODULE_2__["ToastrService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"]));
         };
 
         DataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
