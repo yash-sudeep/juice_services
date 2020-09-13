@@ -2927,7 +2927,7 @@
 
       var _c0 = function _c0(a0) {
         return {
-          "animate__heartBeat": a0
+          "animate__pulse": a0
         };
       };
 

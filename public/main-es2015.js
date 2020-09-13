@@ -1516,7 +1516,7 @@ function ProgramComponent_div_3_Template(rf, ctx) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", item_r5.total === 0);
     }
 }
-const _c0 = function (a0) { return { "animate__heartBeat": a0 }; };
+const _c0 = function (a0) { return { "animate__pulse": a0 }; };
 function ProgramComponent_button_7_Template(rf, ctx) {
     if (rf & 1) {
         const _r21 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
