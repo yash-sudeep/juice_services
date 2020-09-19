@@ -567,10 +567,10 @@
             this.dataService.url.subscribe(function (val) {
               _this.activeUrl = val.replace('/', '');
 
-              if (_this.activeUrl === 'landing') {
-                _this.footerFlag = false;
-              } else {
+              if (_this.activeUrl === 'login' || _this.activeUrl === 'profile') {
                 _this.footerFlag = true;
+              } else {
+                _this.footerFlag = false;
               }
             });
           }

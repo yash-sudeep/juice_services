@@ -271,11 +271,11 @@ let AppComponent = /*@__PURE__*/ (() => {
             this.footerFlag = false;
             this.dataService.url.subscribe((val) => {
                 this.activeUrl = val.replace('/', '');
-                if (this.activeUrl === 'landing') {
-                    this.footerFlag = false;
+                if (this.activeUrl === 'login' || this.activeUrl === 'profile') {
+                    this.footerFlag = true;
                 }
                 else {
-                    this.footerFlag = true;
+                    this.footerFlag = false;
                 }
             });
         }
