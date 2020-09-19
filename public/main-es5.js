@@ -567,10 +567,10 @@
             this.dataService.url.subscribe(function (val) {
               _this.activeUrl = val.replace('/', '');
 
-              if (_this.activeUrl === 'login' || _this.activeUrl === 'profile') {
-                _this.footerFlag = true;
-              } else {
+              if (_this.activeUrl === 'landing') {
                 _this.footerFlag = false;
+              } else {
+                _this.footerFlag = true;
               }
             });
           }
@@ -1314,7 +1314,7 @@
               var storageItem = this.dataService.cartData;
 
               if (storageItem) {
-                this.cartItems = storageItem;
+                this.cartItems = storageItem.sort(this._httpService.GetSortOrder('id'));
               } else {
                 this.cartItems = [];
               }

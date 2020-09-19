@@ -271,11 +271,11 @@ let AppComponent = /*@__PURE__*/ (() => {
             this.footerFlag = false;
             this.dataService.url.subscribe((val) => {
                 this.activeUrl = val.replace('/', '');
-                if (this.activeUrl === 'login' || this.activeUrl === 'profile') {
-                    this.footerFlag = true;
+                if (this.activeUrl === 'landing') {
+                    this.footerFlag = false;
                 }
                 else {
-                    this.footerFlag = false;
+                    this.footerFlag = true;
                 }
             });
         }
@@ -674,7 +674,7 @@ let CartComponent = /*@__PURE__*/ (() => {
             this.getSubscriptions();
             let storageItem = this.dataService.cartData;
             if (storageItem) {
-                this.cartItems = storageItem;
+                this.cartItems = storageItem.sort(this._httpService.GetSortOrder('id'));
             }
             else {
                 this.cartItems = [];
