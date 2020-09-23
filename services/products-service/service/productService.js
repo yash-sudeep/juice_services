@@ -22,9 +22,9 @@ module.exports = {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
                             const query =
-                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE " +
+                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE '" +
                                 programId +
-                                "=ANY(PROGRAMID)";
+                                "'=ANY(PROGRAMID)";
                             const res = await db.basicQuery(query);
                             resolve(res);
                         } else {
