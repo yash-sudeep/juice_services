@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             try {
                 const query =
-                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true";
+                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID FROM PRODUCTS WHERE STATUS=true ORDER BY PRODUCTID";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -24,7 +24,7 @@ module.exports = {
                             const query =
                                 "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS FROM PRODUCTS WHERE '" +
                                 programId +
-                                "'=ANY(PROGRAMID)";
+                                "'=ANY(PROGRAMID) ORDER BY PRODUCTID";
                             const res = await db.basicQuery(query);
                             resolve(res);
                         } else {
