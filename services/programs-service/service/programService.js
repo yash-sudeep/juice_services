@@ -6,7 +6,7 @@ module.exports = {
     getAllProgrammes: function (req) {
         return new Promise(async (resolve, reject) => {
             try {
-                const query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE,MIN_BUY_CRITERIA FROM PROGRAMS WHERE STATUS=true";
+                const query = "SELECT PROGRAMID as programId,NAME,DESCRIPTION,PRICE,MIN_BUY_CRITERIA FROM PROGRAMS WHERE STATUS=true ORDER BY PROGRAMID";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
