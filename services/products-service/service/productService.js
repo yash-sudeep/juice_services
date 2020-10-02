@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             try {
                 const query =
-                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID,PRICE FROM PRODUCTS WHERE STATUS=true ORDER BY PRODUCTID";
+                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID,ITEMS FROM PRODUCTS WHERE STATUS=true ORDER BY PRODUCTID";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -22,7 +22,7 @@ module.exports = {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
                             const query =
-                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PRICE FROM PRODUCTS WHERE '" +
+                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,ITEMS FROM PRODUCTS WHERE '" +
                                 programId +
                                 "'=ANY(PROGRAMID) ORDER BY PRODUCTID";
                             const res = await db.basicQuery(query);
@@ -76,7 +76,7 @@ module.exports = {
                         const productValidationResult = await validateProductName(product.name);
                         if (!productValidationResult) {
                             const query =
-                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,QUANTITY,MEDIAPATH,PROGRAMID,PRICE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *";
+                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,ITEMS,MEDIAPATH,PROGRAMID) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
                             const values = [
                                 product.name,
                                 product.description,
@@ -89,10 +89,9 @@ module.exports = {
                                 .replace("]", "}")
                                 .replace(/'/g, '"'),
                                 product.status,
-                                product.quantity ? product.quantity : 0,
+                                product.items,
                                 product.mediapath,
                                 JSON.stringify(product.pid).replace("[", "{").replace("]", "}"),
-                                product.price ? product.price : 0,
                             ];
                             await db.parameterizedQuery(query, values);
                             resolve("Product Added");
