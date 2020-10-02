@@ -2,19 +2,9 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var tokenValidation = require('./services/custom-modules/auth').validateToken;
+var cors = require('cors');
 
-// enabling CORS
-var allowCrossDomain = function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    next();
-};
-
-app.use(allowCrossDomain);
+app.use(cors());
 
 //  Connect all our routes to our application
 let db = require("./services/custom-modules/database/index.js");
