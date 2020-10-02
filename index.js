@@ -4,7 +4,7 @@ var router = express.Router();
 var tokenValidation = require('./services/custom-modules/auth').validateToken;
 var cors = require('cors');
 
-app.use(cors())
+app.use(cors());
 
 let db = require("./services/custom-modules/database/index.js");
 require("./services/users-service/routes.js")(app, router);
