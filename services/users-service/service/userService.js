@@ -109,7 +109,7 @@ module.exports = {
                 findUser(mobile_number)
                     .then((foundUser) => {
                         user = foundUser;
-                        return checkPassword(password, foundUser.password);
+                        return checkPassword(password, foundUser.password, 'signin');
                     })
                     .then((res) =>
                         auth.createToken(user.username, user.userrole, mobile_number)
@@ -169,7 +169,7 @@ module.exports = {
                     .then((foundUser) => {
                         user = foundUser;
                     })
-                    .then(() => checkPassword(oldPassword, user.password))
+                    .then(() => checkPassword(oldPassword, user.password, 'reset'))
                     .then(() => auth.hashPassword(newPassword))
                     .then((newHashedPassword) =>
                         updatePassword(newHashedPassword, req.user.mobile_number)
@@ -355,7 +355,7 @@ const findUser = (mobile_number) => {
     });
 };
 
-const checkPassword = (newPassword, oldPassword) => {
+const checkPassword = (newPassword, oldPassword, activity) => {
     return new Promise((resolve, reject) =>
         bcrypt.compare(newPassword, oldPassword, (err, response) => {
             if (err) {
@@ -363,7 +363,11 @@ const checkPassword = (newPassword, oldPassword) => {
             } else if (response) {
                 resolve(response);
             } else {
-                reject(new Error("Passwords do not match."));
+                if(activity === 'reset') {
+                    reject(new Error("Passwords do not match."));
+                } else {
+                    reject(new Error("Invalid Credentials."));
+                }
             }
         })
     );

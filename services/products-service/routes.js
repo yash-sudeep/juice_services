@@ -11,7 +11,7 @@ module.exports = function(app, router) {
     //app.use(tokenValidate);
 
     // Get All Products
-    // router.get('/products', productController.getAllProducts);
+    router.get('/products/all', productController.getAllProducts);
 
     // Get Program Wise Products
     router.get('/products', productController.getProgramWiseProducts);
