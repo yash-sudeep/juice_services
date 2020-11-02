@@ -5,40 +5,40 @@ module.exports = {
     getAllOrdersAdmin: function (req, res) {
         orderService.addOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     addOrder: function (req, res) {
         orderService.addOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(201).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     getUserWiseOrders: function (req, res) {
         orderService.getUserWiseOrders(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
-    CancelOrder: function (req, res) {
-        orderService.CancelOrder(req).then(
+    cancelOrder: function (req, res) {
+        orderService.cancelOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(202).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },

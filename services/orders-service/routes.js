@@ -8,13 +8,15 @@ module.exports = function(app, router) {
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 500000 }));
     
-    // Add New order
-    router.post('/order/add', orderController.validate("addOrder"), orderController.addOrder);
+    // Get All Orders of a User
+    router.get('/order', orderController.getUserWiseOrders);
     
-    router.get('/order/getallorders', orderController.getUserWiseOrders);
+    // Add New Order
+    router.post('/order', orderController.validate("addOrder"), orderController.addOrder);
+
+    // Order Cancellation
+    router.delete('/order', orderController.cancelOrder);
     
-    router.get('/order/cancel/:id', orderController.CancelOrder);
-    
-    router.get('/getallorders/:id', orderController.CancelOrder);
+    // router.get('/getallorders/:id', orderController.CancelOrder);
 }
 
