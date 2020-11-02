@@ -5,13 +5,21 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "npm install ./services/custom-modules/auth ./services/custom-modules/database ./services/custom-modules/otp ./services/users-service ./services/subscription-service ./services/products-service ./services/programs-service",
+        "postinstall": "npm install ./services/custom-modules/auth ./services/custom-modules/database ./services/custom-modules/otp ./services/users-service ./services/subscription-service ./services/products-service ./services/programs-service ./services/orders-service",
         "start": "node index.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "authentication": "file:services/custom-modules/auth",
         "cors": "^2.8.5",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "orders_service": "file:services/orders-service",
+        "otp-service": "file:services/custom-modules/otp",
+        "postgresdb_connection": "file:services/custom-modules/database",
+        "product_service": "file:services/products-service",
+        "program_service": "file:services/programs-service",
+        "subscription-services": "file:services/subscription-service",
+        "user_service": "file:services/users-service"
     }
 }
