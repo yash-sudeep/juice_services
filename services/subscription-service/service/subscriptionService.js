@@ -6,7 +6,7 @@ module.exports = {
     getAllSubscriptions: function (req) {
         return new Promise(async (resolve, reject) => {
             try {
-                const query = "SELECT subscriptions.subid as subscriptionId,subscriptions.package,subscriptions.plan,subscriptions.description,subscriptions.price,programs.name,programs.programid as programId FROM subscriptions INNER JOIN programs ON programs.programid = subscriptions.programid ORDER BY subscriptions.subid;";
+                const query = "SELECT subscriptions.subid as subscriptionId,subscriptions.package,subscriptions.plan,subscriptions.weight,subscriptions.description,subscriptions.price,programs.name,programs.programid as programId FROM subscriptions INNER JOIN programs ON programs.programid = subscriptions.programid ORDER BY subscriptions.subid;";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
