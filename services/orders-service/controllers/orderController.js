@@ -1,9 +1,9 @@
-var cartService = require("./../service/orderService");
+var orderService = require("./../service/orderService");
 const { body } = require('express-validator');
 
 module.exports = {
     getAllOrdersAdmin: function (req, res) {
-        cartService.addOrder(req).then(
+        orderService.addOrder(req).then(
             (data) => {
                 res.status(201).send(data);
             },
@@ -13,7 +13,7 @@ module.exports = {
         );
     },
     addOrder: function (req, res) {
-        cartService.addOrder(req).then(
+        orderService.addOrder(req).then(
             (data) => {
                 res.status(201).send(data);
             },
@@ -23,7 +23,7 @@ module.exports = {
         );
     },
     getUserWiseOrders: function (req, res) {
-        cartService.getUserWiseOrders(req).then(
+        orderService.getUserWiseOrders(req).then(
             (data) => {
                 res.status(201).send(data);
             },
@@ -33,7 +33,7 @@ module.exports = {
         );
     },
     CancelOrder: function (req, res) {
-        cartService.CancelOrder(req).then(
+        orderService.CancelOrder(req).then(
             (data) => {
                 res.status(201).send(data);
             },
