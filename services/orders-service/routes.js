@@ -1,4 +1,4 @@
-var cartController = require('./controllers/orderController');
+var orderController = require('./controllers/orderController');
 // var tokenValidation = require('./../custom-modules/auth').validateToken;
 
 var bodyParser = require('body-parser');
@@ -9,12 +9,12 @@ module.exports = function(app, router) {
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 500000 }));
     
     // Add New order
-    router.post('/order/add', cartController.validate("addOrder"), cartController.addOrder);
+    router.post('/order/add', orderController.validate("addOrder"), orderController.addOrder);
     
-    router.get('/order/getallorders', cartController.getUserWiseOrders);
+    router.get('/order/getallorders', orderController.getUserWiseOrders);
     
-    router.get('/order/cancel/:id', cartController.CancelOrder);
+    router.get('/order/cancel/:id', orderController.CancelOrder);
     
-    router.get('/getallorders/:id', cartController.CancelOrder);
+    router.get('/getallorders/:id', orderController.CancelOrder);
 }
 
