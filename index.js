@@ -11,6 +11,7 @@ require("./services/users-service/routes.js")(app, router);
 require("./services/subscription-service/routes.js")(app, router);
 require("./services/products-service/routes.js")(app, router);
 require("./services/programs-service/routes.js")(app, router);
+require("./services/orders-service/routes.js")(app, router);
 
 app.use(tokenValidation);
 app.use(require("body-parser").json({ limit: '50mb', extended: true }));
