@@ -1,5 +1,6 @@
 const db = require("../../custom-modules/database/index");
 const { validationResult } = require('express-validator');
+var moment = require("moment");
 
 module.exports = {
     getAllOrdersAdmin: function (req) {
@@ -8,7 +9,7 @@ module.exports = {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -73,13 +74,13 @@ module.exports = {
             }
         });
     },
-    addOrder: function (req) {
+    placeOrder: function (req) {
         return new Promise(async (resolve, reject) => {
             try {
                 const errors = validationResult(req);
 
                 if (!errors.isEmpty()) {
-                    reject(errors.array());
+                    reject({ code: 400, message: errors.array() });
                     return;
                 }
 
@@ -89,28 +90,28 @@ module.exports = {
                 let consumer_ids = [];
                 let userID = parseInt(order.userid);
                 if (role.length > 0) {
-                    let datetime = new Date();
                     role.map((el) => consumer_ids.push(el.userid));
                     if (consumer_ids.includes(userID)) {
                         query = "INSERT INTO ORDERS (CREATEDAT,STATUS,PAYMENTSTATUS,MOBILENUMBER,PAYMENTTYPE,PAYMENTVENDOR,DESCRIPTION,COST,ITEMS,USERID,ADDRESSID) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *";
                         let values = [
-                            datetime,
-                            order.status,
+                            moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
+                            "pending",
                             order.paymentstatus,
-                            order.mobilenumber,
+                            req.user.mobile_number,
                             "online",
                             order.paymentvendor,
                             order.description,
                             order.cost,
-                            JSON.stringify(order.items).replace('[', '{').replace(']', '}').replace(/'/g, '"'),
+                            '' + JSON.stringify(order.items) + '',
                             order.userid,
-                            order.addressid
+                            order.addressid,
                         ];
                         let res = await db.parameterizedQuery(query, values);
                         let query_orderstatus = "INSERT INTO ORDERS_STATUS (CREATEDAT,STATUS,PACKINGSTATUS,DELIVERYSTATUS,SHIPPINGSTATUS,ISRETURNED,REFUNDSTATUS,ORDERID) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
 
-                        let value1 = [datetime,
-                            "order placed",
+                        let value1 = [
+                            moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
+                            "pending",
                             "pending", "pending", "pending", false, "pending",
                             res[0].orderid
                         ];

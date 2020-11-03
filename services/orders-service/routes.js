@@ -12,7 +12,7 @@ module.exports = function(app, router) {
     router.get('/order', orderController.getUserWiseOrders);
     
     // Add New Order
-    router.post('/order', orderController.validate("addOrder"), orderController.addOrder);
+    router.post('/order', orderController.validate("placeOrder"), orderController.placeOrder);
 
     // Order Cancellation
     router.delete('/order', orderController.cancelOrder);
