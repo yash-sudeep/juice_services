@@ -182,6 +182,7 @@ module.exports = {
                             body("landmark", "Invalid City").isString(),
                             body("type", "Invalid City").isString(),
                             body("addressId", "Invalid Address").isNumeric(),
+                            body("active", "Invalid State").isBoolean()
                         ],
                     ];
                 }
