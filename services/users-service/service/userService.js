@@ -221,7 +221,7 @@ module.exports = {
     getAddress: function (req) {
         return new Promise((resolve, reject) => {
             findUser(req.user.mobile_number).then(async (user) => {
-                const query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE,ACTIVE FROM ADDRESS WHERE USERID=" + user.userid;
+                const query = "SELECT ADDRESSID as addressId,NAME,MOBILENUMBER,PINCODE,ADDRESS,LANDMARK,CITY,STATE,TYPE FROM ADDRESS WHERE USERID=" + user.userid;
                 const res = await db.basicQuery(query);
                 resolve(res);
             }).catch((err) => {
@@ -404,7 +404,7 @@ const updatePassword = (password, mobile_number) => {
 const insertAddress = (address) => {
     return new Promise(async (resolve, reject) => {
         const query =
-            "INSERT INTO ADDRESS (NAME,MOBILENUMBER,PINCODE,ADDRESS,CITY,STATE,LANDMARK,TYPE,USERID,CREATEDAT,ACTIVE) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *";
+            "INSERT INTO ADDRESS (NAME,MOBILENUMBER,PINCODE,ADDRESS,CITY,STATE,LANDMARK,TYPE,USERID,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
         const values = [
             address.name,
             address.mobile_number,
@@ -416,7 +416,6 @@ const insertAddress = (address) => {
             address.type,
             address.userId,
             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
-            false
         ];
         try {
             const res = await db.parameterizedQuery(query, values);
@@ -481,9 +480,7 @@ const updateAddress = (address, userId) => {
         address.type +
         "', UPDATEDAT='" +
         moment().format("YYYY-MM-DD HH:mm:ss.SSSSS") +
-        "', ACTIVE=" +
-        address.active +
-        " WHERE USERID=" +
+        "' WHERE USERID=" +
         userId +
         " AND ADDRESSID=" +
         address.addressId;
