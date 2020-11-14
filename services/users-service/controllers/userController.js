@@ -181,7 +181,7 @@ module.exports = {
                             body("state", "Invalid City").isString(),
                             body("landmark", "Invalid City").isString(),
                             body("type", "Invalid City").isString(),
-                            body("addressId", "Invalid Address").isNumeric()
+                            body("addressId", "Invalid Address").isNumeric(),
                         ],
                     ];
                 }
