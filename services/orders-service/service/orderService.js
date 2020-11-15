@@ -41,7 +41,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             const mobilenumber = req.user.mobile_number;
             try {
-                let query = "SELECT * FROM ORDERS WHERE MOBILENUMBER= $1 ";
+                let query = "SELECT orders.ORDERID,orders.CREATEDAT,orders.STATUS,orders.PAYMENTSTATUS,orders.PAYMENTTYPE,orders.PAYMENTVENDOR,orders.COST,orders.ITEMS,orders.USERID,orders.ADDRESSID,address.PINCODE,address.addressid,address.city,address.pincode,address.address,address.city,address.state,address.landmark,address.type,address.name,address.MOBILENUMBER FROM orders INNER JOIN address ON orders.addressid = address.addressid AND orders.mobilenumber = $1";
                 let values = [mobilenumber];
                 let res = await db.parameterizedQuery(query, values);
                 resolve(res);
@@ -92,7 +92,7 @@ module.exports = {
                 if (role.length > 0) {
                     role.map((el) => consumer_ids.push(el.userid));
                     if (consumer_ids.includes(userID)) {
-                        query = "INSERT INTO ORDERS (CREATEDAT,STATUS,PAYMENTSTATUS,MOBILENUMBER,PAYMENTTYPE,PAYMENTVENDOR,DESCRIPTION,COST,ITEMS,USERID,ADDRESSID) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *";
+                        query = "INSERT INTO ORDERS (CREATEDAT,STATUS,PAYMENTSTATUS,MOBILENUMBER,PAYMENTTYPE,PAYMENTVENDOR,COST,ITEMS,USERID,ADDRESSID) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
                         let values = [
                             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
                             "pending",
@@ -100,7 +100,6 @@ module.exports = {
                             req.user.mobile_number,
                             "online",
                             order.paymentvendor,
-                            order.description,
                             order.cost,
                             '' + JSON.stringify(order.items) + '',
                             order.userid,

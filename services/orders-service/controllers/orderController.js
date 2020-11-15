@@ -48,7 +48,6 @@ module.exports = {
                 [
                     body('paymentstatus', 'paymentstatus cannot be empty').exists(),
                     body('paymentvendor', 'paymentvender cannot be empty').exists(),
-                    body('description').exists(),
                     body('cost').exists(),
                     body('items').exists(),
                     body('userid').optional().isNumeric(),
