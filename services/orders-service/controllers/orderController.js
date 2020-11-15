@@ -3,54 +3,51 @@ const { body } = require('express-validator');
 
 module.exports = {
     getAllOrdersAdmin: function (req, res) {
-        orderService.addOrder(req).then(
+        orderService.placeOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
-    addOrder: function (req, res) {
-        orderService.addOrder(req).then(
+    placeOrder: function (req, res) {
+        orderService.placeOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(201).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     getUserWiseOrders: function (req, res) {
         orderService.getUserWiseOrders(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
-    CancelOrder: function (req, res) {
-        orderService.CancelOrder(req).then(
+    cancelOrder: function (req, res) {
+        orderService.cancelOrder(req).then(
             (data) => {
-                res.status(201).send(data);
+                res.status(202).send({ errorCode: 0, data: data });
             },
             (err) => {
-                res.status(400).send({ errorCode: 1, message: err });
+                res.status(err.code).send({ errorCode: 1, message: err.message });
             }
         );
     },
     validate: function (name) {
-        if (name === 'addOrder') {
+        if (name === 'placeOrder') {
             return [
                 [
-                    body('status', 'status doesn\'t exists').exists(),
                     body('paymentstatus', 'paymentstatus cannot be empty').exists(),
-                    body('mobilenumber', 'mobilenumber cannot be empty').exists(),
                     body('paymentvendor', 'paymentvender cannot be empty').exists(),
-                    body('description').exists(),
                     body('cost').exists(),
                     body('items').exists(),
                     body('userid').optional().isNumeric(),
