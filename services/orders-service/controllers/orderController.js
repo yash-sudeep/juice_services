@@ -2,8 +2,8 @@ var orderService = require("./../service/orderService");
 const { body } = require('express-validator');
 
 module.exports = {
-    getAllOrdersAdmin: function (req, res) {
-        orderService.placeOrder(req).then(
+    getOrders: function (req, res) {
+        orderService.getOrders(req).then(
             (data) => {
                 res.status(200).send({ errorCode: 0, data: data });
             },
@@ -16,16 +16,6 @@ module.exports = {
         orderService.placeOrder(req).then(
             (data) => {
                 res.status(201).send({ errorCode: 0, data: data });
-            },
-            (err) => {
-                res.status(err.code).send({ errorCode: 1, message: err.message });
-            }
-        );
-    },
-    getUserWiseOrders: function (req, res) {
-        orderService.getUserWiseOrders(req).then(
-            (data) => {
-                res.status(200).send({ errorCode: 0, data: data });
             },
             (err) => {
                 res.status(err.code).send({ errorCode: 1, message: err.message });
