@@ -76,7 +76,7 @@ module.exports = {
                         const productValidationResult = await validateProductName(product.name);
                         if (!productValidationResult) {
                             const query =
-                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,ITEMS,MEDIAPATH,PROGRAMID) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
+                                "INSERT INTO PRODUCTS (NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,STATUS,MEDIAPATH,ITEMS,PROGRAMID) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
                             const values = [
                                 product.name,
                                 product.description,
@@ -89,8 +89,8 @@ module.exports = {
                                 .replace("]", "}")
                                 .replace(/'/g, '"'),
                                 product.status,
-                                product.items,
                                 product.mediapath,
+                                '' + JSON.stringify(product.items) + '',
                                 JSON.stringify(product.pid).replace("[", "{").replace("]", "}"),
                             ];
                             await db.parameterizedQuery(query, values);
