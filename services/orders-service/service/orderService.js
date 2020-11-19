@@ -3,48 +3,20 @@ const { validationResult } = require('express-validator');
 var moment = require("moment");
 
 module.exports = {
-    getAllOrdersAdmin: function (req) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const errors = validationResult(req);
-
-                if (!errors.isEmpty()) {
-                    reject({ code: 400, message: errors.array() });
-                    return;
-                }
-
-                const product = req.body;
-                let query = "SELECT userid FROM USERS WHERE USERROLE='Seller'";
-                let role = await db.basicQuery(query);
-                let seller_ids = [];
-                let programValidationResult = await validateProgram(product.pid);
-                let userID = parseInt(req.params.id);
-                if (role.length > 0 && programValidationResult) {
-                    role.map((el) => seller_ids.push(el.userid));
-                    if (seller_ids.includes(userID)) {
-                        let query1 = "SELECT * FROM ORDERS"
-                        let res = await db.basicQuery(query1);
-                        resolve(res[0]);
-                    } else {
-                        reject({ code: 403, message: "Access Forbidden" });
-                    }
-                } else {
-                    reject({ code: 400, message: "Invalid Input" });
-                }
-            } catch (error) {
-                console.log(error);
-                reject({ code: 400, message: "Invalid Input" });
-            }
-        });
-    },
-    getUserWiseOrders: function (req) {
+    getOrders: function (req) {
         return new Promise(async (resolve, reject) => {
             const mobilenumber = req.user.mobile_number;
             try {
-                let query = "SELECT orders.ORDERID,orders.CREATEDAT,orders.STATUS,orders.PAYMENTSTATUS,orders.PAYMENTTYPE,orders.PAYMENTVENDOR,orders.COST,orders.ITEMS,orders.USERID,orders.ADDRESSID,address.PINCODE,address.addressid,address.city,address.pincode,address.address,address.city,address.state,address.landmark,address.type,address.name,address.MOBILENUMBER FROM orders INNER JOIN address ON orders.addressid = address.addressid AND orders.mobilenumber = $1";
-                let values = [mobilenumber];
-                let res = await db.parameterizedQuery(query, values);
-                resolve(res);
+                if(req.user.role === 'Seller') {
+                    let query = "SELECT * FROM ORDERS";
+                    let res = await db.parameterizedQuery(query, values);
+                    resolve(res);
+                } else {
+                    let query = "SELECT orders.ORDERID,orders.CREATEDAT,orders.STATUS,orders.PAYMENTSTATUS,orders.PAYMENTTYPE,orders.PAYMENTVENDOR,orders.COST,orders.ITEMS,orders.USERID,orders.ADDRESSID,address.PINCODE,address.addressid,address.city,address.pincode,address.address,address.city,address.state,address.landmark,address.type,address.name,address.MOBILENUMBER FROM orders INNER JOIN address ON orders.addressid = address.addressid AND orders.mobilenumber = $1";
+                    let values = [mobilenumber];
+                    let res = await db.parameterizedQuery(query, values);
+                    resolve(res);
+                }
             } catch (error) {
                 console.log(error);
                 reject({ code: 400, message: "Invalid Input" });
