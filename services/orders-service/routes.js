@@ -8,8 +8,8 @@ module.exports = function(app, router) {
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 500000 }));
     
-    // Get All Orders of a User
-    router.get('/order', orderController.getUserWiseOrders);
+    // Get All Orders
+    router.get('/order', orderController.getOrders);
     
     // Add New Order
     router.post('/order', orderController.validate("placeOrder"), orderController.placeOrder);
