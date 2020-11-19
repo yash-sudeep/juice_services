@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator");
 const moment = require("moment");
 
 module.exports = {
-    getAllSubscriptions: function (req) {
+    getSubscriptions: function (req) {
         return new Promise(async (resolve, reject) => {
             try {
                 const query = "SELECT subscriptions.subid as subscriptionId,subscriptions.package,subscriptions.plan,subscriptions.weight,subscriptions.description,subscriptions.price,programs.name,programs.programid as programId FROM subscriptions INNER JOIN programs ON programs.programid = subscriptions.programid ORDER BY subscriptions.subid;";
@@ -31,11 +31,14 @@ module.exports = {
                         const valid = await checkSubscription(subscription.programId, subscription.package);
                         if (!valid) {
                             const query =
-                                "INSERT INTO SUBSCRIPTIONS (PROGRAMID,PACKAGE,PRICE,CREATEDAT) VALUES($1, $2, $3, $4) RETURNING *";
+                                "INSERT INTO SUBSCRIPTIONS (PROGRAMID,PACKAGE,PLAN,WEIGHT,PRICE,DESCRIPTION,CREATEDAT) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *";
                             const values = [
                                 subscription.programId,
                                 subscription.package,
+                                subscription.plan,
+                                subscription.weight,
                                 subscription.price,
+                                '' + JSON.stringify(subscription.description) + '',
                                 moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
                             ];
                             await db.parameterizedQuery(query, values);
@@ -64,14 +67,12 @@ module.exports = {
                     return;
                 }
 
-                const { packageName, subscriptionId, price } = req.body;
+                const { subscriptionId, price } = req.body;
                 if (req.user.userrole === "Seller") {
                     const valid = await validateSubscriptionID(subscriptionId);
                     if (valid) {
                         const query =
-                            "UPDATE SUBSCRIPTIONS SET PACKAGE='" +
-                            packageName +
-                            "', PRICE=" +
+                            "UPDATE SUBSCRIPTIONS SET PRICE=" +
                             price +
                             " WHERE SUBID= " +
                             subscriptionId;
