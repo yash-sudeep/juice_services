@@ -2,8 +2,8 @@ var subscriptionService = require("./../service/subscriptionService");
 const { body } = require('express-validator');
 
 module.exports = {
-    getAllSubscriptions: function(req, res) {
-        subscriptionService.getAllSubscriptions(req).then(
+    getSubscriptions: function(req, res) {
+        subscriptionService.getSubscriptions(req).then(
             (data) => {
                 res.status(200).send({ errorCode: 0, data: data });
             },
@@ -50,7 +50,10 @@ module.exports = {
                         [
                             body('programId', 'Invalid Program').isNumeric(),
                             body('package', 'Invalid Package Name').isString(),
+                            body('plan', 'Invalid Package Name').isString(),
+                            body('weight', 'Invalid Package Name').isString(),
                             body('price', 'Invalid Amount').isNumeric(),
+                            body('description', 'Invalid Amount').exists()
                         ]
                     ]
                 }
@@ -59,7 +62,6 @@ module.exports = {
                     return [
                         [
                             body('subscriptionId', 'Invalid Subscription').isNumeric(),
-                            body('package', 'Invalid Package Name').isString(),
                             body('price', 'Invalid Amount').isNumeric(),
                         ]
                     ]

@@ -11,7 +11,7 @@ module.exports = function(app, router) {
     //app.use(tokenValidate);
 
     // Get All Subscriptions
-    router.get('/subscription', subscriptionController.getAllSubscriptions);
+    router.get('/subscription', subscriptionController.getSubscriptions);
 
     // Add New Subscription
     router.post('/subscription', subscriptionController.validate("addSubscription"), subscriptionController.addSubscription);
