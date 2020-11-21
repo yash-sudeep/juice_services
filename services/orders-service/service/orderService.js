@@ -9,7 +9,7 @@ module.exports = {
             try {
                 if(req.user.role === 'Seller') {
                     let query = "SELECT * FROM ORDERS";
-                    let res = await db.parameterizedQuery(query, values);
+                    let res = await db.basicQuery(query);
                     resolve(res);
                 } else {
                     let query = "SELECT orders.ORDERID,orders.CREATEDAT,orders.STATUS,orders.PAYMENTSTATUS,orders.PAYMENTTYPE,orders.PAYMENTVENDOR,orders.COST,orders.ITEMS,orders.USERID,orders.ADDRESSID,address.PINCODE,address.addressid,address.city,address.pincode,address.address,address.city,address.state,address.landmark,address.type,address.name,address.MOBILENUMBER FROM orders INNER JOIN address ON orders.addressid = address.addressid AND orders.mobilenumber = $1";
