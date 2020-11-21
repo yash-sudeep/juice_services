@@ -67,7 +67,7 @@ module.exports = {
                         query = "INSERT INTO ORDERS (CREATEDAT,STATUS,PAYMENTSTATUS,MOBILENUMBER,PAYMENTTYPE,PAYMENTVENDOR,COST,ITEMS,USERID,ADDRESSID) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
                         let values = [
                             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
-                            "pending",
+                            "confirmed",
                             order.paymentstatus,
                             req.user.mobile_number,
                             "online",
@@ -82,7 +82,7 @@ module.exports = {
 
                         let value1 = [
                             moment().format("YYYY-MM-DD HH:mm:ss.SSSSS"),
-                            "pending",
+                            "confirmed",
                             "pending", "pending", "pending", false, "pending",
                             res[0].orderid
                         ];
