@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             try {
                 const query =
-                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID,ITEMS FROM PRODUCTS WHERE STATUS=true ORDER BY PRODUCTID";
+                    "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,PROGRAMID,ITEMS,MEDIAPATH FROM PRODUCTS WHERE STATUS=true ORDER BY PRODUCTID";
                 const res = await db.basicQuery(query);
                 resolve(res);
             } catch (error) {
@@ -22,7 +22,7 @@ module.exports = {
                     validateProgram([programId]).then(async(valid) => {
                         if (valid) {
                             const query =
-                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,ITEMS FROM PRODUCTS WHERE '" +
+                                "SELECT PRODUCTID as productId,NAME,DESCRIPTION,ADVANTAGES,INGREDIENTS,ITEMS,MEDIAPATH FROM PRODUCTS WHERE '" +
                                 programId +
                                 "'=ANY(PROGRAMID) ORDER BY PRODUCTID";
                             const res = await db.basicQuery(query);
